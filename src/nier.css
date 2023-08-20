@@ -1,0 +1,11 @@
+.container {
+	padding: 0 4rem;
+}
+
+header {
+	padding: 1rem 0;
+}
+
+main {
+	flex: 1;
+}
