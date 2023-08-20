@@ -1,10 +1,8 @@
 <script lang="ts">
-	import type { PageData } from './$types';
 	import Modal from '$lib/components/Modal.svelte';
-	import type { Post } from '$lib/types';
 	import stackElements, { type stackElement } from '$lib/stackElements';
 	let showModal = false;
-	export let data: PageData;
+	import * as config from '$lib/config';
 
 	let selectedItem = 'None';
 	let selectedModalContent: any;
@@ -17,6 +15,10 @@
 		showModal = true;
 	};
 </script>
+
+<svelte:head>
+	<title>{config.title} Data</title>
+</svelte:head>
 
 <div class="data">
 	<Modal bind:showModal>
