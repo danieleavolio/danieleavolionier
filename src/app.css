@@ -5,6 +5,7 @@
 	outline: none !important;
 }
 
+
 html {
 	/* font */
 	--font-sans: 'Manrope', sans-serif;
@@ -126,6 +127,10 @@ html {
 	--border: var(--border-light);
 }
 
+svg{
+	fill: var(--automataColor);	
+}
+
 html,
 body {
 	height: fit-content;
@@ -189,6 +194,25 @@ th, td{
 	padding: 0.5rem;
 }
 
+
+h1{
+	font-size: var(--font-size-fluid-3);
+}
+
+h2{
+	font-size: var(--font-size-fluid-2);
+}
+
+h3{
+	font-size: var(--font-size-fluid-1);
+}
+
+h4{
+	font-size: var(--font-size-fluid-0);
+}
+
+
+
 h1,
 h2,
 h3,
@@ -236,6 +260,7 @@ a {
 	border-right: none;
 	transition: all 0.1s ease-in-out;
 	text-align: center;
+	white-space: nowrap;
 
 	&::before {
 		content: '';

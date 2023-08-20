@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { formatDate } from '$lib/utils';
 	import * as config from '$lib/config';
+	import { Square } from "lucide-svelte";
 	import Profile from './profile.svelte';
-	import {Diamond, Square} from "lucide-svelte";
 </script>
 
 <svelte:head>
@@ -12,9 +11,9 @@
 	<section class="section-1">
 		<li class="post">
 			<div class="items-container">
-				<a href="data" class="title"><Diamond /> Data</a>
-				<a href="pagine" class="title"><Diamond /> Projects</a>
-				<a href="pagine" class="title"><Diamond /> Blog</a>
+				<a href="data" class="title"><Square /> Data</a>
+				<a href="progetti" class="title"><Square /> Projects</a>
+				<a href="pagine" class="title"><Square /> Blog</a>
 			</div>
 		</li>
 	</section>
@@ -37,6 +36,7 @@
 		align-items: center;
 		padding-top: 0;
 		padding-bottom: 0;
+		width: 100%;
 
 	}
 	.separator {
@@ -69,12 +69,14 @@
 		padding: 2em;
 		background-color: var(--automataBg);
 		z-index: 10;
+		width: 100%;
 	}
 
 	.title {
 		font-size: var(--font-size-fluid-2);
 		text-transform: capitalize;
 	}
+
 
 
 

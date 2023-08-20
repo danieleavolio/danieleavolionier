@@ -1,3 +1,0 @@
-import{s as l,n as a}from"../chunks/scheduler.57811b04.js";import{S as n,i as r,g as c,h as u,y as p,k as d,a as m,f as v}from"../chunks/index.bffac608.js";function _(o){let e,s=`<p class="svelte-1yipxub">Un diario personale ma pubblico. Quale senso c&#39;è dietro questa cosa? Nessuno. Solamente la
-		voglia di creare qualcosa di pubblico dove poter scrivere le mie scemenze. Mi andava di farlo, e
-		quindi l&#39;ho fatto. Et voilà! Questo è il risultato.</p>`;return{c(){e=c("div"),e.innerHTML=s,this.h()},l(t){e=u(t,"DIV",{class:!0,"data-svelte-h":!0}),p(e)!=="svelte-1b89qlg"&&(e.innerHTML=s),this.h()},h(){d(e,"class","about svelte-1yipxub")},m(t,i){m(t,e,i)},p:a,i:a,o:a,d(t){t&&v(e)}}}class b extends n{constructor(e){super(),r(this,e,null,_,l,{})}}export{b as component};

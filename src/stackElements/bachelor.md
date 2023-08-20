@@ -11,7 +11,8 @@
         - NodeJS
         - Firebase
         - TypeScript
-    - Link: [GitHub REPOSITORY](https://github.com/danieleavolio/link4students)
+    - Repository: [GitHub](https://github.com/danieleavolio/link4students)
+    - Link (Italian): [PDF](https://danieleavolio.it/bachelor-thesis.pdf)
 
 
 

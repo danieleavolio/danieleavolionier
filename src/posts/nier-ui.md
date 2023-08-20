@@ -1,38 +1,30 @@
 ---
 title: NieR Automata UI
-description: Nuova UI fresca fresca del diario
+description: Fresh new UI for the diary
 date: '08-12-2023-13:00'
 categories:
-  - programmazione
+  - programming
   - web
 published: true
 ---
 
-# Cambiamento al volo
+# On-the-Fly Change
 
-Ho deciso di passare da una palette di colori _totalmente scura_ ad una _leggermente diversa_. Sono passato da un tema totalmente scuro, con qualche accento qui e li di colori più chiari, ad un tema totalmente chiaro in tema **NieR Automata**.
+I've decided to transition from a _completely dark_ color palette to a _slightly different_ one. I've shifted from an entirely dark theme with occasional accents of lighter colors here and there to a fully light theme inspired by **NieR Automata**.
 
-### Vecchia UI
+## How I Did It
 
-![Vecchia UI](../images/dark1.png)
+I have to thank the user who created this **project** on [CodePen](https://www.codepen.io), which helped me understand how to structure everything.
 
-### Nuova UI
+You can find the project directly at this link: [SOURCE](https://codepen.io/levise/pen/vMzEwr).
 
-![Nuova UI](../images/nierui.png)
+I'm really loving how the project is turning out, even though I still _don't know exactly what to post_. For now, let's just say that I'm spending time writing posts and building the website's structure. I must admit I've always wanted to create something in the style of **NieR:Automata**.
 
-## Come ho fatto
+### Idea for the Future
 
-Devo ringraziare l'utente che ha creato questo **progetto** su [CodePen](https://www.codepen.io) che mi ha permesso di capire come strutturare il tutto.
+I literally just had an idea while writing this post! Maybe I can add a component to the site that displays post content in a summarized form, highlighting the **headers**. I don't know how to do it yet, but technically it should be very doable.
 
-Il progetto lo potete trovare direttamente a questo link: [SOURCE](https://codepen.io/levise/pen/vMzEwr).
-
-Mi piace moltissimo come sta venendo fuori il progetto, anche se ancora _non so cosa pubblicare di preciso_. Per ora diciamo che sto passando il tempo a scrivere i post e a creare la struttura del sito. Devo dire che ho sempre voluto creare un qualcosa in stile **NieR:Automata**.
-
-### Idea per il futuro
-
-Ho letteralmente appena avuto l'idea mentre scrivevo questo post! Posso magari aggiungere un componente al sito che mostra il contenuto del riassumendo gli **headers**. Non so ancora come fare, ma tecnicamente dovrebbe essere possibilissimo.
-
-- Aggiungere un componente che mostra il contenuto del post in un riassunto
-- Aggiungere una ricerca dei post per tag
-- Aggiungere una ricerca dei post per data
-- Vincere alla lotteria 10.000€
+- Add a component to display post content in a summarized form
+- Add a search for posts by tag
+- Add a search for posts by date
+- Win the lottery and get 10,000€

@@ -1,9 +1,12 @@
 <script lang="ts">
+	import { Square } from "lucide-svelte";
+
+	
 </script>
 
 <div class="page-data">
 	<div class="top-header">
-		<p>■</p>
+		<Square />
 		<p>Daniele Avolio: Master-student</p>
 	</div>
 	<div class="outer-box">
@@ -14,11 +17,9 @@
 			/>
 			<div class="main-features">
 				<p>
-					Lorem ipsum dolor sit amet consectetur adipisicing elit. Et accusamus officia, at
-					asperiores perferendis pariatur suscipit culpa nostrum molestiae perspiciatis, veritatis
-					tempore maxime mollitia dolorum expedita! Consequuntur sint ex soluta! Lorem ipsum dolor,
-					sit amet consectetur adipisicing elit. Alias ab minus quaerat, illum animi obcaecati
-					perspiciatis voluptatum voluptatibus maiores quia.
+					<b>Daniele Avolio</b> is a master-student in <b>Computer Science and Artificial Intelligence</b> at the University of Calabria. He developed 
+					a strong interest in the field of Artificial Intelligence and Machine Learning. He have experience in <b>Front-end development 
+					</b>using the <b>SvelteKit and Angular</b> frameworks.
 				</p>
 				<div class="socials">
 					<a target="_blank" class="title" href="https://www.linkedin.com/in/danieleavolio/">Linkedin</a>

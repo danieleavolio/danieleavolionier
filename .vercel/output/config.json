@@ -1,0 +1,79 @@
+{
+	"version": 3,
+	"routes": [
+		{
+			"src": "/data",
+			"dest": "/data/"
+		},
+		{
+			"src": "/data/",
+			"status": 308,
+			"headers": {
+				"Location": "/data"
+			}
+		},
+		{
+			"src": "/pagine",
+			"dest": "/pagine/"
+		},
+		{
+			"src": "/pagine/",
+			"status": 308,
+			"headers": {
+				"Location": "/pagine"
+			}
+		},
+		{
+			"src": "/progetti",
+			"dest": "/progetti/"
+		},
+		{
+			"src": "/progetti/",
+			"status": 308,
+			"headers": {
+				"Location": "/progetti"
+			}
+		},
+		{
+			"src": "/pagine/nier-ui",
+			"dest": "/pagine/nier-ui/"
+		},
+		{
+			"src": "/pagine/nier-ui/",
+			"status": 308,
+			"headers": {
+				"Location": "/pagine/nier-ui"
+			}
+		},
+		{
+			"src": "/_app/immutable/.+",
+			"headers": {
+				"cache-control": "public, immutable, max-age=31536000"
+			}
+		},
+		{
+			"handle": "filesystem"
+		},
+		{
+			"src": "/.*",
+			"dest": "/fn"
+		}
+	],
+	"overrides": {
+		"index.html": {
+			"path": ""
+		},
+		"data.html": {
+			"path": "data"
+		},
+		"pagine.html": {
+			"path": "pagine"
+		},
+		"progetti.html": {
+			"path": "progetti"
+		},
+		"pagine/nier-ui.html": {
+			"path": "pagine/nier-ui"
+		}
+	}
+}

@@ -20,6 +20,8 @@
 		<slot name="header" />
 		<slot class="internal" />
 		<!-- svelte-ignore a11y-autofocus -->
+		<!-- svelte-ignore a11y-invalid-attribute -->
+		<!-- svelte-ignore a11y-missing-attribute -->
 		<a autofocus on:click={() => dialog.close()}>CLOSE DATA</a>
 	</div>
 </dialog>
