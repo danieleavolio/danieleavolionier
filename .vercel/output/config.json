@@ -46,6 +46,39 @@
 			}
 		},
 		{
+			"src": "/progetti/second-website",
+			"dest": "/progetti/second-website/"
+		},
+		{
+			"src": "/progetti/second-website/",
+			"status": 308,
+			"headers": {
+				"Location": "/progetti/second-website"
+			}
+		},
+		{
+			"src": "/progetti/photograper-website",
+			"dest": "/progetti/photograper-website/"
+		},
+		{
+			"src": "/progetti/photograper-website/",
+			"status": 308,
+			"headers": {
+				"Location": "/progetti/photograper-website"
+			}
+		},
+		{
+			"src": "/progetti/first-website",
+			"dest": "/progetti/first-website/"
+		},
+		{
+			"src": "/progetti/first-website/",
+			"status": 308,
+			"headers": {
+				"Location": "/progetti/first-website"
+			}
+		},
+		{
 			"src": "/_app/immutable/.+",
 			"headers": {
 				"cache-control": "public, immutable, max-age=31536000"
@@ -74,6 +107,15 @@
 		},
 		"pagine/nier-ui.html": {
 			"path": "pagine/nier-ui"
+		},
+		"progetti/second-website.html": {
+			"path": "progetti/second-website"
+		},
+		"progetti/photograper-website.html": {
+			"path": "progetti/photograper-website"
+		},
+		"progetti/first-website.html": {
+			"path": "progetti/first-website"
 		}
 	}
 }

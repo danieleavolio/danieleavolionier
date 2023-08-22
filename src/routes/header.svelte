@@ -13,33 +13,39 @@
 	}
 	function handleClick() {
 		isOpened.set(!$isOpened);
+		if (isOpened) {
+			window.document.body.style.scrollBehavior = 'unset';
+			window.scrollTo(0, 0);
+		}
 	}
 </script>
 
 <svelte:window bind:innerWidth={width} />
 
 <nav>
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	{#if width > 800}
-		<a href="/" class="title">
-			<b>{config.title}</b>
-		</a>
+	<div class="nav-div">
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		{#if width > 800}
+			<a href="/" class="title">
+				<b>{config.title}</b>
+			</a>
 
-		<ul class="links">
-			<li><a href="/pagine">BLOG</a></li>
-			<li><a href="/progetti">PROJECTS</a></li>
-			<li><a href="/data">DATA</a></li>
-		</ul>
-	{:else}
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<div on:click={() => goHome()}>
-			<Home fill-opacity="0" size="2.5em" />
-		</div>
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<div on:click={() => handleClick()} class="button-hamburger">
-			<Settings fill-opacity="0" size="2.5em" />
-		</div>
-	{/if}
+			<ul class="links">
+				<li><a href="/pagine">BLOG</a></li>
+				<li><a href="/progetti">PROJECTS</a></li>
+				<li><a href="/data">DATA</a></li>
+			</ul>
+		{:else}
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<div class="home" on:click={() => goHome()}>
+				<Home cursor="pointer" fill-opacity="0" size="2.5em" />
+			</div>
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<div on:click={() => handleClick()} class="button-hamburger">
+				<Settings fill-opacity="0" size="2.5em" />
+			</div>
+		{/if}
+	</div>
 </nav>
 {#if $isOpened && width < 800}
 	<div transition:fly={{ y: 1000, duration: 300, opacity: 1 }} class="hidden-menu">
@@ -61,11 +67,34 @@
 		text-decoration: none;
 		height: fit-content;
 	}
+
+	a::after {
+		content: '';
+		background-image: url('https://i.imgur.com/h8f3hwW.png');
+		background-size: contain;
+		background-repeat: no-repeat;
+	}
 	nav {
 		display: flex;
+		flex-direction: column;
 		padding-block: var(--size-7);
 		justify-content: space-between;
-		position: relative;
+		top: 0;
+		z-index: 999;
+	}
+
+	nav::after {
+		content: '';
+		width: 100%;
+		height: 30px;
+		background-image: url('https://i.imgur.com/FMYB47Q.png');
+		background-size: contain;
+		background-repeat: repeat;
+	}
+
+	.nav-div {
+		display: flex;
+		justify-content: space-between;
 	}
 
 	.links {
@@ -77,6 +106,8 @@
 
 	li {
 		background-image: none;
+		padding-bottom: 0;
+		margin-bottom: 0;
 	}
 
 	/* Desktop */
@@ -127,9 +158,20 @@
 		opacity: 1;
 	}
 
+	.home {
+		opacity: 0.7;
+		transition: all 0.3s ease-in-out;
+	}
+
+	.home:hover {
+		opacity: 1;
+		transform: rotate(-90deg);
+	}
+
 	@media (max-width: 800px) {
 		nav {
 			justify-content: space-between;
+			position: sticky;
 		}
 	}
 </style>

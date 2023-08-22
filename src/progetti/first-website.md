@@ -1,10 +1,10 @@
 ---
 title: First Personal Website
 description: First ever website made for myself. It's a simple website made with Sveltekit and Tailwindcss.
-date: "02-22-2023-13:00"
+date: "08-22-2023-12:00"
 categories: 
     - TailwindCSS
-    - Sveltekit
+    - SvelteKit
 published: true
 ---
 

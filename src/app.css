@@ -52,6 +52,8 @@ html {
 		background-color: var(--automataColor);
 		color: var(--automataBg);
 	}
+
+	scroll-behavior: unset;
 }
 
 :root {
@@ -161,6 +163,10 @@ article{
 	line-height: 2.3rem;
 }
 
+article a{
+	white-space: nowrap;
+}
+
 img {
 	border-radius: var(--radius-1);
 	box-shadow: 5px 5px 0 rgba(77, 73, 62, 0.6);
@@ -245,7 +251,9 @@ h4 {
 p {
 	max-inline-size: none;
 }
-
+a::backdrop{
+		content: url('https://i.imgur.com/h8f3hwW.png');
+}
 a {
 	text-transform: uppercase;
 	font-weight: 300;
@@ -291,7 +299,7 @@ a {
 	&:hover,
 	&:focus {
 		background-color: transparent;
-		color: var(--automataBg);
+		color: var(--automataBg) !important;
 		border-color: var(--automataColor);
 		text-decoration: none;
 

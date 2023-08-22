@@ -36,6 +36,23 @@ const Arrow_down_0_1 = create_ssr_component(($$result, $$props, $$bindings, slot
   })}`;
 });
 const ArrowDown01 = Arrow_down_0_1;
+const Home = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  const iconNode = [
+    [
+      "path",
+      {
+        "d": "m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+      }
+    ],
+    ["polyline", { "points": "9 22 9 12 15 12 15 22" }]
+  ];
+  return `${validate_component(Icon, "Icon").$$render($$result, Object.assign({}, { name: "home" }, $$props, { iconNode }), {}, {
+    default: () => {
+      return `${slots.default ? slots.default({}) : ``}`;
+    }
+  })}`;
+});
+const Home$1 = Home;
 const Settings = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   const iconNode = [
     [
@@ -56,7 +73,7 @@ const Settings$1 = Settings;
 const isOpened = writable(false);
 const header_svelte_svelte_type_style_lang = "";
 const css$2 = {
-  code: "a.svelte-hncc9j.svelte-hncc9j{color:inherit;text-decoration:none;height:fit-content}nav.svelte-hncc9j.svelte-hncc9j{display:flex;padding-block:var(--size-7);justify-content:space-between;position:relative}.links.svelte-hncc9j.svelte-hncc9j{margin-block:var(--size-7);display:flex;gap:var(--size-7);margin-block:0}li.svelte-hncc9j.svelte-hncc9j{background-image:none}.button-hamburger.svelte-hncc9j.svelte-hncc9j{right:100%;width:fit-content;cursor:pointer;transition:all 0.5s ease-in-out;z-index:3}.button-hamburger.svelte-hncc9j.svelte-hncc9j:hover{transform:rotate(90deg)}.hidden-menu.svelte-hncc9j.svelte-hncc9j{position:absolute;top:0;right:0;left:0;bottom:0;background-color:var(--automataBg);height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:var(--size-7);padding:1em;transition:all 0.5s ease-in-out;z-index:999}.hidden-menu.svelte-hncc9j a.svelte-hncc9j{width:90%}.close.svelte-hncc9j.svelte-hncc9j{position:absolute;bottom:2em;right:10px;padding:0.2em;opacity:0.7;transition:all 0.2s ease-in-out}.close.svelte-hncc9j.svelte-hncc9j:hover{opacity:1}@media(max-width: 800px){nav.svelte-hncc9j.svelte-hncc9j{justify-content:end}}",
+  code: "a.svelte-1pv5rrx.svelte-1pv5rrx{color:inherit;text-decoration:none;height:fit-content}a.svelte-1pv5rrx.svelte-1pv5rrx::after{content:'';background-image:url('https://i.imgur.com/h8f3hwW.png');background-size:contain;background-repeat:no-repeat}nav.svelte-1pv5rrx.svelte-1pv5rrx{display:flex;flex-direction:column;padding-block:var(--size-7);justify-content:space-between;top:0;z-index:999}nav.svelte-1pv5rrx.svelte-1pv5rrx::after{content:'';width:100%;height:30px;background-image:url('https://i.imgur.com/FMYB47Q.png');background-size:contain;background-repeat:repeat}.nav-div.svelte-1pv5rrx.svelte-1pv5rrx{display:flex;justify-content:space-between}.links.svelte-1pv5rrx.svelte-1pv5rrx{margin-block:var(--size-7);display:flex;gap:var(--size-7);margin-block:0}li.svelte-1pv5rrx.svelte-1pv5rrx{background-image:none;padding-bottom:0;margin-bottom:0}.button-hamburger.svelte-1pv5rrx.svelte-1pv5rrx{right:100%;width:fit-content;cursor:pointer;transition:all 0.5s ease-in-out;z-index:3}.button-hamburger.svelte-1pv5rrx.svelte-1pv5rrx:hover{transform:rotate(90deg)}.hidden-menu.svelte-1pv5rrx.svelte-1pv5rrx{position:absolute;top:0;right:0;left:0;bottom:0;background-color:var(--automataBg);height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:var(--size-7);padding:1em;transition:all 0.5s ease-in-out;z-index:999}.hidden-menu.svelte-1pv5rrx a.svelte-1pv5rrx{width:90%}.close.svelte-1pv5rrx.svelte-1pv5rrx{position:absolute;bottom:3rem;right:10px;padding:0.2em;opacity:0.7;transition:all 0.2s ease-in-out}.close.svelte-1pv5rrx.svelte-1pv5rrx:hover{opacity:1}.home.svelte-1pv5rrx.svelte-1pv5rrx{opacity:0.7;transition:all 0.3s ease-in-out}.home.svelte-1pv5rrx.svelte-1pv5rrx:hover{opacity:1;transform:rotate(-90deg)}@media(max-width: 800px){nav.svelte-1pv5rrx.svelte-1pv5rrx{justify-content:space-between;position:sticky}}",
   map: null
 };
 const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -65,7 +82,16 @@ const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let width = 0;
   $$result.css.add(css$2);
   $$unsubscribe_isOpened();
-  return ` <nav class="svelte-hncc9j"> ${` <div class="button-hamburger svelte-hncc9j">${validate_component(Settings$1, "Settings").$$render($$result, { "fill-opacity": "0", size: "2.5em" }, {}, {})}</div>`}</nav> ${$isOpened && width < 800 ? `<div class="hidden-menu svelte-hncc9j">  <div class="close svelte-hncc9j">${validate_component(ArrowDown01, "ArrowDown01").$$render(
+  return ` <nav class="svelte-1pv5rrx"><div class="nav-div svelte-1pv5rrx"> ${` <div class="home svelte-1pv5rrx">${validate_component(Home$1, "Home").$$render(
+    $$result,
+    {
+      cursor: "pointer",
+      "fill-opacity": "0",
+      size: "2.5em"
+    },
+    {},
+    {}
+  )}</div>  <div class="button-hamburger svelte-1pv5rrx">${validate_component(Settings$1, "Settings").$$render($$result, { "fill-opacity": "0", size: "2.5em" }, {}, {})}</div>`}</div></nav> ${$isOpened && width < 800 ? `<div class="hidden-menu svelte-1pv5rrx">  <div class="close svelte-1pv5rrx">${validate_component(ArrowDown01, "ArrowDown01").$$render(
     $$result,
     {
       cursor: "pointer",
@@ -74,7 +100,7 @@ const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     },
     {},
     {}
-  )}</div> <a href="/" class="svelte-hncc9j" data-svelte-h="svelte-7hipin">D.A</a> <a href="/pagine" class="svelte-hncc9j" data-svelte-h="svelte-17lisni">BLOG</a> <a href="/progetti" class="svelte-hncc9j" data-svelte-h="svelte-852dr0">PROJECTS</a> <a href="/data" class="svelte-hncc9j" data-svelte-h="svelte-jow4kg">DATA</a></div>` : ``}`;
+  )}</div> <a href="/" class="svelte-1pv5rrx" data-svelte-h="svelte-7hipin">D.A</a> <a href="/pagine" class="svelte-1pv5rrx" data-svelte-h="svelte-17lisni">BLOG</a> <a href="/progetti" class="svelte-1pv5rrx" data-svelte-h="svelte-852dr0">PROJECTS</a> <a href="/data" class="svelte-1pv5rrx" data-svelte-h="svelte-jow4kg">DATA</a></div>` : ``}`;
 });
 const buttons_min = "";
 const normalize_min = "";

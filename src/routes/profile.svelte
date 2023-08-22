@@ -1,28 +1,41 @@
 <script lang="ts">
-	import { Square } from "lucide-svelte";
+	import { Square } from 'lucide-svelte';
+	let pagedata: HTMLElement;
 
-	
+	import { onMount } from 'svelte';
+
+	onMount(() => {
+		pagedata.addEventListener('mousemove', (e) => {
+			let rect = pagedata.getBoundingClientRect();
+			const left = e.clientX - rect.left;
+			const top = e.clientY - rect.top;
+			pagedata.style.setProperty('--left', `${left}px`);
+			pagedata.style.setProperty('--top', `${top}px`);
+		});
+	});	
+		
 </script>
 
-<div class="page-data">
+<div bind:this={pagedata} class="page-data">
 	<div class="top-header">
 		<Square />
 		<p>Daniele Avolio: Master-student</p>
 	</div>
 	<div class="outer-box">
 		<div class="inner-box">
-			<img
-			src="images/avatar.jpg"
-				alt=""
-			/>
+			<img src="images/avatar.jpg" alt="" />
 			<div class="main-features">
 				<p>
-					<b>Daniele Avolio</b> is a master-student in <b>Computer Science and Artificial Intelligence</b> at the University of Calabria. He developed 
-					a strong interest in the field of Artificial Intelligence and Machine Learning. He have experience in <b>Front-end development 
-					</b>using the <b>SvelteKit and Angular</b> frameworks.
+					<b>Daniele Avolio</b> is a master-student in
+					<b>Computer Science and Artificial Intelligence</b>
+					at the University of Calabria. He developed a strong interest in the field of Artificial Intelligence
+					and Machine Learning. He have experience in
+					<b>Front-end development </b>using the <b>SvelteKit and Angular</b> frameworks.
 				</p>
 				<div class="socials">
-					<a target="_blank" class="title" href="https://www.linkedin.com/in/danieleavolio/">Linkedin</a>
+					<a target="_blank" class="title" href="https://www.linkedin.com/in/danieleavolio/"
+						>Linkedin</a
+					>
 					<a target="_blank" href="https://twitter.com/avolio_daniele">Twitter</a>
 					<a target="_blank" href="https://github.com/danieleavolio">GitHub</a>
 					<a href="mailto:daniele.avolio14@gmail.com">EMAIL</a>
@@ -37,6 +50,35 @@
 	a {
 		z-index: 20;
 	}
+
+	.page-data {
+		--left: 0px;
+		--top: 0px;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.page-data::before {
+		content: '';
+		background: var(--automataWhiteOpacity);
+		border-radius: 50%;
+		width: 25rem;
+		height: 25rem;
+
+		position: absolute;
+		left: var(--left);	
+		top: var(--top);
+		transform: translate(-50%, -50%) scale(1.5);
+		z-index: -1;
+		filter: blur(30px);
+		opacity: 0;
+		transition: opacity 0.3s ease-in-out;
+	}
+
+	.page-data:hover::before {
+		opacity: 1;
+	}
+
 	.top-header {
 		padding: 0.1em;
 		display: flex;

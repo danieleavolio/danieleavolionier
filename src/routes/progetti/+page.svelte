@@ -22,13 +22,23 @@
 </section>
 
 <style>
+
+	
+	a{
+		z-index: 10;
+	}
 	.post {
 		display: grid;
-		gap: 2rem;
+		gap: 1.2rem;
+		transition: all 0.5s ease-in-out;
 	}
 
 	.post:not(:last-child) {
 		padding-bottom: var(--size-7);
+	}
+
+	.post:hover{
+		background-color: var(--automataBg);
 	}
 
 	.title {

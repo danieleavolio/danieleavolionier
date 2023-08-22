@@ -1,7 +1,19 @@
 <script lang="ts">
 	import * as config from '$lib/config';
-	import { Square } from "lucide-svelte";
+	import { Square } from 'lucide-svelte';
 	import Profile from './profile.svelte';
+	import { onMount } from 'svelte';
+
+	let items_container: HTMLElement;
+	onMount(() => {
+		items_container.addEventListener('mousemove', (e) => {
+			let rect = items_container.getBoundingClientRect();
+			const left = e.clientX - rect.left;
+			const top = e.clientY - rect.top;
+			items_container.style.setProperty('--left', `${left}px`);
+			items_container.style.setProperty('--top', `${top}px`);
+		});
+	});
 </script>
 
 <svelte:head>
@@ -10,7 +22,7 @@
 <div class="separator">
 	<section class="section-1">
 		<li class="post">
-			<div class="items-container">
+			<div bind:this={items_container} class="items-container">
 				<a href="data" class="title"><Square /> Data</a>
 				<a href="progetti" class="title"><Square /> Projects</a>
 				<a href="pagine" class="title"><Square /> Blog</a>
@@ -28,7 +40,6 @@
 		text-align: left;
 		display: flex;
 		gap: 0.2em;
-
 	}
 
 	li {
@@ -37,7 +48,6 @@
 		padding-top: 0;
 		padding-bottom: 0;
 		width: 100%;
-
 	}
 	.separator {
 		display: flex;
@@ -67,18 +77,40 @@
 		flex-direction: column;
 		gap: 2em;
 		padding: 2em;
-		background-color: var(--automataBg);
+		background-color: var(--automataBgOpacity);
 		z-index: 10;
 		width: 100%;
+		--left: 0px;
+		--top: 0px;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.items-container::before {
+		content: '';
+		background: var(--automataBgOpacity);
+		border-radius: 50%;
+		width: 15rem;
+		height: 15rem;
+
+		position: absolute;
+		left: var(--left);
+		top: var(--top);
+		transform: translate(-50%, -50%) scale(1.5);
+		z-index: -1;
+		filter: blur(50px);
+		opacity: 0;
+		transition: opacity 0.1s ease-in-out;
+	}
+
+	.items-container:hover::before {
+		opacity: 1;
 	}
 
 	.title {
 		font-size: var(--font-size-fluid-2);
 		text-transform: capitalize;
 	}
-
-
-
 
 	@media (min-width: 1400px) {
 		.separator {
