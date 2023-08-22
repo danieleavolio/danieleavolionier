@@ -54,6 +54,7 @@
 		display: flex;
 		gap: var(--size-3);
 		margin-top: var(--size-7);
+		flex-wrap: wrap;
 	}
 
 	.tags > * {
