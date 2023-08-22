@@ -1,5 +1,8 @@
-import type { PageLoad } from './$types';
+import type { Element } from '$lib/types';
 
-export const load = (async () => {
-    return {};
-}) satisfies PageLoad;
+export async function load({ fetch }) {
+	const response = await fetch('api/progetti');
+	const progetti: Element[] = await response.json();
+
+	return { progetti };
+}

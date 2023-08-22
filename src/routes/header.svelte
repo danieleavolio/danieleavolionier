@@ -1,12 +1,16 @@
 <script lang="ts">
 	import * as config from '$lib/config';
-	import { Settings, ArrowDown01 } from 'lucide-svelte';
+	import { Settings, ArrowDown01, Home } from 'lucide-svelte';
 	let width = 0;
 	import { fly } from 'svelte/transition';
 
 	//Import store and set to true on click
 	import isOpened from '$lib/stores/navstore';
+	import { goto } from '$app/navigation';
 
+	function goHome() {
+		goto('/');
+	}
 	function handleClick() {
 		isOpened.set(!$isOpened);
 	}
@@ -28,13 +32,17 @@
 		</ul>
 	{:else}
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<div on:click={() => goHome()}>
+			<Home fill-opacity="0" size="2.5em" />
+		</div>
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div on:click={() => handleClick()} class="button-hamburger">
 			<Settings fill-opacity="0" size="2.5em" />
 		</div>
 	{/if}
 </nav>
 {#if $isOpened && width < 800}
-	<div transition:fly={{y: 1000, duration: 300,opacity: 1}} class="hidden-menu">
+	<div transition:fly={{ y: 1000, duration: 300, opacity: 1 }} class="hidden-menu">
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div on:click={() => handleClick()} class="close">
@@ -86,7 +94,7 @@
 
 	.hidden-menu {
 		position: absolute;
-		top:0;
+		top: 0;
 		right: 0;
 		left: 0;
 		bottom: 0;
@@ -108,7 +116,7 @@
 
 	.close {
 		position: absolute;
-		bottom: 2em;
+		bottom: 3rem;
 		right: 10px;
 		padding: 0.2em;
 		opacity: 0.7;
@@ -121,7 +129,7 @@
 
 	@media (max-width: 800px) {
 		nav {
-			justify-content: end;
+			justify-content: space-between;
 		}
 	}
 </style>

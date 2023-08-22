@@ -1,6 +1,6 @@
 export type Categories = 'personale';
 
-export type Post = {
+export type Element = {
 	title: string;
 	slug: string;
 	description: string;

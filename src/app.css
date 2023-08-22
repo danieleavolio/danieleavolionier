@@ -157,6 +157,10 @@ html {
 	letter-spacing: var(--automataSpacing);
 }
 
+article{
+	line-height: 2.3rem;
+}
+
 img {
 	border-radius: var(--radius-1);
 	box-shadow: 5px 5px 0 rgba(77, 73, 62, 0.6);
@@ -260,7 +264,6 @@ a {
 	border-right: none;
 	transition: all 0.1s ease-in-out;
 	text-align: center;
-	white-space: nowrap;
 
 	&::before {
 		content: '';

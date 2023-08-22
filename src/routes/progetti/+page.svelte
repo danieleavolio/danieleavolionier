@@ -1,13 +1,8 @@
 <script lang="ts">
+	import { formatDate } from '$lib/utils';
 	import * as config from '$lib/config';
-	import { onMount } from 'svelte';
-	let render = false;
 
-	onMount(() => {
-		setTimeout(() => {
-			render = true;
-		}, 2000);
-	});
+	export let data;
 </script>
 
 <svelte:head>
@@ -15,12 +10,37 @@
 </svelte:head>
 
 <section>
-	<h2>PAGE UNDER CONSTRUCTION</h2>
+	<ul class="posts">
+		{#each data.progetti as progetto}
+			<li class="post">
+				<a href="progetti/{progetto.slug}" class="title">{progetto.title}</a>
+				<p class="date">{formatDate(progetto.date)}</p>
+				<p class="description">{progetto.description}</p>
+			</li>
+		{/each}
+	</ul>
 </section>
 
 <style>
-	h2 {
-		text-align: center;
-		font-size: var(--font-size-fluid-3) !important;
+	.post {
+		display: grid;
+		gap: 2rem;
+	}
+
+	.post:not(:last-child) {
+		padding-bottom: var(--size-7);
+	}
+
+	.title {
+		font-size: var(--font-size-fluid-2);
+		text-transform: capitalize;
+	}
+
+	.date {
+		color: var(--text-2);
+	}
+
+	.description {
+		margin-top: var(--size-3);
 	}
 </style>
