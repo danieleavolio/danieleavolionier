@@ -29,7 +29,7 @@
 					<b>Daniele Avolio</b> is a master-student in
 					<b>Computer Science and Artificial Intelligence</b>
 					at the University of Calabria. He developed a strong interest in the field of Artificial Intelligence
-					and Machine Learning. He have experience in
+					and Machine Learning. He has experience in
 					<b>Front-end development </b>using the <b>SvelteKit and Angular</b> frameworks.
 				</p>
 				<div class="socials">
