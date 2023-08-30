@@ -60,20 +60,16 @@ can try to fix it by yourself! This *looks scarier than it is*.
 - Choose one from the list and just buy it. Important, be sure to check that the model is **Pixel 7 Pro** and not **Pixel 7**. I saw that the buttons are quite different, so be careful.
     
     
-    <div style="text-align:center">
     Pixel 7 **WRONG ONE** 
 
     ![Pixel 7](https://i.imgur.com/wzgdD91.png)
     
-    </div>
 
-    <div style="text-align:center">
 
     Pixel 7 Pro **RIGHT ONE**
     
     ![Pixel 7 Pro](https://i.imgur.com/Mt051av.png)
 
-    </div>
 
   - You can even choose to buy a *different color*. I bought a **black** one because I think it looks better than the **white** one, and it's actually working.
 
