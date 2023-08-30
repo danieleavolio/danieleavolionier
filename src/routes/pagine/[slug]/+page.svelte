@@ -15,7 +15,7 @@
 	<!-- TITLE -->
 	<hgroup>
 		<h1>{data.meta.title}</h1>
-		<p>Scritta il {formatDate(data.meta.date)}</p>
+		<p>Written: {formatDate(data.meta.date)}</p>
 	</hgroup>
 
 	<!-- tags -->
@@ -32,8 +32,10 @@
 </article>
 
 <style>
+
+	
 	article {
-		max-inline-size: 80ch;
+		max-inline-size: 120cqh	;
 		margin-inline: auto;
 	}
 

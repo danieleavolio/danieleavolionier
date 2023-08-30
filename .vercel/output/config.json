@@ -35,6 +35,17 @@
 			}
 		},
 		{
+			"src": "/pagine/how-to-fix-pixel-7-pro-volume-button-falling-off",
+			"dest": "/pagine/how-to-fix-pixel-7-pro-volume-button-falling-off/"
+		},
+		{
+			"src": "/pagine/how-to-fix-pixel-7-pro-volume-button-falling-off/",
+			"status": 308,
+			"headers": {
+				"Location": "/pagine/how-to-fix-pixel-7-pro-volume-button-falling-off"
+			}
+		},
+		{
 			"src": "/pagine/nier-ui",
 			"dest": "/pagine/nier-ui/"
 		},
@@ -104,6 +115,9 @@
 		},
 		"progetti.html": {
 			"path": "progetti"
+		},
+		"pagine/how-to-fix-pixel-7-pro-volume-button-falling-off.html": {
+			"path": "pagine/how-to-fix-pixel-7-pro-volume-button-falling-off"
 		},
 		"pagine/nier-ui.html": {
 			"path": "pagine/nier-ui"
