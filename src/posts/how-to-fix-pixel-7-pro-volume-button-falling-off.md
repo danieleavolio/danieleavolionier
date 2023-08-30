@@ -27,9 +27,11 @@ Source: [here](https://support.google.com/pixelphone/thread/214902392/pixel-7-vo
 <br>
 <br>
 
-![My Button](https://lh3.googleusercontent.com/pw/AIL4fc-U9DKEVQ13ZnHfJPxycDw6c1YP4zLHkmdjI8brbZ5ZpvqZViPMQA6isrVvHdkZMcT2jxyhmEHZsGVdXQRm4riUQm-txvpxGwCmNlI0kq_mpYLBrKMGU4IHLZ9YN_YHCBz_5GFLKigN8tv0IJK1sQYIQAvTAMrWXZVzuUx-jDUXffPWnYf_74qXtdmQAF4EHBzmwSby0a8SjWnWe1adW8b7hN5bddSp3wv6lB5lFfGG63apAA3pI8UYcVW8vevHzS1mPfF1ZnZS35Yt5p7iHq0LZFJGjjL3hU36OmQfqPlcWlqMz1bPifnbcccGnpMkozKIoHFhiBjDvtHJvVmP_7tGhYPN8sDQkKqiHTpI1qfhPLuHhHuvu3tSj2g4-LLrdlzUiTp20A480GyafAIV7O0zGORLJa99zyzJ3EkNIoSZxZfjHQxk6sLTn9ZThN1GAqHHV7XakHrJxcmhM7IifCt-wzLVacuKBS639pvNYicPh-vIRHBe9eFxo8TIIKp0SY0uNyITJYWoEqd6E3zyhl2d8Wt3XUNutIapMsxZrEs-Q3sM_cKtn89dvJ31R1oywXXghKYbi3nq_3tkSfrGS6DpPjAMmOtbDBQOkePo119bMAIprceVDTOR-4k6y7_TG-34xiyfQCpCwgUVAy25E6D96SjJsb52z9XdxQ7zfYH3_Nb3sgZgGoX4Msoq_byvuljnTR6jOcYQ6T0FUeTsLpuM4gXh5jB96k23XKz_lenAeuf3YNpIE24GrBUh579QhV5Hu1lo-hFesG4g3wSIiQZy95QIPP9HJ78_KLnjQiLJPt1yXFKkGnJoMIyZ71eCMCVCpwkRzeQdTZsALyAKEZ0GYR-u_XsxdoC5aYuUsaQwmN8AxyHAQuQHuZZQTh3zCYBOvCnlgudkJA-jXwI0W7fk2Zp0dXVxIZI_tCt_iLxDnGIZGD7To9tQF2dV=w1226-h923-s-no?authuser=0)
+![My Button](https://i.imgur.com/hBSlyLi.png)
+
 ---
-![My Button 2](https://lh3.googleusercontent.com/pw/AIL4fc9uUf7GnNx9oo52QMfPjvAgvd2VHgRXQ49B9jV4LEbjpyq76g9HjWnVy2wDU_37t4ZrCW8syX9Bbm8WENrPljuwX8aCwDePeIkrk2PMhnVFKm45OZbBXFkgvphXo7paYVHEvs3ISDwjH8RJZKn10sn5k_TbNyQ9Q00Tqftthko4Q3uB9e9t2nEFAhQ-9zHvWYAUyFuQ-r_yeEJUG1AxxV48ZW7_hCPL5QhJFjPI4SBRQMlVYtqEs0o7OLBxjNQ8pYMs0N9MzMwDgrRKH672-B7upxNuCPvFN2TRFLIMAm_l_Yy5yIcVgKVRcX8lYg8XY7vrXME89NG5W3CkX20JKL-VyF6VnRM_Fk8CZ-l7-T9F9bqxEFnwnebtk7PdR1llg_EaKicfM1O4aTerq9lBrYEDlSkvpjeHNoaV6HY9XNSlQ1E8e5dpHvIW8zKhnTmrBTKyR7pdtCbFggIqrU6580lsM3paFYVv0Tcnsb8i676XGdZWtUBJR3z9Dh7nmfjJNQBPlJ4oGB0rh_e5QK8dDWsMfgcqB67fBJGH66Q1VmMau_FclfAHNkoBm8JMHmEyqx6OV94R2w4lecAbotXbPttnDQ9xAv-oblbx0is2ytIBnKgiV5iCMRHj4J7ZSwhX0BzbV2Cd98lWbo6BOQRgZ7twdh4FFZKd_29vpMBHXlAyvtq79lHvWIDH4i5kl28jthlxnLhk8zVZWnGQ04KMIm0r8zI6XoOeC8dyaL5trxPjK0i_-sHV2x5w0bSDjhbqGJbne6QRQGJ05v5mSCMCT8iJQwyKFGsUpy_xwYhqlxNzeaGCgFRw_E0yIL0Nv0ubkVTMDO0zH_OZ-LNNJEQNmh0CYPRkcqFUZcNjW4xdTmC1iZKeOb7KgvINLskKYm0qcBMVLOmJct3wsN7uDjYS44A40COUJkpL7zSF74w8k5cay1q8R_UyNKbm3XUW=w1226-h923-s-no?authuser=0)
+
+![My Button 2](https://i.imgur.com/CgpokCr.png)
 
 It looks like the **glue or sponge thing** that used to hold the button in place is **not strong enough**. I don't know if it's a problem of the **glue** or the **sponge** itself. However, it's a **big problem** because you can **lose** the button and **not be able to change the volume**.
 
@@ -60,15 +62,13 @@ can try to fix it by yourself! This *looks scarier than it is*.
 - Choose one from the list and just buy it. Important, be sure to check that the model is **Pixel 7 Pro** and not **Pixel 7**. I saw that the buttons are quite different, so be careful.
     
     
-    Pixel 7 **WRONG ONE** 
+    - Pixel 7 **WRONG ONE** 
 
-    ![Pixel 7](https://i.imgur.com/wzgdD91.png)
+        ![Pixel 7](https://i.imgur.com/wzgdD91.png)
     
-
-
-    Pixel 7 Pro **RIGHT ONE**
-    
-    ![Pixel 7 Pro](https://i.imgur.com/Mt051av.png)
+    - Pixel 7 Pro **RIGHT ONE**
+        
+        ![Pixel 7 Pro](https://i.imgur.com/Mt051av.png)
 
 
   - You can even choose to buy a *different color*. I bought a **black** one because I think it looks better than the **white** one, and it's actually working.
