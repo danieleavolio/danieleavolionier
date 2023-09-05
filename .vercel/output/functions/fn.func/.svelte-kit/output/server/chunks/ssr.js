@@ -30,6 +30,9 @@ function compute_rest_props(props, keys) {
       rest[k] = props[k];
   return rest;
 }
+function custom_event(type, detail, { bubbles = false, cancelable = false } = {}) {
+  return new CustomEvent(type, { detail, bubbles, cancelable });
+}
 let current_component;
 function set_current_component(component) {
   current_component = component;
@@ -38,6 +41,25 @@ function get_current_component() {
   if (!current_component)
     throw new Error("Function called outside component initialization");
   return current_component;
+}
+function createEventDispatcher() {
+  const component = get_current_component();
+  return (type, detail, { cancelable = false } = {}) => {
+    const callbacks = component.$$.callbacks[type];
+    if (callbacks) {
+      const event = custom_event(
+        /** @type {string} */
+        type,
+        detail,
+        { cancelable }
+      );
+      callbacks.slice().forEach((fn) => {
+        fn.call(component, event);
+      });
+      return !event.defaultPrevented;
+    }
+    return true;
+  };
 }
 function setContext(key, context) {
   get_current_component().$$.context.set(key, context);
@@ -239,12 +261,13 @@ export {
   create_ssr_component as c,
   add_attribute as d,
   escape as e,
-  compute_rest_props as f,
+  each as f,
   getContext as g,
-  spread as h,
-  escape_object as i,
-  escape_attribute_value as j,
-  each as k,
+  createEventDispatcher as h,
+  compute_rest_props as i,
+  spread as j,
+  escape_object as k,
+  escape_attribute_value as l,
   missing_component as m,
   noop as n,
   setContext as s,
