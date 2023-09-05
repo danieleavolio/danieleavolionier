@@ -126,7 +126,7 @@
 	@media (min-width: 1000px) {
 		section {
 			flex-direction: row;
-			align-items: center;
+			align-items: start;
 		}
 	}
 </style>
