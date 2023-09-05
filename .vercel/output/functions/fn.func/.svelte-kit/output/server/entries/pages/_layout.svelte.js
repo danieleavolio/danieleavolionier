@@ -2,7 +2,6 @@ import { c as create_ssr_component, e as escape, v as validate_component, a as s
 import { t as title } from "../../chunks/config.js";
 import { I as Icon } from "../../chunks/Icon.js";
 import { w as writable } from "../../chunks/index2.js";
-import { inject } from "@vercel/analytics";
 const footer_svelte_svelte_type_style_lang = "";
 const css$3 = {
   code: "footer.svelte-k2ae0s{padding-block:var(--size-7);border-top:1px solid var(--border)}p.svelte-k2ae0s{color:var(--text-2)}",
@@ -126,7 +125,6 @@ const css = {
 const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $isOpened, $$unsubscribe_isOpened;
   $$unsubscribe_isOpened = subscribe(isOpened, (value) => $isOpened = value);
-  inject({ mode: "production" });
   let { data } = $$props;
   const document = typeof window !== "undefined" ? window.document : null;
   if ($$props.data === void 0 && $$bindings.data && data !== void 0)

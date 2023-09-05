@@ -12,9 +12,7 @@
 
 	import { dev } from '$app/environment';
 	import isOpened from '$lib/stores/navstore';
-	import { inject } from '@vercel/analytics';
 
-	inject({ mode: dev ? 'development' : 'production' });
 	export let data;
 
 	//If the window is not defined, we are in SSR
