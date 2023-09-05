@@ -20,7 +20,7 @@ that Google with the next generation of Pixel phones will spend more money on th
 If you are interested on later Pixel phones *leaks*, you can check out this *X / Twitter* profile [here](https://twitter.com/Za_Raczke)
 
 ### Image of the problem
-<img  src="https://i.imgur.com/tQMHEp5.png" style="width:50%; margin:auto">
+<img alt="Pixel 7 Volume Button Missing"  src="https://i.imgur.com/tQMHEp5.png" style="width:50%; margin:auto">
 
 Source: [here](https://support.google.com/pixelphone/thread/214902392/pixel-7-volume-button-fell-off-randomly?hl=en)
 

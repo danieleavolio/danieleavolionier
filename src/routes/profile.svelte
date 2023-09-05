@@ -23,7 +23,7 @@
 	</div>
 	<div class="outer-box">
 		<div class="inner-box">
-			<img src="images/avatar.jpg" alt="" />
+			<img alt="Daniele Avolio Avatar" src="images/avatar.jpg" />
 			<div class="main-features">
 				<p>
 					<b>Daniele Avolio</b> is a master-student in
