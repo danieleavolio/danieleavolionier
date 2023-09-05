@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { Cpu, ChevronsUpDown, ChevronsDownUp } from 'lucide-svelte';
+	import { ChevronsDownUp, ChevronsUpDown, Cpu } from 'lucide-svelte';
 	import { createEventDispatcher } from 'svelte';
-	import { flip } from 'svelte/animate';
-	import { fade, slide } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 
 	export let categories: string[] = [];
 
@@ -16,15 +15,25 @@
 
 		if (isShowing) {
 			filters.style.setProperty('height', '300px');
-            filters.style.setProperty('width', '100%');
-            filters.style.setProperty('opacity', '1');
+			filters.style.setProperty('width', '100%');
+			filters.style.setProperty('opacity', '1');
 		} else {
 			filters.style.setProperty('height', '0');
-            filters.style.setProperty('opacity', '0');
+			filters.style.setProperty('opacity', '0');
 		}
 	};
 
-	function setActive(i: number) {
+	const clearFilters = () => {
+		activeFilters = [];
+
+		let items = document.querySelectorAll('.filter-item');
+		items.forEach((item: any) => {
+			item.firstChild?.style.setProperty('opacity', '0');
+			item.style.setProperty('color', 'var(--automataColor)');
+		});
+		dispatch('filter', activeFilters);
+	};
+	const setActive = (i: number) => {
 		let target: any = document.getElementById(`-${i}`);
 		console.log(target?.textContent);
 
@@ -35,14 +44,14 @@
 			target?.firstChild?.style.setProperty('opacity', '0');
 			target.style.setProperty('color', 'var(--automataColor)');
 		} else {
-			activeFilters.push(filter!);
+			activeFilters = [...activeFilters, filter!];
 			// target the first child and set the style
 			target?.firstChild?.style.setProperty('opacity', '1');
 			target.style.setProperty('color', 'var(--automataBg)');
 		}
 
 		dispatch('filter', activeFilters);
-	}
+	};
 </script>
 
 <section>
@@ -68,6 +77,11 @@
 			</div>
 		{/each}
 	</div>
+	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+	{#if activeFilters.length > 0}
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<p on:click={() => clearFilters()} transition:fly class="clear">CLEAR</p>
+	{/if}
 </section>
 
 <style>
@@ -77,7 +91,7 @@
 		align-items: center;
 		gap: 0.5em;
 		padding: 0.5em;
-        cursor: pointer;
+		cursor: pointer;
 	}
 	p {
 		display: flex;
@@ -85,10 +99,6 @@
 		gap: 0.2em;
 		padding: 0.19em;
 		cursor: pointer;
-	}
-
-	:global(.lucide) {
-		fill: none;
 	}
 
 	.filters {
@@ -101,9 +111,9 @@
 		border-bottom: 2px solid var(--automataBlackOpacity);
 		max-height: 300px;
 		height: 0;
-        min-width: 300px;
+		min-width: 300px;
 		overflow: scroll;
-        opacity: 0;
+		opacity: 0;
 		transition: all 0.3s ease-in-out;
 	}
 
@@ -154,5 +164,20 @@
 
 	::-webkit-scrollbar {
 		width: 0.5em;
+	}
+
+	.clear {
+		background-color: var(--automataRedOpacity);
+		font-size: 1.2em;
+		padding: 0.5em;
+		color: var(--automataColor);
+		text-align: center;
+		cursor: pointer;
+		justify-content: center;
+	}
+
+	.clear:hover {
+		background-color: var(--automataRed);
+		transition: 0.2s ease-in-out;
 	}
 </style>

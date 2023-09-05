@@ -55,6 +55,11 @@
 				<a href="progetti/{progetto.slug}" class="title">{progetto.title}</a>
 				<p class="date">{formatDate(progetto.date)}</p>
 				<p class="description">{progetto.description}</p>
+				<div class="tags">
+					{#each progetto.categories as category}
+						<p class="tag">{category.toUpperCase()}</p>
+					{/each}
+				</div>
 			</li>
 		{/each}
 		{#if projectToShow.length == 0}
@@ -66,8 +71,7 @@
 </section>
 
 <style>
-
-	h1{
+	h1 {
 		display: flex;
 		align-items: center;
 		gap: 0.2em;
@@ -107,6 +111,19 @@
 
 	.description {
 		margin-top: var(--size-3);
+	}
+
+	.tags {
+		display: flex;
+		gap: 0.5em;
+		margin-top: var(--size-3);
+		flex-wrap: wrap;
+	}
+
+	.tag {
+		background-color: var(--automataColor);
+		color: var(--automataBg);
+		padding: 0.2em 0.5em;
 	}
 
 	@media (min-width: 768px) {

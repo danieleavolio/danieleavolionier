@@ -35,6 +35,17 @@
 			}
 		},
 		{
+			"src": "/pagine/filter-system",
+			"dest": "/pagine/filter-system/"
+		},
+		{
+			"src": "/pagine/filter-system/",
+			"status": 308,
+			"headers": {
+				"Location": "/pagine/filter-system"
+			}
+		},
+		{
 			"src": "/pagine/how-to-fix-pixel-7-pro-volume-button-falling-off",
 			"dest": "/pagine/how-to-fix-pixel-7-pro-volume-button-falling-off/"
 		},
@@ -115,6 +126,9 @@
 		},
 		"progetti.html": {
 			"path": "progetti"
+		},
+		"pagine/filter-system.html": {
+			"path": "pagine/filter-system"
 		},
 		"pagine/how-to-fix-pixel-7-pro-volume-button-falling-off.html": {
 			"path": "pagine/how-to-fix-pixel-7-pro-volume-button-falling-off"

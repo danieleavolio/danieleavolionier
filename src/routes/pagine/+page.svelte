@@ -61,18 +61,22 @@
 				<a href="pagine/{post.slug}" class="title">{post.title}</a>
 				<p class="date">{formatDate(post.date)}</p>
 				<p class="description">{post.description}</p>
+				<div class="tags">
+					{#each post.categories as category}
+						<p class="tag">{category.toUpperCase()}</p>
+					{/each}
+				</div>
 			</li>
 		{/each}
 		{#if postToShow.length == 0}
-			<h1>No post found <BoxSelect size="2em"  /></h1>
+			<h1>No post found <BoxSelect size="2em" /></h1>
 		{/if}
 	</ul>
 	<CategoriesFilter {categories} on:filter={(e) => handleFilter(e)} />
 </section>
 
 <style>
-
-	h1{
+	h1 {
 		display: flex;
 		align-items: center;
 		gap: 0.2em;
@@ -104,6 +108,19 @@
 
 	.description {
 		margin-top: var(--size-3);
+	}
+
+	.tags {
+		display: flex;
+		gap: 0.5em;
+		margin-top: var(--size-3);
+		flex-wrap: wrap;
+	}
+
+	.tag {
+		background-color: var(--automataColor);
+		color: var(--automataBg);
+		padding: 0.2em 0.5em;
 	}
 
 	@media (min-width: 1000px) {

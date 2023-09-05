@@ -133,6 +133,15 @@ svg{
 	fill: var(--automataColor);	
 }
 
+section svg{
+	fill:none;
+}
+
+pre{
+	cursor: inherit;
+}
+
+
 html,
 body {
 	height: fit-content;
