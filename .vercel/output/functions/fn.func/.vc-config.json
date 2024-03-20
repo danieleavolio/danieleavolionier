@@ -1,6 +1,6 @@
 {
 	"runtime": "nodejs16.x",
-	"handler": "..\\..\\..\\..\\..\\..\\Lovaion\\University\\Code\\Svelte\\danieleavolionier\\.svelte-kit\\vercel-tmp\\index.js",
+	"handler": "..\\..\\..\\..\\..\\..\\..\\Lovaion\\University\\Programming\\Code\\Svelte\\danieleavolionier\\.svelte-kit\\vercel-tmp\\index.js",
 	"launcherType": "Nodejs",
 	"experimentalResponseStreaming": true
 }

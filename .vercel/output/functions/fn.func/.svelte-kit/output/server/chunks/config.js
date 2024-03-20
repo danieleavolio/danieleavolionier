@@ -1,4 +1,4 @@
-const title = "D.A";
+const title = "Daniele Avolio - Web Development and AI";
 export {
   title as t
 };
