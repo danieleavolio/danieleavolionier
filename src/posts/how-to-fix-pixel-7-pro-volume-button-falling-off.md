@@ -90,7 +90,7 @@ can try to fix it by yourself! This *looks scarier than it is*.
 
 Here is a picture of my phone with the new volume button. 
 
-![My Pixel 7 Pro](https://lh3.googleusercontent.com/pw/AIL4fc9lSIdLNuWzjY20rzzs9UE9xFfUaJ2wVBk2xSUtNK77cSUkFHbF64qKRvb3U0Mf_Clsw8o85ojw26tG9rskHPws30lUPIkQrItwWex0qS8GipNDsajSt0RTaYkPFVAJquUm3MJvtU7489KXHQx6xx35jf8QG-MCx7-mEKgW5Du3O1lDItFmX9U_jhw07a-Yphaz_lzhHCZX2zM4UwxbMIzWtrG8dE4jyDbqfZqy8VcXpyR6IQeuhOSQsCWlfnouoIYSKHFl4Gi1UblyDUOQgAwBOjCZVcbu4NmmsBFzLCPOQAG7d-B08fxqIqY-GBvBq62yQvzbkNCsS1kez3ZprOYbcV1axKyd6me5kqXxn37lwf1z_6NpimNnRUBQQd95IgCxibkgLD8Tt00D1blcD86Kpg_SmDlS5sxHmDiJ62-_gURUxKq2cz0YC1AZ8Yb56fxU9wjt4SOptDU4vfh8qyzL4ITjljmkEfCHjc5acn7ERO_p1Ei5dYzYWWXUKcgm8QRUHCo31lLz0iWyWZhL9wdKsoabePAInDoTF8ag_sTGLdHy9uvMmZVsvjhwVlbpcxgRJOI0yxxB6Qu1adZEYFI8o7jtI8EIK-Z1Uce1FTNPPCu3C65fVIf_409R9qGLEfmaWIXQTQATbfluXt24yvW1aVT96pJjidgS7u_hu4BjLbBhdNekoe1sixEvwgUmwmWkLlvjYLOIXayPmuyglFdgLeYjInPb1ZQ9Yw_b0qregjDPo9nA0cbHfbgnJwtVt4DfcWAxATOR0WAzA9-AKUSXlgvZq6v-A6DsJVjuJGpeoY_HwWPz-7dQcpdbmLoFzLsyxjYtBUkPUnZh3gaENrOpE7Wdur38ByLJBxIQ0cnJRuUsjAdqh4kS-EnkuKr2UWGV0OzIe0Omwf8hkfXJnAhoKH3zazCMaW0hm2-SVSOFplXcw_hdFXHRUEQg=w1640-h923-s-no?authuser=0)
+![My Pixel 7 Pro](https://imgur.com/a/3I6SYtt)
 
 It's sad that a fast way to fix this is to buy a cheap volume button from Aliexpress after speding around **1k €** for a phone. The phone is **fantastic** and I never had any problem with it, but goddamn, this is a **big problem**.
 
