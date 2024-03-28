@@ -1,7 +1,7 @@
 ---
 title: Erasmus in Lisbon
 description: Vanished into the unknown and started a new experience in Lisbon with Erasmus
-date: "29-03-2024-14:30"
+date: "03-29-2024-14:30"
 categories: 
     - blog
     - university

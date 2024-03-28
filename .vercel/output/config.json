@@ -35,6 +35,17 @@
 			}
 		},
 		{
+			"src": "/pagine/erasmus",
+			"dest": "/pagine/erasmus/"
+		},
+		{
+			"src": "/pagine/erasmus/",
+			"status": 308,
+			"headers": {
+				"Location": "/pagine/erasmus"
+			}
+		},
+		{
 			"src": "/pagine/filter-system",
 			"dest": "/pagine/filter-system/"
 		},
@@ -126,6 +137,9 @@
 		},
 		"progetti.html": {
 			"path": "progetti"
+		},
+		"pagine/erasmus.html": {
+			"path": "pagine/erasmus"
 		},
 		"pagine/filter-system.html": {
 			"path": "pagine/filter-system"
