@@ -1,6 +1,8 @@
 @import '@fontsource/manrope';
 @import '@fontsource/jetbrains-mono';
 
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
 *:focus {
 	outline: none !important;
 }
@@ -36,7 +38,7 @@ html {
 	--automataBg: #c8c2aa;
 	--automataBgOpacity: #c8c2aa96;
 	--automataColor: #4d493e;
-	--automataBgRGBA: rgba(77, 73, 62, 0.35)	;
+	--automataBgRGBA: rgba(77, 73, 62, 0.35);
 	--automataSpacing: 0.1rem;
 	--automataShadow: 3px 3px 0 rgba(var(--automataColor), 0.6);
 	--automataRedOpacity: #cd674d86;
@@ -54,6 +56,9 @@ html {
 	}
 
 	scroll-behavior: unset;
+
+	scrollbar-width: thin;
+	scrollbar-color: var(--automataColor) var(--automataBg);
 }
 
 :root {
@@ -74,32 +79,20 @@ html {
 	:root {
 		color-scheme: light;
 
-		--brand: var(--brand-light);
-		--text-1: var(--text-1-light);
-		--text-2: var(--text-2-light);
-		--surface-1: var(--surface-1-light);
-		--surface-2: var(--surface-2-light);
-		--surface-3: var(--surface-3-light);
-		--surface-4: var(--surface-4-light);
-		--background: var(--background-light);
-		--border: var(--border-light);
+		--brand: var(--brand-dark);
+		--text-1: var(--text-1-dark);
+		--text-2: var(--text-2-dark);
+		--surface-1: var(--surface-1-dark);
+		--surface-2: var(--surface-2-dark);
+		--surface-3: var(--surface-3-dark);
+		--surface-4: #2e2d27;
+		--background: var(--background-dark);
+		--border: var(--border-dark);
 	}
 }
 
-/* scrollbar */
-::-webkit-scrollbar {
-	width: 10px;
-}
 
-::-webkit-scrollbar-track {
-	background-color: var(--surface-1);
-}
 
-::-webkit-scrollbar-thumb {
-	background-color: var(--automataColor);
-	border-radius: 6px;
-	border: 3px solid var(--surface-1);
-}
 
 [color-scheme='dark'] {
 	color-scheme: dark;
@@ -129,15 +122,15 @@ html {
 	--border: var(--border-light);
 }
 
-svg{
-	fill: var(--automataColor);	
+svg {
+	fill: var(--automataColor);
 }
 
-section svg{
-	fill:none;
+section svg {
+	fill: none;
 }
 
-pre{
+pre {
 	cursor: inherit;
 }
 
@@ -168,11 +161,11 @@ html {
 	letter-spacing: var(--automataSpacing);
 }
 
-article{
+article {
 	line-height: 2.3rem;
 }
 
-article a{
+article a {
 	white-space: nowrap;
 }
 
@@ -181,9 +174,10 @@ img {
 	box-shadow: 5px 5px 0 rgba(77, 73, 62, 0.6);
 }
 
-article img{
+article img {
 	margin: auto;
 }
+
 ul,
 ol {
 	list-style: none;
@@ -194,16 +188,14 @@ li {
 	padding-inline-start: 0;
 	padding-left: 4rem;
 	padding-bottom: 1em;
-	background-image: linear-gradient(
-		90deg,
-		rgba(77, 73, 62, 0.2),
-		rgba(77, 73, 62, 0.2) 14px,
-		transparent 14px,
-		transparent 20px,
-		rgba(77, 73, 62, 0.2) 20px,
-		rgba(77, 73, 62, 0.2) 23px,
-		transparent 23px
-	);
+	background-image: linear-gradient(90deg,
+			rgba(77, 73, 62, 0.2),
+			rgba(77, 73, 62, 0.2) 14px,
+			transparent 14px,
+			transparent 20px,
+			rgba(77, 73, 62, 0.2) 20px,
+			rgba(77, 73, 62, 0.2) 23px,
+			transparent 23px);
 	margin-bottom: 2rem;
 	max-inline-size: var(--size-content-3);
 }
@@ -211,29 +203,31 @@ li {
 article li {
 	max-inline-size: 120ch;
 }
-table{
+
+table {
 	border: #2e2d27 1px solid;
 }
 
-th, td{
+th,
+td {
 	border: #2e2d27 1px solid;
 	padding: 0.5rem;
 }
 
 
-h1{
+h1 {
 	font-size: var(--font-size-fluid-3);
 }
 
-h2{
+h2 {
 	font-size: var(--font-size-fluid-2);
 }
 
-h3{
+h3 {
 	font-size: var(--font-size-fluid-1);
 }
 
-h4{
+h4 {
 	font-size: var(--font-size-fluid-0);
 }
 
@@ -248,6 +242,7 @@ h4 {
 	letter-spacing: 0.3rem;
 	text-shadow: 0.3rem 0.3rem 0 rgba(77, 73, 62, 0.3);
 	max-inline-size: 100%;
+
 	span {
 		margin-right: -0.7rem;
 	}
@@ -267,9 +262,11 @@ h4 {
 p {
 	max-inline-size: none;
 }
-a::backdrop{
-		content: url('https://i.imgur.com/h8f3hwW.png');
+
+a::backdrop {
+	content: url('https://i.imgur.com/h8f3hwW.png');
 }
+
 a {
 	text-transform: uppercase;
 	font-weight: 300;
@@ -392,14 +389,11 @@ a:visited:hover {
 		50px 1px;
 	background-position: 0 0, 22px 4px, 22px 5px, 22px 6px, 22px 7px, 28px 12px, 28px 13px, 28px 14px,
 		28px 15px;
-	background-image: linear-gradient(
-			90deg,
+	background-image: linear-gradient(90deg,
 			var(--automataColor),
 			var(--automataColor) 10px,
-			transparent 10px
-		),
-		linear-gradient(
-			90deg,
+			transparent 10px),
+		linear-gradient(90deg,
 			rgba(var(--automataColor), 0.4),
 			rgba(var(--automataColor), 0.4) 1px,
 			rgba(var(--automataColor), 0.8) 1px,
@@ -418,10 +412,8 @@ a:visited:hover {
 			rgba(var(--automataColor), 0.9) 15px,
 			rgba(var(--automataColor), 0.4) 15px,
 			rgba(var(--automataColor), 0.4) 16px,
-			transparent 16px
-		),
-		linear-gradient(
-			90deg,
+			transparent 16px),
+		linear-gradient(90deg,
 			rgba(var(--automataColor), 0.9),
 			rgba(var(--automataColor), 0.9) 1px,
 			rgba(var(--automataColor), 1) 1px,
@@ -440,10 +432,8 @@ a:visited:hover {
 			rgba(var(--automataColor), 1) 15px,
 			rgba(var(--automataColor), 0.9) 15px,
 			rgba(var(--automataColor), 0.9) 16px,
-			transparent 16px
-		),
-		linear-gradient(
-			90deg,
+			transparent 16px),
+		linear-gradient(90deg,
 			rgba(var(--automataColor), 0.9),
 			rgba(var(--automataColor), 0.9) 1px,
 			rgba(var(--automataColor), 1) 1px,
@@ -462,10 +452,8 @@ a:visited:hover {
 			rgba(var(--automataColor), 1) 15px,
 			rgba(var(--automataColor), 0.9) 15px,
 			rgba(var(--automataColor), 0.9) 16px,
-			transparent 16px
-		),
-		linear-gradient(
-			90deg,
+			transparent 16px),
+		linear-gradient(90deg,
 			rgba(var(--automataColor), 0.4),
 			rgba(var(--automataColor), 0.4) 1px,
 			rgba(var(--automataColor), 0.8) 1px,
@@ -484,10 +472,8 @@ a:visited:hover {
 			rgba(var(--automataColor), 0.9) 15px,
 			rgba(var(--automataColor), 0.4) 15px,
 			rgba(var(--automataColor), 0.4) 16px,
-			transparent 16px
-		),
-		linear-gradient(
-			90deg,
+			transparent 16px),
+		linear-gradient(90deg,
 			rgba(var(--automataColor), 0.4),
 			rgba(var(--automataColor), 0.4) 1px,
 			rgba(var(--automataColor), 0.8) 1px,
@@ -496,10 +482,8 @@ a:visited:hover {
 			rgba(var(--automataColor), 0.9) 3px,
 			rgba(var(--automataColor), 0.4) 3px,
 			rgba(var(--automataColor), 0.4) 4px,
-			transparent 4px
-		),
-		linear-gradient(
-			90deg,
+			transparent 4px),
+		linear-gradient(90deg,
 			rgba(var(--automataColor), 0.9),
 			rgba(var(--automataColor), 0.9) 1px,
 			rgba(var(--automataColor), 1) 1px,
@@ -508,10 +492,8 @@ a:visited:hover {
 			rgba(var(--automataColor), 1) 3px,
 			rgba(var(--automataColor), 0.9) 3px,
 			rgba(var(--automataColor), 0.9) 4px,
-			transparent 4px
-		),
-		linear-gradient(
-			90deg,
+			transparent 4px),
+		linear-gradient(90deg,
 			rgba(var(--automataColor), 0.9),
 			rgba(var(--automataColor), 0.9) 1px,
 			rgba(var(--automataColor), 1) 1px,
@@ -520,10 +502,8 @@ a:visited:hover {
 			rgba(var(--automataColor), 1) 3px,
 			rgba(var(--automataColor), 0.9) 3px,
 			rgba(var(--automataColor), 0.9) 4px,
-			transparent 4px
-		),
-		linear-gradient(
-			90deg,
+			transparent 4px),
+		linear-gradient(90deg,
 			rgba(var(--automataColor), 0.4),
 			rgba(var(--automataColor), 0.4) 1px,
 			rgba(var(--automataColor), 0.8) 1px,
@@ -532,8 +512,7 @@ a:visited:hover {
 			rgba(var(--automataColor), 0.9) 3px,
 			rgba(var(--automataColor), 0.4) 3px,
 			rgba(var(--automataColor), 0.4) 4px,
-			transparent 4px
-		);
+			transparent 4px);
 	background-repeat: repeat-x;
 }
 
@@ -541,6 +520,6 @@ a:visited:hover {
 	list-style-type: initial;
 }
 
-.prose :is(ul, ol) > li {
+.prose :is(ul, ol)>li {
 	background-image: none;
 }

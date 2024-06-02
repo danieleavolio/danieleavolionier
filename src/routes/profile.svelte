@@ -23,14 +23,15 @@
 	</div>
 	<div class="outer-box">
 		<div class="inner-box">
-			<img alt="Daniele Avolio Avatar" src="images/avatar.jpg" />
+			<img alt="Daniele Avolio Avatar" src="images/avatar.png" />
 			<div class="main-features">
 				<p>
-					<b>Daniele Avolio</b> is a master-student in
-					<b>Computer Science and Artificial Intelligence</b>
-					at the University of Calabria. He developed a strong interest in the field of Artificial Intelligence
-					and Machine Learning. He has experience in
-					<b>Front-end development </b>using the <b>SvelteKit and Angular</b> frameworks.
+					Hi, I'm <b>Daniele Avolio</b>, a master student in computer science and artificial
+					intelligence at the <b>University of Calabria</b>. I am passionate about machine and 
+					deep learning and really enjoy working on projects that involve these topics.
+					I have past experience in the field of frontend development with 
+					<b>SvelteKit</b> and <b>Angular</b>. I am currently finishing my master degree 
+					and looking for new opportunities in the field of <b>machine learning</b>!
 				</p>
 				<div class="socials">
 					<a target="_blank" class="title" href="https://www.linkedin.com/in/danieleavolio/"

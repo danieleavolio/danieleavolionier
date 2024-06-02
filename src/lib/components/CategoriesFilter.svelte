@@ -115,6 +115,9 @@
 		overflow: scroll;
 		opacity: 0;
 		transition: all 0.3s ease-in-out;
+		scrollbar-color: var(--automataColor) var(--automataBg);
+		scrollbar-width: thin;
+		/* bare minimum scrollbar */
 	}
 
 	.filter-item {
@@ -156,14 +159,6 @@
 		z-index: -1;
 		background-color: var(--automataColor);
 		opacity: 0;
-	}
-
-	::-webkit-scrollbar-corner {
-		background-color: var(--automataBg);
-	}
-
-	::-webkit-scrollbar {
-		width: 0.5em;
 	}
 
 	.clear {

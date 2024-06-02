@@ -25,7 +25,7 @@
 <nav>
 	<div class="nav-div">
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		{#if width > 800}
+		{#if width > 1300}
 			<a href="/" class="title">
 				<b>{config.title}</b>
 			</a>
@@ -34,6 +34,7 @@
 				<li><a href="/pagine">BLOG</a></li>
 				<li><a href="/progetti">PROJECTS</a></li>
 				<li><a href="/data">DATA</a></li>
+				<li><a href="/appunti">NOTES</a></li>
 			</ul>
 		{:else}
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -47,7 +48,7 @@
 		{/if}
 	</div>
 </nav>
-{#if $isOpened && width < 800}
+{#if $isOpened && width < 1300}
 	<div transition:fly={{ y: 1000, duration: 300, opacity: 1 }} class="hidden-menu">
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -58,6 +59,7 @@
 		<a on:click={() => handleClick()} href="/pagine">BLOG</a>
 		<a on:click={() => handleClick()} href="/progetti">PROJECTS</a>
 		<a on:click={() => handleClick()} href="/data">DATA</a>
+		<a on:click={() => handleClick()} href="/appunti">NOTES</a>
 	</div>
 {/if}
 
@@ -168,7 +170,7 @@
 		transform: rotate(-90deg);
 	}
 
-	@media (max-width: 800px) {
+	@media (max-width: 800) {
 		nav {
 			justify-content: space-between;
 			position: sticky;

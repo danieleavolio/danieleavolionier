@@ -10,7 +10,6 @@
 
 	import PageTransition from './transition.svelte';
 
-	import { dev } from '$app/environment';
 	import isOpened from '$lib/stores/navstore';
 
 	export let data;
@@ -60,4 +59,6 @@
 			padding-inline: 0;
 		}
 	}
+
+
 </style>
