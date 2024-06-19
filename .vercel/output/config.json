@@ -46,6 +46,17 @@
 			}
 		},
 		{
+			"src": "/pagine/primo-modello-di-machine-learning",
+			"dest": "/pagine/primo-modello-di-machine-learning/"
+		},
+		{
+			"src": "/pagine/primo-modello-di-machine-learning/",
+			"status": 308,
+			"headers": {
+				"Location": "/pagine/primo-modello-di-machine-learning"
+			}
+		},
+		{
 			"src": "/pagine/erasmus",
 			"dest": "/pagine/erasmus/"
 		},
@@ -162,6 +173,9 @@
 		},
 		"progetti.html": {
 			"path": "progetti"
+		},
+		"pagine/primo-modello-di-machine-learning.html": {
+			"path": "pagine/primo-modello-di-machine-learning"
 		},
 		"pagine/erasmus.html": {
 			"path": "pagine/erasmus"
