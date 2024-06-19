@@ -15,10 +15,12 @@
 </script>
 
 <div class="note-holder">
-	<p class="note-title">{title}</p>
+	<div class="title-desc">
+		<p class="note-title">{title}</p>
 
-	<div class="note-description">
-		<p>{description}</p>
+		<div class="note-description">
+			<p>{description}</p>
+		</div>
 	</div>
 	<a href={downloadLink} target="_blank">
 		<span class="material-symbols-outlined"> download </span>
@@ -41,6 +43,8 @@
 		padding: 1rem;
 		transition: all 0.1s ease-in-out;
 		box-shadow: 0px 7px 0px 1px rgba(0, 0, 0, 0.5);
+		width: 100%;
+		justify-content: space-between;
 	}
 
 	.note-holder:hover {

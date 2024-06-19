@@ -1,16 +1,10 @@
 <script lang="ts">
 	import NotesHolder from '$lib/components/NotesHolder.svelte';
 	import type { PageData } from './$types';
-
+    import { notes } from '$lib/notes_files_desc';
 	export let data: PageData;
 
-    const notes = [
-        {
-            title: 'Theoretical Computer Science',
-            description: 'Domande e risposte delle slides',
-            downloadLink: 'files/q&a.pdf'
-        }
-    ]
+    
 </script>
 
 <div class="page">
@@ -52,10 +46,8 @@
 	}
 
     .notes{
-        display: flex;
-        gap: 1rem;
-        justify-content: center;
-        align-items: center;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
     }
 </style>
