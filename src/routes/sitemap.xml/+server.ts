@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+export const prerender = true;
 
 export async function GET() {
     const navHeaderLinks = ["/", "/pagine", "/progetti", "/data", "/appunti"];
