@@ -1,53 +1,71 @@
 <script lang="ts">
 	import NotesHolder from '$lib/components/NotesHolder.svelte';
 	import type { PageData } from './$types';
-    import { notes } from '$lib/notes_files_desc';
+	import { notes } from '$lib/notes_files_desc';
+	import Highlit from '$lib/components/Highlit.svelte';
 	export let data: PageData;
-
-    
 </script>
 
 <div class="page">
 	<div class="title">
-		<h1>Notes | Appunti</h1>
-		<i
-			>In this page you will find my nothes on the courses I followed at the University of Calabria,
-			both in Italian and English. Probably there will not be a lot of Bachelor's notes since I
-			started to take notes in my first year of Master's degree.
-            <br />
-            Note that the notes are not complete and may contain errors. Do not rely 100% on them and 
-            always refer to the official material provided by the professors. Enjoy!
+		<h1>Appunti</h1>
+		<i>
+			In questa pagina troverai i miei appunti sui corsi seguiti presso l'Università della Calabria,
+			sia in italiano che in inglese. Probabilmente non ci saranno molti appunti del corso di laurea
+			triennale poiché ho iniziato a prendere appunti nel mio primo anno di laurea magistrale.
+			<br />
+			Nota che gli appunti non sono completi e potrebbero contenere errori. Non fare affidamento al 100%
+			su di essi e consulta sempre il materiale ufficiale fornito dai professori. Ci tengo a specificare che gli <b>appunti 
+            sono 100% gratuiti!</b> Mi raccomando, buona fortuna per gli esami!
 		</i>
+
+		<Highlit type="warning">
+			<p>
+				<b>Nota:</b> Alcuni appunti possono contenere screen di slide o materiale didattico fornito dai
+				professori. Se un professore ritiene che il materiale violi i suoi diritti d'autore o che gli dia noia, mi contatti
+				e provvederò a rimuoverlo immediatamente!
+			</p>
+			<a href="mailto:daniele.avolio14@gmail.com">
+				<span class="material-symbols-outlined"> warning </span>Contattami
+			</a>
+		</Highlit>
 	</div>
 
-    <div class="notes">
-        
-        {#each notes as note}
-        <NotesHolder
-        title={note.title}
-        description={note.description}
-        downloadLink={note.downloadLink}
-        />
-        {/each}
-    </div>
+	<div class="notes">
+		{#each notes as note}
+			<NotesHolder
+				title={note.title}
+				description={note.description}
+				downloadLink={note.downloadLink}
+			/>
+		{/each}
+	</div>
 </div>
 
 <style>
 	.page {
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
-        width: 100%;
-        height: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+		width: 100%;
+		height: 100%;
+	}
+
+	a {
+		display: flex;
+		justify-content: center;
+		width: fit-content;
+		margin: auto;
 	}
 
 	.title {
 		text-align: center;
+		text-justify: inter-word;
 	}
 
-    .notes{
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 1.5rem;
-    }
+	.notes {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+		gap: 1.5rem;
+	}
 </style>

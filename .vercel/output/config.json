@@ -112,14 +112,25 @@
 			}
 		},
 		{
-			"src": "/progetti/second-website",
-			"dest": "/progetti/second-website/"
+			"src": "/progetti/USA-Shooting-Analysis",
+			"dest": "/progetti/USA-Shooting-Analysis/"
 		},
 		{
-			"src": "/progetti/second-website/",
+			"src": "/progetti/USA-Shooting-Analysis/",
 			"status": 308,
 			"headers": {
-				"Location": "/progetti/second-website"
+				"Location": "/progetti/USA-Shooting-Analysis"
+			}
+		},
+		{
+			"src": "/progetti/link4students",
+			"dest": "/progetti/link4students/"
+		},
+		{
+			"src": "/progetti/link4students/",
+			"status": 308,
+			"headers": {
+				"Location": "/progetti/link4students"
 			}
 		},
 		{
@@ -131,6 +142,17 @@
 			"status": 308,
 			"headers": {
 				"Location": "/progetti/photograper-website"
+			}
+		},
+		{
+			"src": "/progetti/second-website",
+			"dest": "/progetti/second-website/"
+		},
+		{
+			"src": "/progetti/second-website/",
+			"status": 308,
+			"headers": {
+				"Location": "/progetti/second-website"
 			}
 		},
 		{
@@ -192,11 +214,17 @@
 		"progetti/immersivaudio.html": {
 			"path": "progetti/immersivaudio"
 		},
-		"progetti/second-website.html": {
-			"path": "progetti/second-website"
+		"progetti/USA-Shooting-Analysis.html": {
+			"path": "progetti/USA-Shooting-Analysis"
+		},
+		"progetti/link4students.html": {
+			"path": "progetti/link4students"
 		},
 		"progetti/photograper-website.html": {
 			"path": "progetti/photograper-website"
+		},
+		"progetti/second-website.html": {
+			"path": "progetti/second-website"
 		},
 		"progetti/first-website.html": {
 			"path": "progetti/first-website"

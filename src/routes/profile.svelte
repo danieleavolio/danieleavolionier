@@ -3,6 +3,7 @@
 	let pagedata: HTMLElement;
 
 	import { onMount } from 'svelte';
+	import Link from '$lib/components/Link.svelte';
 
 	onMount(() => {
 		pagedata.addEventListener('mousemove', (e) => {
@@ -12,8 +13,7 @@
 			pagedata.style.setProperty('--left', `${left}px`);
 			pagedata.style.setProperty('--top', `${top}px`);
 		});
-	});	
-		
+	});
 </script>
 
 <div bind:this={pagedata} class="page-data">
@@ -25,13 +25,17 @@
 		<div class="inner-box">
 			<img alt="Daniele Avolio Avatar" src="images/avatar.png" />
 			<div class="main-features">
-				<p>
-					Hi, I'm <b>Daniele Avolio</b>, a master student in computer science and artificial
-					intelligence at the <b>University of Calabria</b>. I am passionate about machine and 
-					deep learning and really enjoy working on projects that involve these topics.
-					I have past experience in the field of frontend development with 
-					<b>SvelteKit</b> and <b>Angular</b>. I am currently finishing my master degree 
-					and looking for new opportunities in the field of <b>machine learning</b>!
+				<p />
+				<p class="content">
+					Ciao, sono <b>Daniele Avolio</b>, uno studente magistrale in informatica e intelligenza
+					artificiale presso l'<Link href="https://www.unical.it/">
+						<b>Università della Calabria</b>
+					</Link>. Sono appassionato di machine learning e deep learning. Ho esperienza pregressa
+					nello sviluppo frontend con
+					<Link href="https://kit.svelte.dev/"><b>SvelteKit</b></Link>
+					e <Link href="https://angular.dev/"><b>Angular</b></Link>. Attualmente sto terminando la
+					mia laurea magistrale e sono alla ricerca di nuove opportunità nel campo del
+					<b>machine learning</b>!
 				</p>
 				<div class="socials">
 					<a target="_blank" class="title" href="https://www.linkedin.com/in/danieleavolio/"
@@ -67,7 +71,7 @@
 		height: 25rem;
 
 		position: absolute;
-		left: var(--left);	
+		left: var(--left);
 		top: var(--top);
 		transform: translate(-50%, -50%) scale(1.5);
 		z-index: -1;
@@ -165,5 +169,8 @@
 			justify-content: start;
 			margin-bottom: 0;
 		}
+	}
+
+	.link-normale {
 	}
 </style>

@@ -1,10 +1,33 @@
-export interface Note{
+export interface Note {
     title: string;
     description: string;
     downloadLink: string;
 }
 
 export const notes: Note[] = [
+    {
+        title: 'Reti e Sicurezza Informatica',
+        description: 'Appunti del corso di Reti di Calcolatori dell\'anno 2020/2021. Nota che potrebbero esserci errori e/o incompletezze poiché vecchi di qualche anno.',
+        downloadLink: 'files/RETI-RIASSUNTO.pdf'
+    },
+    
+    {
+        title: 'Process Mining',
+        description: 'Appunti del corso di Process Mining anno 2022/2023 della Prof.ssa Fionda',
+        downloadLink: 'https://danieleavolio.notion.site/b5d4ff6c051145ccb93f2c26ec8c91d8?v=d300f029d15b4e40b6f6dd073e528ad3&pvs=4'
+    },
+
+    {
+        title: 'Machine Learning',
+        description: 'Appunti del corso di Machine Learning anno 2022/2023 del Prof. Rullo',
+        downloadLink: 'https://danieleavolio.notion.site/64c8929bf3b24680be86ef03c21fa002?v=58b4348d527c45c1bd67621a2d149f83&pvs=4'
+    },
+    {
+        title: 'Data Warehouse and Visualization',
+        description: 'Appunti del corso di Data Warehouse and Visualization anno 2022/2023 del Prof. Terracina',
+        downloadLink: 'https://danieleavolio.notion.site/6d70a5abdbdf40bc87b9750860ff1143?v=670c12862a95499f95b8f768a8b32c83&pvs=4'
+    },
+
     {
         title: 'Theoretical Computer Science',
         description: 'Domande e risposte delle slides anno 2022/2023',

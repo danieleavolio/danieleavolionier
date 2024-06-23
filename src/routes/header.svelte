@@ -32,9 +32,9 @@
 
 			<ul class="links">
 				<li><a href="/pagine">BLOG</a></li>
-				<li><a href="/progetti">PROJECTS</a></li>
+				<li><a href="/progetti">PROGETTI</a></li>
 				<li><a href="/data">DATA</a></li>
-				<li><a href="/appunti">NOTES</a></li>
+				<li><a href="/appunti">APPUNTI</a></li>
 			</ul>
 		{:else}
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -57,9 +57,9 @@
 		</div>
 		<a on:click={() => handleClick()} href="/">D.A</a>
 		<a on:click={() => handleClick()} href="/pagine">BLOG</a>
-		<a on:click={() => handleClick()} href="/progetti">PROJECTS</a>
+		<a on:click={() => handleClick()} href="/progetti">PROGETTI</a>
 		<a on:click={() => handleClick()} href="/data">DATA</a>
-		<a on:click={() => handleClick()} href="/appunti">NOTES</a>
+		<a on:click={() => handleClick()} href="/appunti">APPUNTI</a>
 	</div>
 {/if}
 

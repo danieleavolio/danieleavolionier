@@ -1,47 +1,44 @@
 ## Daniele Avolio
-The following materials document the development stage of the *Daniele Avolio* project.
+Di seguito sono riportati i materiali che documentano lo sviluppo del progetto *Daniele Avolio*.
 
-(Note that this information is classified as Level-SS, meaning that it must not be disclosed to anyone involved in the Daniele Avolio project, including the CEO of the Company.)
+(Nota che queste informazioni sono classificate come Livello SS, il che significa che non devono essere divulgate a nessuno coinvolto nel progetto Daniele Avolio, inclusi il CEO dell'azienda.)
 
-- Age: 23
-- Location: Italy
-- Favorite food: Carbonara
-- Engaged: Yes
+- Età: 25 anni
+- Località: Italia
+- Cibo preferito: Carbonara
+- Fidanzato: Sì
 
+### Hobby
 
-### Hobbies
-<!-- make a table for hobbies -->
-
-| Hobbies | Description |
+| Hobby | Descrizione |
 | --- | --- |
-| Programming | Sometimes I prefer to code rather than doing anything else |
-| Gaming | Videogames where my initial passion, so I still play them , especially the ones with a good story |
-| Photography | I usually take photos of people and animals. I mainly use my phone |
-| Guitar | In the past I used to play guitar, but I stopped because I changed the kind of music I listen to |
-| Anime | I really like to watch anime, especially the ones more mature and with a nice writing |
-| Manga reading | To be honest I read more manga than watching anime, because I can read them faster and I like to see the art style of the author |
+| Programmazione | A volte preferisco programmare piuttosto che fare qualsiasi altra cosa |
+| Videogiochi | I videogiochi erano la mia passione iniziale, quindi continuo a giocarci, specialmente quelli con una buona storia |
+| Fotografia | Di solito scatto foto di persone e animali. Uso principalmente il mio telefono |
+| Chitarra | In passato suonavo la chitarra, ma ho smesso perché ho cambiato il tipo di musica che ascolto |
+| Anime | Mi piace molto guardare gli anime, soprattutto quelli più maturi con una scrittura interessante |
+| Lettura di Manga | Onestamente leggo più manga che guardo anime, perché posso leggerli più velocemente e mi piace vedere lo stile artistico dell'autore |
 
+### Videogiochi preferiti
 
+#### NieR: Automata
+Il mio gioco preferito di sempre. Mi piace molto la storia e i personaggi. Anche il gameplay è molto buono e la colonna sonora è incredibile. Adoro davvero l'autore, **Yoko Taro**!
+![NieR:Automata](https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/nintendo_switch_4/2x1_NSwitch_NierAutomataTheEndOfYorhaEdition_image1280w.jpg)
 
-### Favorite games
-#### NieR: Automata:
-My favorite game of all time. I really like the story and the characters. The gameplay is also very good and the soundtrack is amazing. I really love the author, **Yoko Taro**!
-<img alt="NieR:Automata" src="https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/nintendo_switch_4/2x1_NSwitch_NierAutomataTheEndOfYorhaEdition_image1280w.jpg"  style="width:40em;margin: 3em auto"/>
-
-#### NieR: Replicant:
-The prequel of NieR: Automata. I really like the story and the characters. The gameplay is not so good, since is a remaster of a game from 2010, but the soundtrack is amazing. The work of **Keiichi Okabe** is really good! I really suggest to play this game if you liked NieR: Automata.
-
-<img alt="NieR: Replicant" src="https://oyster.ignimgs.com/mediawiki/apis.ign.com/nier-replicant/7/74/Nier.jpg" style="width:40em;margin:3em auto"/>
+#### NieR: Replicant
+Il prequel di NieR: Automata. Mi piace molto la storia e i personaggi. Il gameplay non è così buono, essendo un remaster di un gioco del 2010, ma la colonna sonora è eccezionale. Il lavoro di **Keiichi Okabe** è davvero buono! Consiglio vivamente di giocare a questo gioco se ti è piaciuto NieR: Automata.
+![NieR: Replicant](https://oyster.ignimgs.com/mediawiki/apis.ign.com/nier-replicant/7/74/Nier.jpg)
 
 #### The Legend of Zelda: Breath of the Wild
-This is the first *The Legend Of Zelda* game I played. I really like the open world and the freedom you have. The story is a little bit cheap, but is not the main selling point of the game. The gameplay and the freedom of choice is extraordinary. Probably the best Switch game, without considering *Tears of the Kingdom*.
+Questo è il primo gioco di *The Legend Of Zelda* che ho giocato. Mi piace molto il mondo aperto e la libertà che hai. La storia è un po' semplice, ma non è il punto di vendita principale del gioco. Il gameplay e la libertà di scelta sono straordinari. Probabilmente il miglior gioco per Switch, senza considerare *Tears of the Kingdom*.
+![The legend of zelda breath of the wild](https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/ncom/software/switch/70010000000025/7137262b5a64d921e193653f8aa0b722925abc5680380ca0e18a5cfd91697f58)
 
-<img alt="The legend of zelda breath of the wild" src="https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/ncom/software/switch/70010000000025/7137262b5a64d921e193653f8aa0b722925abc5680380ca0e18a5cfd91697f58"  style="width:40em; margin:3em auto"/>
+### Manga e Anime preferiti
 
-### Favorite Manga and Anime
-| Type | Name | Description |
+| Tipo | Nome | Descrizione |
 | --- | --- | --- |
-| Manga Anime | Shingeki no Kyojin | My favorite manga of all time. The story, the plot, the characters, the plot twists during the story, everything is perfect. I really suggest to read it. Moreover, this is the first manga of **Hajime Isayama**! |
-| Manga | Berserk | The story is very good, but the art style is amazing. The author, **Kentaro Miura**, is a genius. I really suggest to read it. A must read for every manga reader. |
-| Manga Anime | Jujutsu Kaisen | A very interesting opera. The characters are very well written and the story is very good. The author, **Gege Akutami**, is very young, but he is very talented. At the moment (2023), the manga is still ongoing. |
+| Manga Anime | Shingeki no Kyojin (Attack on Titan) | Il mio manga preferito di sempre. La storia, il plot, i personaggi, i colpi di scena durante la storia, tutto è perfetto. Consiglio vivamente di leggerlo. Inoltre, questo è il primo manga di **Hajime Isayama**! |
+| Manga | Berserk | La storia è molto buona, ma lo stile artistico è incredibile. L'autore, **Kentaro Miura**, è un genio. Consiglio vivamente di leggerlo. Un must per ogni lettore di manga. |
+| Manga Anime | Jujutsu Kaisen | Un'opera molto interessante. I personaggi sono molto ben scritti e la storia è molto buona. L'autore, **Gege Akutami**, è molto giovane, ma molto talentuoso. Al momento (2023), il manga è ancora in corso. |
 | TBD | TBD | TBD |
+

@@ -31,7 +31,7 @@
 			</div>
 		{/if}
 	</Modal>
-	<p class="title">Daniele Avolio's Data</p>
+	<p class="title">Daniele Avolio: DATI</p>
 	<div class="stack">
 		{#each stackElements as element}
 		<p class="stack-element stack-{element.color}" on:click={() => handleModalClick(element)}>
@@ -63,12 +63,12 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.2rem;
-		height: 50vh;
 		width: 100%;
 		max-width: 230px;
 		margin: auto;
 		border: 2px solid var(--automataColor);
 		padding: 0.3em;
+		padding-bottom: 0.5em;
 	}
 
 	.stack-element {

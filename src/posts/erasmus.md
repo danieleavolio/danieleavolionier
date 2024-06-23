@@ -1,37 +1,38 @@
 ---
-title: Erasmus in Lisbon
-description: Vanished into the unknown and started a new experience in Lisbon with Erasmus
+title: Erasmus a Lisbona
+description: Sparito nell'ignoto e iniziato una nuova esperienza a Lisbona con l'Erasmus
 date: "03-29-2024-14:30"
 categories: 
     - blog
-    - university
-    - life
+    - università
+    - vita
 published: true
 ---
 
-# The beginning
+# L'inizio
 
-What's up everyone! I am Daniele and I'm just writing this to make this website a little bit more alive. I'm currently in Lisbon, Portugal, for an Erasmus experience. I'm studying at the **Instituto Superior Técnico** and having a little **hard** time with the period system they have here.
+Ciao a tutti! Sono Daniele e sto scrivendo questo per rendere il sito un po' più vivo. Attualmente mi trovo a Lisbona, Portogallo, per un'esperienza Erasmus. Sto studiando presso l'**Instituto Superior Técnico** e sto avendo un po' di **difficoltà** con il sistema di periodi che hanno qui.
 
-Right now is going kinda well, but I'm still trying to figure out how to actually LIVE. I mean, I'm not used to this kind of life, so I'm trying to adapt as much as I can.
+In questo momento sta andando abbastanza bene, ma sto ancora cercando di capire come VIVERE davvero. Voglio dire, non sono abituato a questo tipo di vita, quindi sto cercando di adattarmi il più possibile.
 
 ## Instituto Superior Técnico
 
-The university is really cool, and at the same time, it's really hard. I'm studying **Electrical and Computer Engineering** and I'm actually having fun with the subjects. I mean, there is this thing called **Julia** that's kinda MHHHHHHHHHHHHHHHHHHHHH.
-But at least, I'm having fun with the **programming** subjects. Having time to develope new skills in *Information Retrival* and *Compilers* is really cool. Luckily I was in a group with GOD himself that helped me a lot with the Julia thing. Also the Information Retrieval is cool, and the project was very interesting.
+L'università è davvero bella e allo stesso tempo molto difficile. Studio **Ingegneria Elettrica e Informatica** e mi sto davvero divertendo con le materie. Voglio dire, c'è questa cosa chiamata **Julia** che è un po' MHHHHHHHHHHHHHHHHHHHHH.
+Ma almeno mi sto divertendo con le materie di **programmazione**. Avere tempo per sviluppare nuove competenze in *Information Retrieval* e *Compilatori* è davvero interessante. Per fortuna ero in un gruppo con DIO in persona che mi ha aiutato molto con Julia. Anche l'Information Retrieval è interessante e il progetto è stato molto coinvolgente.
 
 ![Clustering](https://i.imgur.com/DCCfN5V.png)
 
-Just wanted to put the clustering photo here.
+Volevo solo mettere qui la foto del clustering.
 
-## The city
+## La città
 
-**Lisbon** is amazing. It feels reeeeally *safe* for being a capital and the people are pretty chill. I actually didn't meet that much of portoguese people, but the ones I met were really nice. Also a lot of Erasmus students are here, and I mean A LOT. Italians, Germans, Spanish, North Europeans, and so on. Shout out to Teo for being crazy and kind guy. Yeah shout out even to Michele aka **Maiku22** for being with me here, even if he's a little bit dormiendes.
+**Lisbona** è fantastica. Sembra davvero *sicura* per essere una capitale e le persone sono piuttosto tranquille. In realtà non ho incontrato molti portoghesi, ma quelli che ho incontrato sono stati davvero gentili. Inoltre, ci sono molti studenti Erasmus qui, e intendo DAVVERO TANTI. Italiani, tedeschi, spagnoli, nord europei, e così via. Un saluto a Teo per essere un ragazzo pazzo e gentile. Sì, un saluto anche a Michele alias **Maiku22** per essere qui con me, anche se è un po' dormiglione.
 
-## The future
+## Il futuro
 
-Yeah I should be working on my thesis, but for **some unfortunate events** I'm still waiting. I don't have a particular topic in mind, even if there is some that has my interest. Of course it's something related to *Artificial Intelligence*, more focused on some Deep Learning stuff. I'm actually waiting to see if all the exams are going well, and then I will start to think about it. 
+Sì, dovrei lavorare alla mia tesi, ma per **alcuni eventi sfortunati** sto ancora aspettando. Non ho un argomento particolare in mente, anche se ce ne sono alcuni che mi interessano. Ovviamente è qualcosa legato all'*Intelligenza Artificiale*, più focalizzato su alcune cose di Deep Learning. Sto aspettando di vedere se tutti gli esami vanno bene, e poi comincerò a pensarci.
 
-I don't have that much to say, but I will try to keep this updated. I'm also trying to write some articles about some stuff I'm learning, so stay tuned! Here is a photo of a pidgeon.
+Non ho molto da dire, ma cercherò di mantenere aggiornato questo blog. Sto anche cercando di scrivere alcuni articoli su alcune cose che sto imparando, quindi rimanete sintonizzati! Ecco una foto di un piccione.
 
 ![Pidgeon](https://i.imgur.com/9FkJH7S.png)
+

@@ -1,99 +1,94 @@
 ---
-title: How to fix Pixel 7 Pro volume button falling off
-description: If you have a Pixel 7 Pro and the volume button falls off, here's how to fix it without having to send it in for repair.
+title: Come riparare il tasto del volume del Pixel 7 Pro che si stacca
+description: Se hai un Pixel 7 Pro e il tasto del volume si stacca, ecco come ripararlo senza doverlo mandare in assistenza.
 date: "08-30-2023-12:00"
 categories: 
-    - phones
+    - telefoni
     - pixel 
     - pixel-7-pro
-    - repair
+    - riparazione
 published: true
 ---
 
-# Problem assessment
-If you own a *Pixel 7 Pro*, I really hope you don't have this problem in the first place. However, if you are here, you probably 
-searching for a solution to this problem. I'm so sad that a flagship that costs around **900€** has such a problem.
+# Valutazione del problema
+Se possiedi un *Pixel 7 Pro*, spero vivamente che tu non abbia questo problema. Tuttavia, se sei qui, probabilmente stai cercando una soluzione a questo problema. Mi dispiace che un telefono di punta che costa circa **900€** abbia un problema del genere.
 
- I really hope
-that Google with the next generation of Pixel phones will spend more money on the **manufacturing process and quality control**.
+Spero davvero che Google con la prossima generazione di telefoni Pixel spenda più soldi nel **processo di produzione e controllo qualità**.
 
-If you are interested on later Pixel phones *leaks*, you can check out this *X / Twitter* profile [here](https://twitter.com/Za_Raczke)
+Se sei interessato ai *leak* sui prossimi telefoni Pixel, puoi dare un'occhiata a questo profilo su *X / Twitter* [qui](https://twitter.com/Za_Raczke).
 
-### Image of the problem
-<img alt="Pixel 7 Volume Button Missing"  src="https://i.imgur.com/tQMHEp5.png" style="width:50%; margin:auto">
+### Immagine del problema
+<img alt="Pixel 7 Volume Button Missing" src="https://i.imgur.com/tQMHEp5.png" style="width:50%; margin:auto">
 
-Source: [here](https://support.google.com/pixelphone/thread/214902392/pixel-7-volume-button-fell-off-randomly?hl=en)
+Fonte: [qui](https://support.google.com/pixelphone/thread/214902392/pixel-7-volume-button-fell-off-randomly?hl=en)
 
 <br>
 <br>
 
-![My Button](https://i.imgur.com/hBSlyLi.png)
+![Il mio pulsante](https://i.imgur.com/hBSlyLi.png)
 
 ---
 
-![My Button 2](https://i.imgur.com/CgpokCr.png)
+![Il mio pulsante 2](https://i.imgur.com/CgpokCr.png)
 
-It looks like the **glue or sponge thing** that used to hold the button in place is **not strong enough**. I don't know if it's a problem of the **glue** or the **sponge** itself. However, it's a **big problem** because you can **lose** the button and **not be able to change the volume**.
+Sembra che la **colla o la spugna** che teneva il pulsante in posizione non sia **abbastanza forte**. Non so se è un problema della **colla** o della **spugna** stessa. Tuttavia, è un **grosso problema** perché si può **perdere** il pulsante e **non essere in grado di cambiare il volume**.
 
-# How to fix it
+# Come risolverlo
 
-In order to fix the problem, you can choose between some options:
+Per risolvere il problema, puoi scegliere tra alcune opzioni:
 
-- **Send it in for repair**: If you are enough **patient** and you **don't want to risk to break** your phone, you can send it in for repair. However, the process is in the **matter of weeks** and, probably, you will **loose all your data**. If you are interested in this option, you can check out the official [Google support page](https://support.google.com/pixelphone/answer/7109524?hl=en)
+- **Mandarlo in riparazione**: Se hai abbastanza **pazienza** e non vuoi rischiare di rompere il tuo telefono, puoi mandarlo in riparazione. Tuttavia, il processo richiede **settimane** e, probabilmente, perderai tutti i tuoi dati. Se sei interessato a questa opzione, puoi consultare la pagina di supporto ufficiale di [Google](https://support.google.com/pixelphone/answer/7109524?hl=en).
 
-- **Chad fix**: If you are a **Chad** and you don't care about your phone, you
-can try to fix it by yourself! This *looks scarier than it is*. 
+- **Riparazione fai-da-te**: Se sei un tipo **temerario** e non ti importa del tuo telefono, puoi provare a ripararlo da solo! Questo sembra più spaventoso di quanto non sia.
 
-## Chad solution
+## Soluzione fai-da-te
 
-### What you need
+### Cosa ti serve
 
-- Pixel 7 Pro (Possibly with a broken volume button)
-- An Aliexpress Account
-- A credit card
-- A Pixel 7 Pro volume button replacement
+- Pixel 7 Pro (Possibilmente con il pulsante del volume rotto)
+- Un account Aliexpress
+- Una carta di credito
+- Un pulsante di ricambio per il volume del Pixel 7 Pro
 
-### Steps
+### Passaggi
 
-- Go to [Aliexpress](https://www.aliexpress.com/) and search for *Pixel 7 Pro volume button*. 
+- Vai su [Aliexpress](https://www.aliexpress.com/) e cerca *Pixel 7 Pro volume button*. 
 
-![Aliexpress Search Page](https://i.imgur.com/cWd7x0Y.png)
+![Pagina di ricerca Aliexpress](https://i.imgur.com/cWd7x0Y.png)
 
-- Choose one from the list and just buy it. Important, be sure to check that the model is **Pixel 7 Pro** and not **Pixel 7**. I saw that the buttons are quite different, so be careful.
+- Scegli uno dall'elenco e compralo. Importante, assicurati che il modello sia **Pixel 7 Pro** e non **Pixel 7**. Ho visto che i pulsanti sono piuttosto diversi, quindi fai attenzione.
     
     
-    - Pixel 7 **WRONG ONE** 
+    - Pixel 7 **ERRATO** 
 
         ![Pixel 7](https://i.imgur.com/wzgdD91.png)
     
-    - Pixel 7 Pro **RIGHT ONE**
+    - Pixel 7 Pro **CORRETTO**
         
         ![Pixel 7 Pro](https://i.imgur.com/Mt051av.png)
 
+  - Puoi anche scegliere di acquistare un *colore diverso*. Ho comprato uno **nero** perché penso che sembri meglio di quello **bianco**, e funziona perfettamente.
 
-  - You can even choose to buy a *different color*. I bought a **black** one because I think it looks better than the **white** one, and it's actually working.
+- Aspetta che arrivi il pacco. Il **tempo medio di attesa è >= 2 settimane**. Dipende dal paese in cui vivi.
 
+![Tempo di attesa](https://thumbs.gfycat.com/ArcticEasyAfricanpiedkingfisher-size_restricted.gif)
 
-- Wait for the package to arrive. The **average waiting time is >= 2 weeks**. It depends on the country you live in.
+- Quando il pacco arriva, puoi iniziare il processo di riparazione. Leggi attentamente i passaggi successivi per evitare problemi.
 
-![Waiting time](https://thumbs.gfycat.com/ArcticEasyAfricanpiedkingfisher-size_restricted.gif)
+    - **Rimuovi** il vecchio pulsante del volume
+    - **Inserisci** il nuovo pulsante del volume
+    - **Goditi** il tuo telefono
 
-- When the package arrives, you can start the repair process. Read carefully the next steps in order to avoid any problem.
+- Fine 
 
-    - **Remove** old volume button
-    - **Insert** new volume button
-    - **Enjoy** your phone
+## È tutto, gente
 
-- End 
+Ecco una foto del mio telefono con il nuovo pulsante del volume.
 
-## That's all folks
+![Il mio Pixel 7 Pro](https://imgur.com/a/3I6SYtt)
 
-Here is a picture of my phone with the new volume button. 
+È triste che un modo veloce per risolvere questo problema sia acquistare un pulsante del volume economico da Aliexpress dopo aver speso circa **1k €** per un telefono. Il telefono è **fantastico** e non ho mai avuto problemi, ma accidenti, questo è un **grosso problema**.
 
-![My Pixel 7 Pro](https://imgur.com/a/3I6SYtt)
+*Se avrò altri problemi in futuro aggiornerò l'articolo.*
 
-It's sad that a fast way to fix this is to buy a cheap volume button from Aliexpress after speding around **1k €** for a phone. The phone is **fantastic** and I never had any problem with it, but goddamn, this is a **big problem**.
-
-*If I have any problems in the future I will update the article*
-
-I really hope that this guide helped you to **fix** your phone. If you have any questions, feel free to contact me on [Twitter](https://twitter.com/avolio_daniele). 
+Spero davvero che questa guida ti abbia aiutato a **risolvere** il problema del tuo telefono. Se hai domande, sentiti libero di contattarmi su [Twitter](https://twitter.com/avolio_daniele).

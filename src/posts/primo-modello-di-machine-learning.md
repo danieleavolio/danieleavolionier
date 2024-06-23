@@ -75,8 +75,7 @@ y = df['PRICE']
 Dividiamo i dati in set di addestramento e di test:
 
 ```python
-X_train, X_test, y_train, y_test = train_test_split(X, y, 
-                                    test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 ```
 
 ## 5. Addestramento del Modello di Regressione Lineare
@@ -113,8 +112,7 @@ plt.show()
 Ora possiamo utilizzare il nostro modello per predire i prezzi delle case su nuovi dati:
 
 ```python
-new_data = [[0.00632, 18.00, 2.31, 0, 0.538, 6.575,
-             65.2, 4.0900, 1, 296, 15.3, 396.90, 4.98]]  # Nuovi dati
+new_data = [[0.00632, 18.00, 2.31, 0, 0.538, 6.575, 65.2, 4.0900, 1, 296, 15.3, 396.90, 4.98]]  # Nuovi dati
 predicted_price = model.predict(new_data)
 print(f'Predicted Price: {predicted_price}')
 ```

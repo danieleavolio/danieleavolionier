@@ -1,30 +1,31 @@
 ---
-title: NieR Automata UI
-description: Fresh new UI for the diary
+title: UI di NieR Automata
+description: Nuova UI fresca per il diario
 date: '08-12-2023-13:00'
 categories:
-  - programming
+  - programmazione
   - web
 published: true
 ---
 
-# On-the-Fly Change
+# Cambio Improvviso
 
-I've decided to transition from a _completely dark_ color palette to a _slightly different_ one. I've shifted from an entirely dark theme with occasional accents of lighter colors here and there to a fully light theme inspired by **NieR Automata**.
+Ho deciso di passare da una palette di colori _completamente scura_ a una _leggermente diversa_. Sono passato da un tema interamente scuro con occasionali accenti di colori più chiari a un tema completamente chiaro ispirato a **NieR Automata**.
 
-## How I Did It
+## Come Ho Fatto
 
-I have to thank the user who created this **project** on [CodePen](https://www.codepen.io), which helped me understand how to structure everything.
+Devo ringraziare l'utente che ha creato questo **progetto** su [CodePen](https://www.codepen.io), che mi ha aiutato a capire come strutturare tutto.
 
-You can find the project directly at this link: [SOURCE](https://codepen.io/levise/pen/vMzEwr).
+Puoi trovare il progetto direttamente a questo link: [FONTE](https://codepen.io/levise/pen/vMzEwr).
 
-I'm really loving how the project is turning out, even though I still _don't know exactly what to post_. For now, let's just say that I'm spending time writing posts and building the website's structure. I must admit I've always wanted to create something in the style of **NieR:Automata**.
+Mi sta piacendo molto come sta venendo fuori il progetto, anche se ancora _non so esattamente cosa pubblicare_. Per ora, diciamo solo che sto trascorrendo il tempo scrivendo post e costruendo la struttura del sito. Devo ammettere che ho sempre voluto creare qualcosa nello stile di **NieR:Automata**.
 
-### Idea for the Future
+### Idea per il Futuro
 
-I literally just had an idea while writing this post! Maybe I can add a component to the site that displays post content in a summarized form, highlighting the **headers**. I don't know how to do it yet, but technically it should be very doable.
+Letteralmente, ho appena avuto un'idea mentre scrivevo questo post! Forse potrei aggiungere un componente al sito che mostri il contenuto dei post in forma riassunta, evidenziando i **titoli**. Non so ancora come farlo, ma tecnicamente dovrebbe essere molto fattibile.
 
-- Add a component to display post content in a summarized form
-- Add a search for posts by tag
-- Add a search for posts by date
-- Win the lottery and get 10,000€
+- Aggiungere un componente per mostrare il contenuto dei post in forma riassunta
+- Aggiungere una ricerca per i post tramite tag
+- Aggiungere una ricerca per i post tramite data
+- Vincere alla lotteria e ottenere 10.000€
+

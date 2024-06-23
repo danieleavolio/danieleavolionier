@@ -1,32 +1,31 @@
 ---
-title: First Personal Website
-description: First ever website made for myself. It's a simple website made with Sveltekit and Tailwindcss.
-date: "08-22-2023-12:00"
-categories: 
+title: Primo Sito Personale
+description: Il primo sito web che ho creato per me stesso. È un sito semplice realizzato con SvelteKit e TailwindCSS.
+date: "02-22-2021-12:00"
+categories:
     - TailwindCSS
     - SvelteKit
 published: true
 ---
 
-# First Personal Website
-A very simple personal website I made using SvelteKit and Tailwind CSS.
+# Primo Sito Personale
+Un sito personale molto semplice che ho realizzato utilizzando SvelteKit e Tailwind CSS.
 
-I used **Netlify** to deploy the website, because at the time I only knew that platform.
+Ho utilizzato **Netlify** per il deployment del sito, perché all'epoca conoscevo solo quella piattaforma.
 
 ![Homepage](https://i.imgur.com/uEBmxxW.png)
 
-## Technologies
+## Tecnologie
 
-It was a classic website, using a color palette I don't like anymore: *green and blue*. Now I prefer more minimalistic colors. 
+Era un sito web classico, usando una palette di colori che non mi piace più: *verde e blu*. Ora preferisco colori più minimalisti.
 
-I used **SvelteKit** because my thesis advisor suggested me to use it, and I was curious about it. I used **Tailwind CSS** because I wanted to try it, and I liked it a lot. By the way, the project used an old version of SvelteKit, infact I will not update it anymore, of course.
+Ho usato **SvelteKit** perché il mio relatore di tesi me lo ha suggerito e ne ero curioso. Ho usato **Tailwind CSS** perché volevo provarlo e mi è piaciuto molto. Comunque, il progetto utilizzava una vecchia versione di SvelteKit, infatti non lo aggiornerò più, ovviamente.
 
-The mobile version was not so good, but I didn't know how to make it better at the time, because I had so little experience with Tailwind. I knew CSS, but I didn't know how to use it with Tailwind in the good way.
+La versione mobile non era molto buona, ma non sapevo come migliorarla all'epoca, perché avevo poca esperienza con Tailwind. Conoscevo CSS, ma non sapevo come usarlo bene con Tailwind.
 <br>
 
 ![About](https://i.imgur.com/9c9aqeo.gif)
 
+## Riassumendo
 
-## Summing up
-
-If you want to see the website, you can find it [here](https://daniele-avolio.netlify.app/) and if you want to see the *GitHub repository*, you can go here: [repo](https://github.com/danieleavolio/SveltePortfolio)
+Se vuoi vedere il sito web, puoi trovarlo [qui](https://daniele-avolio.netlify.app/) e se vuoi vedere il *repository GitHub*, puoi andare qui: [repo](https://github.com/danieleavolio/SveltePortfolio)

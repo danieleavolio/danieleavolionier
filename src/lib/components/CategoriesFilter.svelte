@@ -58,7 +58,7 @@
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div class="filter-title" on:click={() => handleClick()} id="1">
-		<h3>FILTERS</h3>
+		<h3>FILTRI</h3>
 		{#if isShowing}
 			<ChevronsDownUp cursor="pointer" />
 		{:else}
@@ -80,7 +80,7 @@
 	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 	{#if activeFilters.length > 0}
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<p on:click={() => clearFilters()} transition:fly class="clear">CLEAR</p>
+		<p on:click={() => clearFilters()} transition:fly class="clear">RIPRISTINA</p>
 	{/if}
 </section>
 

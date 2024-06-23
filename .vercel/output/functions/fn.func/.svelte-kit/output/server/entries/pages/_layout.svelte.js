@@ -99,7 +99,7 @@ const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     },
     {},
     {}
-  )}</div> <a href="/" class="svelte-1chnx4l" data-svelte-h="svelte-7hipin">D.A</a> <a href="/pagine" class="svelte-1chnx4l" data-svelte-h="svelte-17lisni">BLOG</a> <a href="/progetti" class="svelte-1chnx4l" data-svelte-h="svelte-852dr0">PROJECTS</a> <a href="/data" class="svelte-1chnx4l" data-svelte-h="svelte-jow4kg">DATA</a> <a href="/appunti" class="svelte-1chnx4l" data-svelte-h="svelte-f51b1w">NOTES</a></div>` : ``}`;
+  )}</div> <a href="/" class="svelte-1chnx4l" data-svelte-h="svelte-7hipin">D.A</a> <a href="/pagine" class="svelte-1chnx4l" data-svelte-h="svelte-17lisni">BLOG</a> <a href="/progetti" class="svelte-1chnx4l" data-svelte-h="svelte-sm6bm8">PROGETTI</a> <a href="/data" class="svelte-1chnx4l" data-svelte-h="svelte-jow4kg">DATA</a> <a href="/appunti" class="svelte-1chnx4l" data-svelte-h="svelte-1yx08mu">APPUNTI</a></div>` : ``}`;
 });
 const buttons_min = "";
 const normalize_min = "";

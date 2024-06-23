@@ -523,3 +523,8 @@ a:visited:hover {
 .prose :is(ul, ol)>li {
 	background-image: none;
 }
+
+pre {
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}

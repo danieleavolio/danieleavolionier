@@ -21,6 +21,10 @@
 	//Sort the tags array alphabetically
 	categories.sort();
 
+	//Create a set to remove duplicates
+	categories = [...new Set(categories)];
+	
+
 	const handleFilter = (e: any) => {
 		let filters: string[] = e.detail;
 

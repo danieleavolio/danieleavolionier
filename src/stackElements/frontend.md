@@ -1,32 +1,33 @@
-**Project:** Internal Application Development
+**Progetto:** Sviluppo di Applicazioni Interne
 
-**Company:** [IET](https://www.iet.it/)
+**Azienda:** [IET](https://www.iet.it/)
 
-**Methodology:** Agile
+**Metodologia:** Agile
 
-**Responsibilities:**
+**Responsabilità:**
 
-* Structure and implement new features requested by the client on a new project.
-* Program and predict possible future implementations.
-* Implement new features on an existing project.
+- Strutturare e implementare nuove funzionalità richieste dal cliente su un nuovo progetto.
+- Programmare e prevedere possibili implementazioni future.
+- Implementare nuove funzionalità su un progetto esistente.
 
-**Skills:**
+**Competenze:**
 
-* Angular
-* SASS
-* CSS3
-* Tailwind CSS
-* NPM
-* TypeScript
-* HTML5
-* JavaScript
-* Node.js
+- Angular
+- SASS
+- CSS3
+- Tailwind CSS
+- NPM
+- TypeScript
+- HTML5
+- JavaScript
+- Node.js
 
-**Accomplishments:**
+**Realizzazioni:**
 
-* Developed an internal application for an Italian company using the Agile methodology.
-* Worked with a team to implement a complex application with a variety of user interactions.
-* Implemented a new library of Angular components using the ng-material library.
-* Improved the cleanliness and production-ready quality of my code.
-* Helped to manage and modify a custom company library.
-* Managed reactive forms in Angular.
+- Sviluppato un'applicazione interna per un'azienda italiana utilizzando la metodologia Agile.
+- Lavorato con un team per implementare un'applicazione complessa con varie interazioni utente.
+- Implementato una nuova libreria di componenti Angular utilizzando la libreria ng-material.
+- Migliorato la pulizia e la qualità pronta per la produzione del mio codice.
+- Contribuito alla gestione e modifica di una libreria personalizzata dell'azienda.
+- Gestito i form reattivi in Angular.
+

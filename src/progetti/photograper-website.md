@@ -1,7 +1,7 @@
 ---
-title: Photographer Website
-description: Website made using plain HTML, CSS and Javascript. It's a website for my photographer fiancee.
-date: "08-22-2023-13:00"
+title: Sito Web per Fotografa
+description: Sito web realizzato con HTML, CSS e Javascript puro. È un sito per la mia fidanzata fotografa.
+date: "03-22-2022-13:00"
 categories: 
     - Bootstrap
     - HTML
@@ -10,35 +10,34 @@ categories:
 published: true
 ---
 
-# Photographer Website
+# Sito Web per Fotografa
 
-## Description
-Website made using plain HTML, CSS and Javascript. It's a website for my photographer fiancee. I just wanted to try Bootstrap since I know is a very popular framework and I wanted to see how it works. I also used some Javascript to make the website more dynamic.
+## Descrizione
+Sito web realizzato utilizzando HTML, CSS e Javascript puro. È un sito per la mia fidanzata fotografa. Ho voluto provare Bootstrap perché so che è un framework molto popolare e volevo vedere come funziona. Ho anche utilizzato un po' di Javascript per rendere il sito più dinamico.
 
-![Main](https://i.imgur.com/OSDbV6S.png)
+![Homepage](https://i.imgur.com/OSDbV6S.png)
 
-## Technologies
-I just used:
+## Tecnologie
+Ho utilizzato:
 
-| Name | Motivation |
+| Nome | Motivazione |
 | ------ | ------ |
-| HTML | To create the structure of the website |
-| CSS | To style the website |
-| Javascript | To make the website more dynamic |
-| Bootstrap | To make the website responsive |
+| HTML | Per creare la struttura del sito web |
+| CSS | Per stilizzare il sito web |
+| Javascript | Per rendere il sito più dinamico |
+| Bootstrap | Per rendere il sito responsive |
 
+Onestamente, se potessi ricominciare, utilizzerei un framework come React, Vue o Svelte, perché è molto più facile da mantenere e aggiungere nuove funzionalità. Avrei anche utilizzato un preprocessore CSS come SASS o LESS, perché è più semplice stilizzare il sito e mantenere il codice.
 
-To be honest, if I could start over, I would use a framework like React, Vue or Svelte, because is far more easy to maintain and to add new features. I also would use a CSS preprocessor like SASS or LESS, because it's easier to style the website and to maintain the code.
+![Galleria](https://i.imgur.com/YgRHuEc.gif)
 
-![Gallery](https://i.imgur.com/YgRHuEc.gif)
+## Conclusione
 
-## Conclusion
-
-If you want, you can visit the website from here:
+Se vuoi, puoi visitare il sito web qui:
 [Ilaria Costantino](https://ilariacostantino.netlify.app/)
 
-If you want to see the code, you can find it here:
-[Github Repository](https://github.com/danieleavolio/sitoIlariaCosthPhoto)
-
+Se vuoi vedere il codice, puoi trovarlo qui:
+[Repository su GitHub](https://github.com/danieleavolio/sitoIlariaCosthPhoto)
+```
 
 

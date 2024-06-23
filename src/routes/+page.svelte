@@ -24,9 +24,9 @@
 		<li class="post">
 			<div bind:this={items_container} class="items-container">
 				<a href="data" class="title"><Square /> Data</a>
-				<a href="progetti" class="title"><Square /> Projects</a>
+				<a href="progetti" class="title"><Square /> Progetti</a>
 				<a href="pagine" class="title"><Square /> Blog</a>
-				<a href="appunti" class="title"><Square /> Notes</a>
+				<a href="appunti" class="title"><Square /> Appunti</a>
 			</div>
 		</li>
 	</section>

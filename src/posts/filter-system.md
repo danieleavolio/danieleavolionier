@@ -1,27 +1,28 @@
 ---
-title: Filter System Implementation
-description: How I implemented a filter system for my blog
+title: Implementazione di un Sistema di Filtri
+description: Come ho implementato un sistema di filtri per il mio blog
 date: "09-05-2023-14:30"
 categories: 
-    - programming
+    - programmazione
     - web
     - blog
 published: true
 ---
 
-# The idea
+# L'idea
 
-Right now the number of **posts** are very low, but in the future (maybe) the number will grow and it will be hard to find a post. So I decided to implement a **filter system**. The idea is kind of simple, because I'm doing it in Javascript and **NOT** using an **API system**. So, anyway, let's get started.
+Al momento il numero di **post** è molto basso, ma in futuro (forse) il numero crescerà e sarà difficile trovare un post. Quindi ho deciso di implementare un **sistema di filtri**. L'idea è abbastanza semplice, perché lo sto facendo in Javascript e **NON** utilizzando un **sistema API**. Comunque, iniziamo.
 
-## The result
+## Il risultato
 
-The final result I wanted to achieve was a simple **dialog** in which I could select a tag taken from the **posts** and then the **posts** with that tag would be shown. So, I started to think about how to do it without changing a lot the **NieR Automata UI**.
+Il risultato finale che volevo ottenere era un semplice **dialogo** in cui poter selezionare un tag preso dai **post** e quindi mostrare i **post** con quel tag. Quindi, ho iniziato a pensare a come farlo senza cambiare molto la **UI di NieR Automata**.
 
-![Filter System](https://i.imgur.com/Uw65SzN.gif)
+![Sistema di Filtri](https://i.imgur.com/Uw65SzN.gif)
 
-Let's go to the code.
+Passiamo al codice.
 
-## The code
+## Il codice
+
 **CSS**
 ```css
 <style>
@@ -125,10 +126,9 @@ Let's go to the code.
 
 **Svelte**
 ```typescript
-
 <section>
 	<div class="filter-title" on:click={() => handleClick()} id="1">
-		<h3>FILTERS</h3>
+		<h3>FILTRI</h3>
 		{#if isShowing}
 			<ChevronsDownUp cursor="pointer" />
 		{:else}
@@ -150,14 +150,13 @@ Let's go to the code.
 </section>
 ```
 
-The main functions are handled in the **filter-title** div, which script will be shown below. 
+Le funzioni principali sono gestite nel div **filter-title**, il cui script verrà mostrato di seguito.
 
-Then, for each category in the list, the **string** is added to an array called **activeFilters**. This array is used to filter the posts sending it with an **eventDispatcher** to the component that handles the **blog's material**.
+Poi, per ogni categoria nella lista, la **stringa** viene aggiunta a un array chiamato **activeFilters**. Questo array viene utilizzato per filtrare i post inviandolo con un **eventDispatcher** al componente che gestisce il **materiale del blog**.
 
 **Typescript**
 ```typescript
 <script>
-
 	import { ChevronsDownUp, ChevronsUpDown, Cpu } from 'lucide-svelte';
 	import { createEventDispatcher } from 'svelte';
 	import { fly } from 'svelte/transition';
@@ -212,16 +211,15 @@ Then, for each category in the list, the **string** is added to an array called 
 		dispatch('filter', activeFilters);
 	};
 </script>
-
 ```
 
-I could have handled the **css** using the **reference** to the **HTMLElement**, but I was a little bit lazy and I didn't want to do it. So, I used the **style** property to set the **css** selectors.
+Avrei potuto gestire il **CSS** utilizzando il **riferimento** all'**HTMLElement**, ma ero un po' pigro e non volevo farlo. Quindi, ho utilizzato la proprietà **style** per impostare i selettori **CSS**.
 
-Not so much to say anymore, the code pretty much explains itself. You can copy and use this code in your projects, but I would appreciate if you could give me some credit 🙏.
+Non c'è molto altro da dire, il codice si spiega praticamente da solo. Puoi copiare e utilizzare questo codice nei tuoi progetti, ma apprezzerei se potessi darmi qualche credito 🙏.
 
-## Conclusion
+## Conclusione
 
-I'm pretty happy with the result, it's simple and it works. I'm not sure if I will update it in the future, but I will probably do it. I hope you enjoyed this post and see you in the next one!
+Sono abbastanza soddisfatto del risultato, è semplice e funziona. Non sono sicuro se lo aggiornerò in futuro, ma probabilmente lo farò. Spero che questo post ti sia piaciuto e ci vediamo nel prossimo!
 
 
 

@@ -7,15 +7,23 @@ export interface stackElement {
 
 const stackElements: stackElement[] = [
     {
-        slug: "bachelor",
-        title: "Bachelor's Degree in Computer Science",
+        slug: "erasmus",
+        title: "Erasmus at Instituto Superior Técnico",
         color: "yellow"
     },
+
     {
         slug: "frontend",
         title: "Frontend Developer",
-        color:"red"
+        color: "red"
     },
+
+    {
+        slug: "bachelor",
+        title: "Laurea Triennale in Informatica",
+        color: "yellow"
+    },
+
     {
         slug: "skills",
         title: "Skills",
@@ -23,7 +31,7 @@ const stackElements: stackElement[] = [
     },
     {
         slug: "private",
-        title: "Private",
+        title: "Privato",
         color: "black"
     },
 ]
