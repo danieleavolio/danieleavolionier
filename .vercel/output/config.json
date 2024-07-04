@@ -101,6 +101,17 @@
 			}
 		},
 		{
+			"src": "/progetti/webcam-emotion-detection",
+			"dest": "/progetti/webcam-emotion-detection/"
+		},
+		{
+			"src": "/progetti/webcam-emotion-detection/",
+			"status": 308,
+			"headers": {
+				"Location": "/progetti/webcam-emotion-detection"
+			}
+		},
+		{
 			"src": "/progetti/immersivaudio",
 			"dest": "/progetti/immersivaudio/"
 		},
@@ -210,6 +221,9 @@
 		},
 		"pagine/nier-ui.html": {
 			"path": "pagine/nier-ui"
+		},
+		"progetti/webcam-emotion-detection.html": {
+			"path": "progetti/webcam-emotion-detection"
 		},
 		"progetti/immersivaudio.html": {
 			"path": "progetti/immersivaudio"
