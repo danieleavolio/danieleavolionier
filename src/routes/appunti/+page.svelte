@@ -4,7 +4,12 @@
 	import { notes } from '$lib/notes_files_desc';
 	import Highlit from '$lib/components/Highlit.svelte';
 	export let data: PageData;
+	import * as config from "$lib/config"
 </script>
+
+<svelte:head>
+	<title>{config.title} Appunti</title>
+</svelte:head>
 
 <div class="page">
 	<div class="title">

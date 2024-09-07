@@ -6,11 +6,22 @@ export interface Note {
 
 export const notes: Note[] = [
     {
+        title: "Statistical Methods for Data Science",
+        description: "Appunti scritti per il corso di SMFDS della Prof.ssa Sabrina Giordano. Potrebbero esserci degli errori e alcuni argomenti potrebbero essere non esaustivi!",
+        downloadLink: "https://www.notion.so/danieleavolio/Links-PDF-Statistica-a06aafe5ff444dd3934cd8fb1c325168?pvs=4"
+    },
+
+    {
+        title: "Optimization for Machine Learning",
+        description: "Appunto scritti per il corso di Optimization for Machine Learning del Prof. Antonio Fuduli dell'anno 2023/2024. Alcuni passaggi potrebbero contenere dei piccoli errori, quindi attenzione con il ragionamento.",
+        downloadLink: "https://drive.google.com/file/d/1DVSHWchtMysazzqjV-r_60r1a5QIpWvY/view?usp=sharing"
+    },
+    {
         title: 'Reti e Sicurezza Informatica',
         description: 'Appunti del corso di Reti di Calcolatori dell\'anno 2020/2021. Nota che potrebbero esserci errori e/o incompletezze poiché vecchi di qualche anno.',
         downloadLink: 'files/RETI-RIASSUNTO.pdf'
     },
-    
+
     {
         title: 'Process Mining',
         description: 'Appunti del corso di Process Mining anno 2022/2023 della Prof.ssa Fionda',

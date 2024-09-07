@@ -105,7 +105,7 @@ const options = {
   service_worker: false,
   templates: {
     app: ({ head, body, assets: assets2, nonce, env }) => '<!DOCTYPE html>\r\n\r\n<html lang="en">\r\n\r\n<head>\r\n	<meta charset="utf-8" />\r\n	<meta name="viewport" content="width=device-width" />\r\n	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">\r\n	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">\r\n	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">\r\n	<link rel="icon" href="/favicon.png" /> \r\n	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">\r\n	<link rel="manifest" href="/site.webmanifest">	' + head + '\r\n	<meta name="google-site-verification" content="FTolVaK-x02wu54OEQqZv2yP7npBnNRQtI6mSv8W4RQ" />\r\n</head>\r\n\r\n<body data-sveltekit-preload-data="hover">\r\n	<div style="display: contents">' + body + "</div>\r\n</body>\r\n\r\n</html>",
-    error: ({ status, message }) => '<!DOCTYPE html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<title>' + message + `</title>
+    error: ({ status, message }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<title>' + message + `</title>
 
 		<style>
 			body {
@@ -114,8 +114,18 @@ const options = {
 				--divider: #ccc;
 				background: var(--bg);
 				color: var(--fg);
-				font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-					Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+				font-family:
+					system-ui,
+					-apple-system,
+					BlinkMacSystemFont,
+					'Segoe UI',
+					Roboto,
+					Oxygen,
+					Ubuntu,
+					Cantarell,
+					'Open Sans',
+					'Helvetica Neue',
+					sans-serif;
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -166,7 +176,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "14lfvsm"
+  version_hash: "10whn83"
 };
 function get_hooks() {
   return {};
