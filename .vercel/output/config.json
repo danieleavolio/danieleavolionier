@@ -46,6 +46,17 @@
 			}
 		},
 		{
+			"src": "/pagine/magistrale-informatica-unical",
+			"dest": "/pagine/magistrale-informatica-unical/"
+		},
+		{
+			"src": "/pagine/magistrale-informatica-unical/",
+			"status": 308,
+			"headers": {
+				"Location": "/pagine/magistrale-informatica-unical"
+			}
+		},
+		{
 			"src": "/pagine/primo-modello-di-machine-learning",
 			"dest": "/pagine/primo-modello-di-machine-learning/"
 		},
@@ -206,6 +217,9 @@
 		},
 		"progetti.html": {
 			"path": "progetti"
+		},
+		"pagine/magistrale-informatica-unical.html": {
+			"path": "pagine/magistrale-informatica-unical"
 		},
 		"pagine/primo-modello-di-machine-learning.html": {
 			"path": "pagine/primo-modello-di-machine-learning"
