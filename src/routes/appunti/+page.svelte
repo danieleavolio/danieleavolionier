@@ -15,9 +15,8 @@
 	<div class="title">
 		<h1>Appunti</h1>
 		<i>
-			In questa pagina troverai i miei appunti sui corsi seguiti presso l'Università della Calabria,
-			sia in italiano che in inglese. Probabilmente non ci saranno molti appunti del corso di laurea
-			triennale poiché ho iniziato a prendere appunti nel mio primo anno di laurea magistrale.
+			Appunti di Unical Informatica, sia Magistrale che Triennale. 
+			Puoi trovare appunti di vari corsi, tra cui: <b>Machine Learning, Statistica, ecc.</b>
 			<br />
 			Nota che gli appunti non sono completi e potrebbero contenere errori. Non fare affidamento al 100%
 			su di essi e consulta sempre il materiale ufficiale fornito dai professori. Ci tengo a specificare che gli <b>appunti 
