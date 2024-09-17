@@ -6,6 +6,13 @@ export interface stackElement {
 }
 
 const stackElements: stackElement[] = [
+
+    {
+        slug:"master",
+        title: "Laurea Magistrale in Informatica",
+        color: "black"
+    },
+
     {
         slug: "erasmus",
         title: "Erasmus at Instituto Superior Técnico",
