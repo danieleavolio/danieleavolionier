@@ -5,6 +5,19 @@ export interface Note {
 }
 
 export const notes: Note[] = [
+
+    {
+        title: "Python Handbook",
+        description: "Handbook scritto da me medesivo per dare una mano a chiunque voglia imparare Python. Contiene argomenti base che possono essere utili per chiunque voglia iniziare a programmare in Python.",
+        downloadLink: "files/Handbook.pdf"
+    },
+
+    {
+        title:"Massive Parallel Programming On GPUs",
+        description: "Appunti del corso di MPPG anno 2022/2023 del Prof. D'Ambrosio",
+        downloadLink: "files/MppGPU Theory.pdf"
+    },
+
     {
         title: "Statistical Methods for Data Science",
         description: "Appunti scritti per il corso di SMFDS della Prof.ssa Sabrina Giordano. Potrebbero esserci degli errori e alcuni argomenti potrebbero essere non esaustivi!",
