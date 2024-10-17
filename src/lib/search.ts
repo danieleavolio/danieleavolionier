@@ -5,9 +5,10 @@ import type { Element } from '$lib/types';
 let postsIndex: FlexSearch.Index
 let posts: Element[]
 
-export function createPostsIndex(data: any) {
+export function createIndex(data: any) {
     // create the posts index
     postsIndex = new FlexSearch.Index({ tokenize: 'forward' })
+
 
     data = data.posts.concat(data.progetti);
     

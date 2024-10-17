@@ -3,10 +3,9 @@
 	import { Square } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import Profile from './profile.svelte';
-	import SearchModal from '$lib/components/SearchModal.svelte';
+	import { goto } from '$app/navigation';
 
 	let items_container: HTMLElement;
-	let currentInput = '';
 	let totalPassword = '';
 	onMount(() => {
 		items_container.addEventListener('mousemove', (e) => {
@@ -21,7 +20,7 @@
 			totalPassword += e.key;
 
 			if (totalPassword.includes('endofthelova')) {
-				window.location.href = '/end-of-the-lova';
+				goto('/end-of-the-lova');
 			}
 
 			// If 0 is pressed reset the password
@@ -47,7 +46,6 @@
 		</li>
 	</section>
 	<section class="section-2"><Profile /></section>
-	<SearchModal />
 </div>
 
 <style>

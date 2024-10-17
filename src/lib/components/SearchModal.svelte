@@ -1,19 +1,21 @@
 <script lang="ts">
+	import { createIndex, searchPostsIndex } from '$lib/search';
 	import { onMount } from 'svelte';
-	import { createPostsIndex, searchPostsIndex } from '$lib/search';
-	import Modal from './Modal.svelte';
 	import { fade } from 'svelte/transition';
+	import Modal from './Modal.svelte';
+	import { goto } from '$app/navigation';
 
 	let search: 'loading' | 'ready' = 'loading';
 	let searchTerm = '';
 	let results: any[] = [];
 	let showModal = false;
+	let dialog: HTMLDialogElement;
 
 	onMount(async () => {
 		// get the posts
 		const posts = await fetch('/search.json').then((res) => res.json());
 		// create search index
-		createPostsIndex(posts);
+		createIndex(posts);
 		// we're in business 🤝
 		search = 'ready';
 	});
@@ -24,20 +26,19 @@
 	}
 </script>
 
-<!-- search icon -->
-
 <div class="search-icon">
 	<button on:click={() => (showModal = !showModal)}>
 		<span class="material-symbols-outlined"> search </span>
 	</button>
 </div>
 
-<Modal showModal={showModal}>
+
+<Modal bind:dialog={dialog} bind:showModal isSearch={true}>
 	{#if search === 'ready'}
 		<div class="search">
 			<input
 				bind:value={searchTerm}
-				placeholder="Search"
+				placeholder="Cerca..."
 				autocomplete="off"
 				spellcheck="false"
 				type="search"
@@ -46,13 +47,26 @@
 			<div class="results">
 				{#if results}
 					<ul>
+						<!-- svelte-ignore a11y-click-events-have-key-events -->
+						<!-- svelte-ignore a11y-no-static-element-interactions -->
 						{#each results as result (result.slug)}
-							<li transition:fade>
-								<a href="/{result.slug}">
+							<div
+								on:click={() => {
+									goto("/" + result.slug);
+									showModal = false;
+									searchTerm = '';
+									dialog.close();
+								}}
+								class="link"
+								transition:fade={{
+									duration: 20
+								}}
+							>
+								<h3>
 									{@html result.title}
-								</a>
+								</h3>
 								<p>{@html result.content}</p>
-							</li>
+							</div>
 						{/each}
 					</ul>
 				{/if}
@@ -66,26 +80,35 @@
 		padding: 1em;
 	}
 
-    .search-icon {
-        position: absolute;
-        bottom: 3em;
-        right: 0;
-    }
+	.search-icon{
+		transform: translateY(0);
+	}
 
-    button{
-        background-color: var(--automataBlackO);
-        color: var(--automataWhite);
-        border: none;
-        padding: 0.5em;
-        cursor: pointer;
-        border-radius: 100%;
-    }
+	@media (min-width: 1300px) {
+		.search-icon{
+			transform: translateY(-10px);
+		}
+	}
+
+	button {
+		background-color: var(--automataBlackO);
+		color: var(--automataWhite);
+		border: none;
+		padding: 0.5em;
+		cursor: pointer;
+		border-radius: 100%;
+	}
 
 	input {
 		width: 100%;
 		padding: 0.5em;
 		font-size: 1em;
 		background-color: var(--automataBlackO);
+		color: var(--automataWhite);
+	}
+
+	h3 {
+		margin: 0;
 		color: var(--automataWhite);
 	}
 
@@ -103,12 +126,23 @@
 		padding: 0;
 	}
 
-	.results li {
-		margin-top: 1em;
+	ul {
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		gap: 2em;
 	}
 
-	.results a {
-		text-decoration: none;
+	.link {
+		cursor: pointer;
+		background-color: var(--automataBlackOpacity);
+		color: var(--automataWhite);
+		padding: 1em;
+		transition: background-color 0.3s;
+	}
+
+	.link:hover {
+		background-color: var(--automataBlackO);
 	}
 
 	.results p {

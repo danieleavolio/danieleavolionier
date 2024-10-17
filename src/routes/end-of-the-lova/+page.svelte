@@ -328,8 +328,6 @@
 
 				requestAnimationFrame(animateEndGame);
 
-				
-
 			}
 		}
 

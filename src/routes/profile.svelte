@@ -170,6 +170,4 @@
 		}
 	}
 
-	.link-normale {
-	}
 </style>

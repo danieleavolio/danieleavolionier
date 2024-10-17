@@ -135,8 +135,10 @@ pre {
 }
 
 mark{
-	background-color: var(--automataYellow);
+	background-color: var(--automataYellowOpacity);
 	color: var(--automataBlackO);
+	border-radius: 0;
+	padding: 0;
 }
 
 html,
