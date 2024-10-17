@@ -2,13 +2,15 @@ import { c as create_ssr_component, e as escape, v as validate_component, a as s
 import { t as title } from "../../chunks/config.js";
 import { I as Icon } from "../../chunks/Icon.js";
 import { w as writable } from "../../chunks/index2.js";
+import "flexsearch";
+import { M as Modal } from "../../chunks/Modal.js";
 const footer_svelte_svelte_type_style_lang = "";
-const css$3 = {
+const css$4 = {
   code: "footer.svelte-k2ae0s{padding-block:var(--size-7);border-top:1px solid var(--border)}p.svelte-k2ae0s{color:var(--text-2)}",
   map: null
 };
 const Footer = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  $$result.css.add(css$3);
+  $$result.css.add(css$4);
   return `<footer class="svelte-k2ae0s"><p class="svelte-k2ae0s">${escape(title)} © ${escape((/* @__PURE__ */ new Date()).getFullYear())}</p> </footer>`;
 });
 const Arrow_down_0_1 = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -70,6 +72,41 @@ const Settings = create_ssr_component(($$result, $$props, $$bindings, slots) => 
 });
 const Settings$1 = Settings;
 const isOpened = writable(false);
+const SearchModal_svelte_svelte_type_style_lang = "";
+const css$3 = {
+  code: ".search.svelte-16w6dnk.svelte-16w6dnk{padding:1em}.search-icon.svelte-16w6dnk.svelte-16w6dnk{transform:translateY(0)}@media(min-width: 1300px){.search-icon.svelte-16w6dnk.svelte-16w6dnk{transform:translateY(-10px)}}button.svelte-16w6dnk.svelte-16w6dnk{background-color:var(--automataBlackO);color:var(--automataWhite);border:none;padding:0.5em;cursor:pointer;border-radius:100%}input.svelte-16w6dnk.svelte-16w6dnk{width:100%;padding:0.5em;font-size:1em;background-color:var(--automataBlackO);color:var(--automataWhite)}h3.svelte-16w6dnk.svelte-16w6dnk{margin:0;color:var(--automataWhite)}.svelte-16w6dnk.svelte-16w6dnk::placeholder{color:var(--automataWhite)}.results.svelte-16w6dnk.svelte-16w6dnk{margin-top:1em}.results.svelte-16w6dnk ul.svelte-16w6dnk{list-style:none;padding:0}ul.svelte-16w6dnk.svelte-16w6dnk{list-style:none;display:flex;flex-direction:column;gap:2em}.link.svelte-16w6dnk.svelte-16w6dnk{cursor:pointer;background-color:var(--automataBlackOpacity);color:var(--automataWhite);padding:1em;transition:background-color 0.3s}.link.svelte-16w6dnk.svelte-16w6dnk:hover{background-color:var(--automataBlackO)}.results.svelte-16w6dnk p.svelte-16w6dnk{margin-top:0.5em}",
+  map: null
+};
+const SearchModal = create_ssr_component(($$result, $$props, $$bindings, slots) => {
+  let showModal = false;
+  let dialog;
+  $$result.css.add(css$3);
+  let $$settled;
+  let $$rendered;
+  do {
+    $$settled = true;
+    $$rendered = `<div class="search-icon svelte-16w6dnk"><button class="svelte-16w6dnk" data-svelte-h="svelte-7udims"><span class="material-symbols-outlined svelte-16w6dnk">search</span></button></div> ${validate_component(Modal, "Modal").$$render(
+      $$result,
+      { isSearch: true, dialog, showModal },
+      {
+        dialog: ($$value) => {
+          dialog = $$value;
+          $$settled = false;
+        },
+        showModal: ($$value) => {
+          showModal = $$value;
+          $$settled = false;
+        }
+      },
+      {
+        default: () => {
+          return `${``}`;
+        }
+      }
+    )}`;
+  } while (!$$settled);
+  return $$rendered;
+});
 const header_svelte_svelte_type_style_lang = "";
 const css$2 = {
   code: "a.svelte-1chnx4l.svelte-1chnx4l{color:inherit;text-decoration:none;height:fit-content}a.svelte-1chnx4l.svelte-1chnx4l::after{content:'';background-image:url('https://i.imgur.com/h8f3hwW.png');background-size:contain;background-repeat:no-repeat}nav.svelte-1chnx4l.svelte-1chnx4l{display:flex;flex-direction:column;padding-block:var(--size-7);justify-content:space-between;top:0;z-index:999}nav.svelte-1chnx4l.svelte-1chnx4l::after{content:'';width:100%;height:30px;background-image:url('https://i.imgur.com/FMYB47Q.png');background-size:contain;background-repeat:repeat}.nav-div.svelte-1chnx4l.svelte-1chnx4l{display:flex;justify-content:space-between}.links.svelte-1chnx4l.svelte-1chnx4l{margin-block:var(--size-7);display:flex;gap:var(--size-7);margin-block:0}li.svelte-1chnx4l.svelte-1chnx4l{background-image:none;padding-bottom:0;margin-bottom:0}.button-hamburger.svelte-1chnx4l.svelte-1chnx4l{right:100%;width:fit-content;cursor:pointer;transition:all 0.5s ease-in-out;z-index:3}.button-hamburger.svelte-1chnx4l.svelte-1chnx4l:hover{transform:rotate(90deg)}.hidden-menu.svelte-1chnx4l.svelte-1chnx4l{position:absolute;top:0;right:0;left:0;bottom:0;background-color:var(--automataBg);height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:var(--size-7);padding:1em;transition:all 0.5s ease-in-out;z-index:999}.hidden-menu.svelte-1chnx4l a.svelte-1chnx4l{width:90%}.close.svelte-1chnx4l.svelte-1chnx4l{position:absolute;bottom:3rem;right:10px;padding:0.2em;opacity:0.7;transition:all 0.2s ease-in-out}.close.svelte-1chnx4l.svelte-1chnx4l:hover{opacity:1}.home.svelte-1chnx4l.svelte-1chnx4l{opacity:0.7;transition:all 0.3s ease-in-out}.home.svelte-1chnx4l.svelte-1chnx4l:hover{opacity:1;transform:rotate(-90deg)}@media(max-width: 800){nav.svelte-1chnx4l.svelte-1chnx4l{justify-content:space-between;position:sticky}}",
@@ -90,7 +127,7 @@ const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     },
     {},
     {}
-  )}</div>  <div class="button-hamburger svelte-1chnx4l">${validate_component(Settings$1, "Settings").$$render($$result, { "fill-opacity": "0", size: "2.5em" }, {}, {})}</div>`}</div></nav> ${$isOpened && width < 1300 ? `<div class="hidden-menu svelte-1chnx4l">  <div class="close svelte-1chnx4l">${validate_component(ArrowDown01, "ArrowDown01").$$render(
+  )}</div> ${validate_component(SearchModal, "SearchModal").$$render($$result, {}, {}, {})}  <div class="button-hamburger svelte-1chnx4l">${validate_component(Settings$1, "Settings").$$render($$result, { "fill-opacity": "0", size: "2.5em" }, {}, {})}</div>`}</div></nav> ${$isOpened && width < 1300 ? `<div class="hidden-menu svelte-1chnx4l">  <div class="close svelte-1chnx4l">${validate_component(ArrowDown01, "ArrowDown01").$$render(
     $$result,
     {
       cursor: "pointer",
@@ -119,7 +156,7 @@ const Transition = create_ssr_component(($$result, $$props, $$bindings, slots) =
 });
 const _layout_svelte_svelte_type_style_lang = "";
 const css = {
-  code: ".layout.svelte-yzgd0o{height:100%;max-inline-size:1440px;display:grid;grid-template-rows:auto 1fr auto;margin-inline:auto;padding-inline:var(--size-7);position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:100vh}main.svelte-yzgd0o{padding-block:var(--size-9)}@media(min-width: 1440px){.layout.svelte-yzgd0o{padding-inline:0}}",
+  code: ".layout.svelte-1bmlo4o{height:100%;max-inline-size:1440px;display:grid;grid-template-rows:auto 1fr auto;margin-inline:auto;padding-inline:var(--size-7);position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:100vh}main.svelte-1bmlo4o{padding-block:var(--size-9)}@media(min-width: 1440px){.layout.svelte-1bmlo4o{padding-inline:0}}",
   map: null
 };
 const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -137,7 +174,7 @@ const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     }
   }
   $$unsubscribe_isOpened();
-  return `<div class="layout svelte-yzgd0o">${validate_component(Header, "Header").$$render($$result, {}, {}, {})} <main class="svelte-yzgd0o">${validate_component(Transition, "PageTransition").$$render($$result, { url: data.url }, {}, {
+  return `<div class="layout svelte-1bmlo4o">${validate_component(Header, "Header").$$render($$result, {}, {}, {})} <main class="svelte-1bmlo4o">${validate_component(Transition, "PageTransition").$$render($$result, { url: data.url }, {}, {
     default: () => {
       return `${slots.default ? slots.default({}) : ``}`;
     }
