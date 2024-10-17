@@ -7,6 +7,7 @@
 	//Import store and set to true on click
 	import isOpened from '$lib/stores/navstore';
 	import { goto } from '$app/navigation';
+	import SearchModal from '$lib/components/SearchModal.svelte';
 
 	function goHome() {
 		goto('/');
@@ -35,12 +36,15 @@
 				<li><a href="/progetti">PROGETTI</a></li>
 				<li><a href="/data">DATA</a></li>
 				<li><a href="/appunti">APPUNTI</a></li>
+				<SearchModal />
 			</ul>
 		{:else}
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<div class="home" on:click={() => goHome()}>
 				<Home cursor="pointer" fill-opacity="0" size="2.5em" />
 			</div>
+			<SearchModal />
+
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<div on:click={() => handleClick()} class="button-hamburger">
 				<Settings fill-opacity="0" size="2.5em" />

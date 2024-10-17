@@ -1,28 +1,33 @@
 <script lang="ts">
-	export let showModal: any; // boolean
+	import { fade } from 'svelte/transition';
 
-	let dialog: HTMLDialogElement; // HTMLDialogElement
+	export let showModal: any; // boolean
+	export let isSearch = false; // boolean
+
+	export let dialog: HTMLDialogElement; // HTMLDialogElement
 
 	$: if (dialog && showModal) {
 		dialog.showModal();
 		dialog.scrollTop = 0;
 	}
+
+	const close = () => {
+		showModal = false;
+		dialog.close();
+	};
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
-<dialog
-	bind:this={dialog}
-	on:close={() => (showModal = false)}
-	on:click|self={() => dialog.close()}
->
+<dialog bind:this={dialog} on:close={close} on:click|self={() => dialog.close()} transition:fade
+	class:search={isSearch}>
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div on:click|stopPropagation>
+	<div on:click|stopPropagation class="internal">
 		<slot name="header" />
 		<slot class="internal" />
 		<!-- svelte-ignore a11y-autofocus -->
 		<!-- svelte-ignore a11y-invalid-attribute -->
 		<!-- svelte-ignore a11y-missing-attribute -->
-		<a autofocus on:click={() => dialog.close()}>CHIUDI REPORT</a>
+		<a autofocus on:click={() => dialog.close()}>CHIUDI</a>
 	</div>
 </dialog>
 
@@ -32,6 +37,23 @@
 		border: none;
 		padding: 2em;
 	}
+
+	.search {
+		padding: 1em;
+		width: 80%;
+		min-height: 80%;
+		flex-direction: column;
+		justify-content: space-evenly;
+		transition: all 0.3s;
+	}
+
+	.internal {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-evenly;
+		height: 100%;
+	}
+
 	dialog::backdrop {
 		background: rgba(0, 0, 0, 0.3);
 	}
@@ -64,8 +86,4 @@
 		display: block;
 		margin: auto;
 	}
-
-	
-
-	
 </style>

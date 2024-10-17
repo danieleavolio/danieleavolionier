@@ -17,9 +17,8 @@
 	//If the window is not defined, we are in SSR
 	const document = typeof window !== 'undefined' ? window.document : null;
 
-
 	$: if (isOpened) {
-		if (document!=null) document.body.style.overflow = $isOpened ? 'hidden' : 'auto';
+		if (document != null) document.body.style.overflow = $isOpened ? 'hidden' : 'auto';
 	}
 </script>
 
@@ -59,6 +58,4 @@
 			padding-inline: 0;
 		}
 	}
-
-
 </style>
