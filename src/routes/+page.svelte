@@ -1,10 +1,13 @@
 <script lang="ts">
 	import * as config from '$lib/config';
 	import { Square } from 'lucide-svelte';
-	import Profile from './profile.svelte';
 	import { onMount } from 'svelte';
+	import Profile from './profile.svelte';
+	import SearchModal from '$lib/components/SearchModal.svelte';
 
 	let items_container: HTMLElement;
+	let currentInput = '';
+	let totalPassword = '';
 	onMount(() => {
 		items_container.addEventListener('mousemove', (e) => {
 			let rect = items_container.getBoundingClientRect();
@@ -12,6 +15,19 @@
 			const top = e.clientY - rect.top;
 			items_container.style.setProperty('--left', `${left}px`);
 			items_container.style.setProperty('--top', `${top}px`);
+		});
+
+		window.addEventListener('keydown', (e) => {
+			totalPassword += e.key;
+
+			if (totalPassword.includes('endofthelova')) {
+				window.location.href = '/end-of-the-lova';
+			}
+
+			// If 0 is pressed reset the password
+			if (e.key === '0') {
+				totalPassword = '';
+			}
 		});
 	});
 </script>
@@ -31,6 +47,7 @@
 		</li>
 	</section>
 	<section class="section-2"><Profile /></section>
+	<SearchModal />
 </div>
 
 <style>

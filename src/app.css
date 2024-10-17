@@ -134,6 +134,10 @@ pre {
 	cursor: inherit;
 }
 
+mark{
+	background-color: var(--automataYellow);
+	color: var(--automataBlackO);
+}
 
 html,
 body {

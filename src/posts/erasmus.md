@@ -34,5 +34,6 @@ Sì, dovrei lavorare alla mia tesi, ma per **alcuni eventi sfortunati** sto anco
 
 Non ho molto da dire, ma cercherò di mantenere aggiornato questo blog. Sto anche cercando di scrivere alcuni articoli su alcune cose che sto imparando, quindi rimanete sintonizzati! Ecco una foto di un piccione.
 
+
 ![Pidgeon](https://i.imgur.com/9FkJH7S.png)
 
