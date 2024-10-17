@@ -24,6 +24,17 @@
 			}
 		},
 		{
+			"src": "/end-of-the-lova",
+			"dest": "/end-of-the-lova/"
+		},
+		{
+			"src": "/end-of-the-lova/",
+			"status": 308,
+			"headers": {
+				"Location": "/end-of-the-lova"
+			}
+		},
+		{
 			"src": "/pagine",
 			"dest": "/pagine/"
 		},
@@ -109,6 +120,17 @@
 			"status": 308,
 			"headers": {
 				"Location": "/pagine/nier-ui"
+			}
+		},
+		{
+			"src": "/progetti/youtube-downloader",
+			"dest": "/progetti/youtube-downloader/"
+		},
+		{
+			"src": "/progetti/youtube-downloader/",
+			"status": 308,
+			"headers": {
+				"Location": "/progetti/youtube-downloader"
 			}
 		},
 		{
@@ -212,6 +234,9 @@
 		"data.html": {
 			"path": "data"
 		},
+		"end-of-the-lova.html": {
+			"path": "end-of-the-lova"
+		},
 		"pagine.html": {
 			"path": "pagine"
 		},
@@ -235,6 +260,9 @@
 		},
 		"pagine/nier-ui.html": {
 			"path": "pagine/nier-ui"
+		},
+		"progetti/youtube-downloader.html": {
+			"path": "progetti/youtube-downloader"
 		},
 		"progetti/webcam-emotion-detection.html": {
 			"path": "progetti/webcam-emotion-detection"
