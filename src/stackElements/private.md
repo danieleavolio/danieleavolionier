@@ -5,7 +5,7 @@ Di seguito sono riportati i materiali che documentano lo sviluppo del progetto *
 
 - Età: 25 anni
 - Località: Italia
-- Cibo preferito: Carbonara
+- Cibo preferito: Pizza al Salame e 'Nduja
 - Fidanzato: Sì
 
 ### Hobby
@@ -13,7 +13,7 @@ Di seguito sono riportati i materiali che documentano lo sviluppo del progetto *
 | Hobby | Descrizione |
 | --- | --- |
 | Programmazione | A volte preferisco programmare piuttosto che fare qualsiasi altra cosa |
-| Videogiochi | I videogiochi erano la mia passione iniziale, quindi continuo a giocarci, specialmente quelli con una buona storia |
+| Videogiochi | I videogiochi erano e sono la mia più grande passione. Amo i giochi profondi con una trama coinvolgente e fuori dagli schemi |
 | Fotografia | Di solito scatto foto di persone e animali. Uso principalmente il mio telefono |
 | Chitarra | In passato suonavo la chitarra, ma ho smesso perché ho cambiato il tipo di musica che ascolto |
 | Anime | Mi piace molto guardare gli anime, soprattutto quelli più maturi con una scrittura interessante |
@@ -29,16 +29,17 @@ Il mio gioco preferito di sempre. Mi piace molto la storia e i personaggi. Anche
 Il prequel di NieR: Automata. Mi piace molto la storia e i personaggi. Il gameplay non è così buono, essendo un remaster di un gioco del 2010, ma la colonna sonora è eccezionale. Il lavoro di **Keiichi Okabe** è davvero buono! Consiglio vivamente di giocare a questo gioco se ti è piaciuto NieR: Automata.
 ![NieR: Replicant](https://oyster.ignimgs.com/mediawiki/apis.ign.com/nier-replicant/7/74/Nier.jpg)
 
-#### The Legend of Zelda: Breath of the Wild
-Questo è il primo gioco di *The Legend Of Zelda* che ho giocato. Mi piace molto il mondo aperto e la libertà che hai. La storia è un po' semplice, ma non è il punto di vendita principale del gioco. Il gameplay e la libertà di scelta sono straordinari. Probabilmente il miglior gioco per Switch, senza considerare *Tears of the Kingdom*.
-![The legend of zelda breath of the wild](https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/ncom/software/switch/70010000000025/7137262b5a64d921e193653f8aa0b722925abc5680380ca0e18a5cfd91697f58)
+#### Outer Wilds
+Un capolavoro, un gioco davvero che mi ha **cambiato la vita**. Il suo essere unico, impossibile da rigiocare, profondo (gigantesco), lo fanno salire in cima alla mia classifica personale di giochi preferiti di sempre. Consiglio vivamente di giocarlo. È un'esperienza che non dimenticherai mai e ti farà riflettere per davvero.
+![Outer Wilds](https://gaming-cdn.com/images/products/2586/orig/outer-wilds-pc-gioco-steam-cover.jpg)
 
 ### Manga e Anime preferiti
 
 | Tipo | Nome | Descrizione |
 | --- | --- | --- |
-| Manga Anime | Shingeki no Kyojin (Attack on Titan) | Il mio manga preferito di sempre. La storia, il plot, i personaggi, i colpi di scena durante la storia, tutto è perfetto. Consiglio vivamente di leggerlo. Inoltre, questo è il primo manga di **Hajime Isayama**! |
-| Manga | Berserk | La storia è molto buona, ma lo stile artistico è incredibile. L'autore, **Kentaro Miura**, è un genio. Consiglio vivamente di leggerlo. Un must per ogni lettore di manga. |
-| Manga Anime | Jujutsu Kaisen | Un'opera molto interessante. I personaggi sono molto ben scritti e la storia è molto buona. L'autore, **Gege Akutami**, è molto giovane, ma molto talentuoso. Al momento (2023), il manga è ancora in corso. |
+| Manga Anime | `Shingeki no Kyojin (Attack on Titan)` | Il mio manga preferito di sempre. La storia, il plot, i personaggi, i colpi di scena durante la storia, tutto è perfetto. Consiglio vivamente di leggerlo. Inoltre, questo è il primo manga di **Hajime Isayama**! |
+| Manga | `Berserk` | La storia è molto buona, ma lo stile artistico è incredibile. L'autore, **Kentaro Miura**, è un genio. Consiglio vivamente di leggerlo. Un must per ogni lettore di manga. |
+| Manga Anime | `Jujutsu Kaisen `| Un'opera molto interessante. I personaggi sono molto ben scritti e la storia è molto buona. L'autore, **Gege Akutami**, è molto giovane, ma molto talentuoso. Al momento (2023), il manga è ancora in corso. *Edit: Il manga è finito, che `delusione`*... |
+| Manga | `Vinland Saga `| Il manga forse più umano e realistico che abbia mai letto. La storia è davvero interessante e i personaggi sono il fiore all'occhiello dell'opera. Consiglio vivamente di leggerlo per chi ama i colpi di scena e il mondo vichingo. |
 | TBD | TBD | TBD |
 

@@ -59,12 +59,12 @@
 
 	h1 {
 		text-transform: capitalize;
+		font-weight: 600;
 	}
 
 
 	h3{
 		text-transform: none;
-		box-shadow: 0 0 0 0 var(--surface-4);
 	}
 
 	.prose {

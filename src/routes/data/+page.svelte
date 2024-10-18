@@ -82,7 +82,7 @@
 		padding: 1em;
 		box-shadow: 0 5px 0px var(--automataColor);
 		cursor: pointer;
-		transition: all 0.1s ease-in-out;
+		transition: all 0.1s ease-in;
 	}
 
 	.stack-yellow {

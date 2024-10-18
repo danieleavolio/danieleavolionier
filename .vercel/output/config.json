@@ -57,6 +57,17 @@
 			}
 		},
 		{
+			"src": "/pagine/recensione-chants-of-sennaar",
+			"dest": "/pagine/recensione-chants-of-sennaar/"
+		},
+		{
+			"src": "/pagine/recensione-chants-of-sennaar/",
+			"status": 308,
+			"headers": {
+				"Location": "/pagine/recensione-chants-of-sennaar"
+			}
+		},
+		{
 			"src": "/pagine/implementare-search-engine-sveltekit",
 			"dest": "/pagine/implementare-search-engine-sveltekit/"
 		},
@@ -264,6 +275,9 @@
 		},
 		"progetti.html": {
 			"path": "progetti"
+		},
+		"pagine/recensione-chants-of-sennaar.html": {
+			"path": "pagine/recensione-chants-of-sennaar"
 		},
 		"pagine/implementare-search-engine-sveltekit.html": {
 			"path": "pagine/implementare-search-engine-sveltekit"
