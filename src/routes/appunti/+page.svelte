@@ -3,13 +3,17 @@
 	import type { PageData } from './$types';
 	import { notes } from '$lib/notes_files_desc';
 	import Highlit from '$lib/components/Highlit.svelte';
-	export let data: PageData;
 	import * as config from "$lib/config"
+	import Seo from '$lib/components/SEO.svelte';
+	export let data: PageData;
 </script>
 
-<svelte:head>
-	<title>{config.title} Appunti</title>
-</svelte:head>
+
+<Seo
+	title={config.title}
+	description="La pagina che contiene tutti gli appunti di Unical Informatica. Qui puoi trovare appunti di vari corsi, tra cui Machine Learning, Statistica, ecc."
+	image="https://i.imgur.com/juSgfgF.png"
+/>
 
 <div class="page">
 	<div class="title">

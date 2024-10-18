@@ -5,12 +5,13 @@
 	import type { Element } from '$lib/types.js';
 	import { BoxSelect } from 'lucide-svelte';
 	import { slide } from 'svelte/transition';
+	import Seo from '$lib/components/SEO.svelte';
 
-	export let data;
+	export let data:any;
 
 	let categories: string[] = [];
 	let projectToShow: Element[] = data.progetti;
-	data.progetti.forEach((progetto) => {
+	data.progetti.forEach((progetto: { categories: any[]; }) => {
 		progetto.categories.forEach((tag) => {
 			categories.push(tag);
 		});
@@ -27,7 +28,7 @@
 			return;
 		}
 
-		projectToShow = data.progetti.filter((progetto) => {
+		projectToShow = data.progetti.filter((progetto: { categories: any; }) => {
 			let progettoTags = progetto.categories;
 			let matches = 0;
 
@@ -44,9 +45,12 @@
 	};
 </script>
 
-<svelte:head>
-	<title>{config.title} Projects</title>
-</svelte:head>
+
+<Seo
+	title={config.title}
+	description="La pagina che contiene tutti i miei progetti. Qui puoi trovare i progetti che ho realizzato, i progetti che sto realizzando e i progetti che realizzerò."
+	image="https://i.imgur.com/juSgfgF.png"
+/>
 
 <section>
 	<ul class="posts">
