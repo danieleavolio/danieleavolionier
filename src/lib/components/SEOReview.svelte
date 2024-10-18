@@ -11,36 +11,44 @@
 
 <svelte:head>
 	<title>{title}</title>
+	<meta name="description" content={reviewBody} />
+	<meta property="og:title" content={title} />
+	<meta property="og:description" content={reviewBody} />
+	<meta property="og:type" content="review" />
+	<meta property="og:image" content={gameImage} />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content={title} />
+	<meta name="twitter:description" content={reviewBody} />
+	<meta name="twitter:image" content={gameImage} />
+
 	{@html `
-    <script type="application/ld+json">
-      {
-      {
-        "@context": "https://schema.org",
-        "@type": "Review",
-        "itemReviewed": {
-          "@type": "VideoGame",
-          "name": "${gameName}",
-          "image": "${gameImage}",
-          "author": "Platinum Games",
-          "datePublished": "${datePublished}",
-          "platform": "${platform}"
-        },
-        "author": {
-          "@type": "Person",
-          "name": "${author}"
-        },
-        "reviewRating": {
-          "@type": "Rating",
-          "ratingValue": "${ratingValue}",
-          "bestRating": "10"
-        },
-        "publisher": {
-          "@type": "Organization",
-          "name": "${author} Reviews"
-        },
-        "reviewBody": "${reviewBody}"
-      }
-      }
+    <script type="application/ld+json">{
+      "@context": "https://schema.org",
+      "@type": "Review",
+      "image": "${gameImage}",
+      "itemReviewed": {
+        "@type": "VideoGame",
+        "name": "${gameName}",
+        "image": "${gameImage}",
+        "author": "Platinum Games",
+        "datePublished": "${datePublished}",
+        "platform": "${platform}"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "${author}"
+      },
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "${ratingValue}",
+        "bestRating": "10"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "${author} Reviews"
+      },
+      "reviewBody": "${reviewBody}"
+    }
     </script>
-    `}
+  `}
 </svelte:head>

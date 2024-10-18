@@ -25,7 +25,7 @@
 	<hgroup>
 		<h1>{data.meta.title}</h1>
 		<h3>{data.meta.description}</h3>
-		<p>Writing date: {formatDate(data.meta.date)}</p>
+		<p>Data: {formatDate(data.meta.date)}</p>
 	</hgroup>
 
 	<!-- tags -->

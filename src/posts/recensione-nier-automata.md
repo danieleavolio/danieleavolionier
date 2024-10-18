@@ -64,7 +64,16 @@ Uno degli aspetti più interessanti del gioco è l'integrazione di differenti me
 
 ### Personalizzazione del personaggio
 
-La personalizzazione di 2B è un altro elemento fondamentale. Distruggendo biomacchine, il giocatore può raccogliere materiali utili per potenziare l'androide, acquistando nuove armi o chip che ne modificano le abilità. La gestione del "banco di memoria" di 2B, dove si incastrano i vari chip, aggiunge un livello strategico al gameplay, permettendo al giocatore di adattare l'androide alle diverse situazioni di combattimento. Un sistema decisamente interessante e che all'inizio può sembrare complesso, ma che se ben gestito può fare la differenza in situazioni di combattimento particolarmente difficili.
+La personalizzazione dei protagonisti è un altro elemento fondamentale. Distruggendo biomacchine, il giocatore può raccogliere materiali utili per potenziare l'androide, acquistando nuove armi o chip che ne modificano le abilità. La gestione del "banco di memoria", dove si incastrano i vari chip, aggiunge un livello strategico al gameplay, permettendo al giocatore di adattare l'androide alle diverse situazioni di combattimento. Un sistema decisamente interessante e che all'inizio può sembrare complesso, ma che se ben gestito può fare la differenza in situazioni di combattimento particolarmente difficili.
+
+Si differenziano 5 tipi di chip:
+
+- `Attacco`: Chiaramente per aumentare la potenza di attacco
+- `Difesa`: Per aumentare la resistenza
+- `Supporto`: Per migliorare alcune statistiche come la velocità di movimento o la rigenerazione della vita
+- `Hacking`: Per potenziare le abilità di hacking di uno dei personaggi
+- `Sistema`: Letteralmente per fare funzionare il sistema di gioco, come HUD, vedere vita nemici, vedere minimappa, e anche per rimanere in vita... 
+
 
 ![Personalizzazione](https://www.gameuidatabase.com/uploads/Nier-Automata06132020-045141-88239.jpg)
 

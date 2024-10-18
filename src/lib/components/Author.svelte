@@ -22,6 +22,7 @@
 		display: flex;
 		flex-direction: column;
 		color: var(--automataBlackO);
+		font-size: 1.2em;
 		background-color: var(--automataYellow);
 		margin: auto;
 		padding: 1em;

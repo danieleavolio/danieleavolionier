@@ -25,7 +25,7 @@
 	<hgroup>
 		<h1>{data.meta.title}</h1>
 		<h3>{data.meta.description}</h3>
-		<p>Written: {formatDate(data.meta.date)}</p>
+		<p>Data: {formatDate(data.meta.date)}</p>
 	</hgroup>
 
 	<!-- tags -->
@@ -51,7 +51,7 @@
 
 <style>
 	article {
-		max-inline-size: 120cqh;
+		max-inline-size: 160cqh;
 		margin-inline: auto;
 	}
 

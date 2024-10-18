@@ -33,8 +33,8 @@
 					</Link>. Sono appassionato di machine learning e data science. Ho esperienza pregressa
 					nello sviluppo frontend con
 					<Link href="https://kit.svelte.dev/"><b>SvelteKit</b></Link>
-					e <Link href="https://angular.dev/"><b>Angular</b></Link>. Attualmente sto terminando la
-					mia laurea magistrale e ho come obiettivo di diventare un <b>Data Scientist</b>!
+					e <Link href="https://angular.dev/"><b>Angular</b></Link>. Quasi laureato magistrale in Computer Science & Artificial Intelligence, aspirante 
+					<b>Data Something</b>?, appassionato di <b>videogiochi</b> e <b>cultura pop giapponese</b>.
 				</p>
 				<div class="socials">
 					<a target="_blank" class="title" href="https://www.linkedin.com/in/danieleavolio/"

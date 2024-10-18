@@ -360,9 +360,19 @@ a:visited:hover {
 }
 
 /* ... */
+
+.prose h1 {
+	font-size: 3rem;
+	font-weight: 600;
+	box-shadow: none;
+	text-align: center;
+}
+
 .prose :is(h2, h3, h4, h5, h6) {
 	margin-top: var(--size-8);
 	margin-bottom: var(--size-3);
+	text-align: center;
+	font-weight: 600;
 }
 
 .prose p:not(:is(h2, h3, h4, h5, h6) + p) {
@@ -384,6 +394,13 @@ a:visited:hover {
 	padding: 1rem;
 	border-radius: 8px;
 	tab-size: 2;
+}
+
+.prose h3{
+	font-size: 2.5rem;
+	font-weight: 600;
+	box-shadow: none;
+	text-align: center;
 }
 
 .pattern {

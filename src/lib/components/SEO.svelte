@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { page } from '$app/stores'; // Importa lo store di SvelteKit per ottenere l'URL corrente
+	import { page } from '$app/stores';
+ // Importa lo store di SvelteKit per ottenere l'URL corrente
 
 	// Props comuni per qualsiasi pagina
 	export let title = '';
@@ -38,53 +39,48 @@
 	{#if isArticle}
 		{@html `
 		<script type="application/ld+json">
-			{
-				
-        {
-          "@context": "https://schema.org",
-          "@type": "Article",
-          "mainEntityOfPage": {
-            "@type": "WebPage",
-            "@id": "${currentUrl}"
-          },
-          "headline": "${title}",
-          "image": ["${image}"],
-          "datePublished": "${publishDate}",
-          "dateModified": "${modifiedDate}",
-          "author": {
-            "@type": "Person",
-            "name": "${author}"
-          },
-          "publisher": {
-            "@type": "Organization",
-            "name": "${author} Blog",
-            "logo": {
-              "@type": "ImageObject",
-              "url": "/path/to/logo.png"
-            }
-          },
-          "description": "${description}",
-          "articleBody": "${articleBody}"
-        }
-        ;
+		{
+			"@context": "https://schema.org",
+			"@type": "Article",
+			"mainEntityOfPage": {
+				"@type": "WebPage",
+				"@id": "${currentUrl}"
+				},
+			"headline": "${title}",
+			"image": ["${image}"],
+			"datePublished": "${publishDate}",
+			"author": {
+				"@type": "Person",
+				"name": "${author}"
+				},
+			"publisher": {
+				"@type": "Organization",
+				"name": "${author} Blog",
+				"logo": {
+					"@type": "ImageObject",
+					"url": "https://i.imgur.com/HjK8Wmp.png"
+					}
+				},
+
+			"description": "${description}",
+			"articleBody": "${articleBody}"
 			}
+		}
 		</script>
 	`}
 	{:else}
 		{@html `
 		<script type="application/ld+json">
+		{
 			{
-				
-        {
-          "@context": "https://schema.org",
-          "@type": "WebPage",
-          "name": "${title}",
-          "description": "${description}",
-          "url": "${currentUrl}",
-          "image": "${image}"
-        }
-        ;
+			"@context": "https://schema.org",
+			"@type": "WebPage",
+			"name": "${title}",
+			"description": "${description}",
+			"url": "${currentUrl}",
+			"image": "${image}"
 			}
+		}
 		</script>
 	`}
 	{/if}
