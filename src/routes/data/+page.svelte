@@ -1,8 +1,9 @@
 <script lang="ts">
 	import Modal from '$lib/components/Modal.svelte';
+	import Seo from '$lib/components/SEO.svelte';
+	import * as config from '$lib/config';
 	import stackElements, { type stackElement } from '$lib/stackElements';
 	let showModal = false;
-	import * as config from '$lib/config';
 
 	let selectedItem = 'None';
 	let selectedModalContent: any;
@@ -16,10 +17,13 @@
 	};
 </script>
 
-<svelte:head>
-	<title>{config.title} Data</title>
-</svelte:head>
 
+
+<Seo
+	title={config.title}
+	description="La pagina che contiene dati personali ed esperienze lavorative. Qui puoi trovare i dati personali e le esperienze lavorative di Daniele Avolio."
+	image="https://i.imgur.com/juSgfgF.png"
+/>
 <div class="data">
 	<Modal bind:showModal>
 		<p class="title" slot="header">
@@ -33,7 +37,9 @@
 	</Modal>
 	<p class="title">Daniele Avolio: DATI</p>
 	<div class="stack">
+		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 		{#each stackElements as element}
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<p class="stack-element stack-{element.color}" on:click={() => handleModalClick(element)}>
 				{element.title}
 			</p>

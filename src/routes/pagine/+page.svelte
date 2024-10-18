@@ -5,6 +5,7 @@
 	import { formatDate } from '$lib/utils';
 	import { slide } from 'svelte/transition';
 	import { BoxSelect } from 'lucide-svelte';
+	import Seo from '$lib/components/SEO.svelte';
 	export let data;
 
 	// create event dispatcher
@@ -23,7 +24,6 @@
 
 	//Create a set to remove duplicates
 	categories = [...new Set(categories)];
-	
 
 	const handleFilter = (e: any) => {
 		let filters: string[] = e.detail;
@@ -57,6 +57,13 @@
 <svelte:head>
 	<title>{config.title} Blog</title>
 </svelte:head>
+
+<Seo
+	title={config.title}
+	description="La pagina dei post del blog. Qui potete trovare tutti i post scritti da me medesimo su vari argomenti che vanno dalla programmazione, alle recensioni di videogiochi e fino ad aggiornamenti generici sulla mia vita."
+	image="https://i.imgur.com/juSgfgF.png"
+	isArticle={false}
+/>
 
 <section>
 	<ul class="posts">

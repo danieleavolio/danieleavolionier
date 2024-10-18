@@ -9,9 +9,6 @@ categories:
 published: true
 ---
 
-<script>
-    import Contacts  from "$lib/components/Contacts.svelte";
-</script>
 Questo progetto è progettato per semplificare il download di video da YouTube con un'interfaccia grafica (GUI) facile da usare. Utilizza la libreria **pytube** per identificare e scaricare i video in formato audio o video. Il sistema consente di personalizzare le preferenze di download, rendendolo adatto per vari utilizzi.
 
 **Caratteristiche**
@@ -46,7 +43,3 @@ Puoi trovare il progetto sulla pagina github qui [Link](https://github.com/danie
 
 Per qualsiasi domanda o suggerimento, non esitare a contattarmi!
 
-**Daniele Avolio** 
-**YoutubeDownloaderGUI**
-
-<Contacts />

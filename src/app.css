@@ -49,6 +49,7 @@ html {
 	--automataWhite: #ece7d5;
 	--automataYellow: #e1d8aa;
 	--automataBlackO: #4d493e;
+	--automataBlack: #3d3b34;
 
 	::selection {
 		background-color: var(--automataColor);
@@ -535,8 +536,12 @@ pre {
 	word-wrap: break-word;
 }
 
-
 code{
 	white-space: pre-wrap;
 	word-wrap: break-word;
+	background-color: var(--automataRed);
+}
+
+pre code{
+	background: transparent;
 }

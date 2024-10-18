@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import Profile from './profile.svelte';
 	import { goto } from '$app/navigation';
+	import Seo from '$lib/components/SEO.svelte';
 
 	let items_container: HTMLElement;
 	let totalPassword = '';
@@ -31,9 +32,15 @@
 	});
 </script>
 
-<svelte:head>
-	<title>{config.title}</title>
-</svelte:head>
+
+<Seo
+	title={config.title}
+	description="Sono Daniele Avolio, uno studente di Informatica presso l'Università della Calabria. Qui puoi trovare i miei progetti, i miei appunti e le mie esperienze lavorative.
+	Ma chissà, forse c'è qualcosa di nascosto e segreto..."
+	image="https://i.imgur.com/juSgfgF.png"
+/>
+
+
 <div class="separator">
 	<section class="section-1">
 		<li class="post">

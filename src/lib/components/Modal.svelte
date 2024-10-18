@@ -4,7 +4,7 @@
 	export let showModal: any; // boolean
 	export let isSearch = false; // boolean
 
-	export let dialog: HTMLDialogElement; // HTMLDialogElement
+	export let dialog:any = 0; // HTMLDialogElement
 
 	$: if (dialog && showModal) {
 		dialog.showModal();
