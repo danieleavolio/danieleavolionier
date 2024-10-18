@@ -57,6 +57,17 @@
 			}
 		},
 		{
+			"src": "/pagine/recensione-nier-automata",
+			"dest": "/pagine/recensione-nier-automata/"
+		},
+		{
+			"src": "/pagine/recensione-nier-automata/",
+			"status": 308,
+			"headers": {
+				"Location": "/pagine/recensione-nier-automata"
+			}
+		},
+		{
 			"src": "/pagine/magistrale-informatica-unical",
 			"dest": "/pagine/magistrale-informatica-unical/"
 		},
@@ -242,6 +253,9 @@
 		},
 		"progetti.html": {
 			"path": "progetti"
+		},
+		"pagine/recensione-nier-automata.html": {
+			"path": "pagine/recensione-nier-automata"
 		},
 		"pagine/magistrale-informatica-unical.html": {
 			"path": "pagine/magistrale-informatica-unical"

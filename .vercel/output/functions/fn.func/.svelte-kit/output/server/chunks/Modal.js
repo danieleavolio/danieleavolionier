@@ -7,7 +7,7 @@ const css = {
 const Modal = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let { showModal } = $$props;
   let { isSearch = false } = $$props;
-  let { dialog } = $$props;
+  let { dialog = 0 } = $$props;
   if ($$props.showModal === void 0 && $$bindings.showModal && showModal !== void 0)
     $$bindings.showModal(showModal);
   if ($$props.isSearch === void 0 && $$bindings.isSearch && isSearch !== void 0)
