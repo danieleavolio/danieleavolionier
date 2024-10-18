@@ -6,10 +6,33 @@
 	import { slide } from 'svelte/transition';
 	import { BoxSelect } from 'lucide-svelte';
 	import Seo from '$lib/components/SEO.svelte';
+	import Tag from '$lib/components/Tag.svelte';
+	import { onMount, tick } from 'svelte';
+	import { categoryStore } from '$lib/stores/categoryStore.js';
 	export let data;
 
-	// create event dispatcher
+	let activeFilters: string[] = [];
+	let CatFilter: any;
 
+	onMount(() => {
+		categoryStore.subscribe((value) => {
+			if (value) {
+				// Get the value index in the categories array
+				let index = categories.indexOf(value);
+				// If the string value is not in the CatFilter.activeFilters array, add it
+				if (!activeFilters.includes(value)) {
+					tick().then(() => {
+						CatFilter.clearFilters();
+						CatFilter.setActive(index);
+						CatFilter.openForce();
+						categoryStore.set(null);
+					});
+				}
+			}
+		});
+	});
+
+	// create event dispatcher
 	let categories: string[] = [];
 	let postToShow: Element[] = data.posts;
 	//For each post, add the tags to the tags array
@@ -74,16 +97,25 @@
 				<p class="description">{post.description}</p>
 				<div class="tags">
 					{#each post.categories as category}
-						<p class="tag">{category.toUpperCase()}</p>
+						<Tag
+							from="pagine"
+							{category}
+							isActive={activeFilters.includes(category)}
+						/>
 					{/each}
 				</div>
 			</li>
 		{/each}
 		{#if postToShow.length == 0}
-			<h1>No post found <BoxSelect size="2em" /></h1>
+			<h1>Nessun post trovato! <BoxSelect size="2em" /></h1>
 		{/if}
 	</ul>
-	<CategoriesFilter {categories} on:filter={(e) => handleFilter(e)} />
+	<CategoriesFilter
+		bind:this={CatFilter}
+		bind:activeFilters
+		{categories}
+		on:filter={(e) => handleFilter(e)}
+	/>
 </section>
 
 <style>
@@ -126,12 +158,6 @@
 		gap: 0.5em;
 		margin-top: var(--size-3);
 		flex-wrap: wrap;
-	}
-
-	.tag {
-		background-color: var(--automataColor);
-		color: var(--automataBg);
-		padding: 0.2em 0.5em;
 	}
 
 	@media (min-width: 1000px) {

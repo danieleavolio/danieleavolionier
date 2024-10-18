@@ -3,6 +3,7 @@
 	import Seo from '$lib/components/SEO.svelte';
 	import type { Element } from '$lib/types';
 	import { formatDate } from '$lib/utils';
+	import Tag from '$lib/components/Tag.svelte';
 	export let data;
 
 	let metadata: Element = data.meta;
@@ -31,7 +32,7 @@
 	<!-- tags -->
 	<div class="tags">
 		{#each data.meta.categories as category}
-			<span class="surface-4">&num;{category.toUpperCase()}</span>
+			<Tag category={category} from="pagine" />
 		{/each}
 	</div>
 

@@ -21,6 +21,8 @@ published: true
         "https://cdn.wccftech.com/wp-content/uploads/2016/08/01-1-1030x579.jpg",
         "https://www.ungeek.ph/wp-content/uploads/2017/02/NA_Sep172016_13-jpg-webp.webp"
     ]
+
+    let ratingValue = 9;
 </script>
 
 <SEOReview
@@ -28,7 +30,7 @@ published: true
     author="Daniele Avolio"
     gameName="NieR: Automata"
     gameImage="https://i.imgur.com/plqhqV4.png"
-    ratingValue="10"
+    ratingValue={ratingValue}
     reviewBody="NieR: Automata è una fusione impeccabile di narrazione coinvolgente, gameplay dinamico e meccaniche originali, creando un'esperienza unica che resta impressa nella mente dei giocatori. Un gioco che si distingue per la sua profondità filosofica e la sua capacità di mescolare diversi generi, rendendolo uno dei migliori action RPG degli ultimi anni."
     platform="PS4, Xbox One, PC"
     datePublished="2024-10-18"
@@ -98,7 +100,7 @@ Una nota super positiva è la presenza di una difficoltà `FACILE` che permette 
 
 ### Giudizio finale
 
-<Grading grade="9"
+<Grading grade={ratingValue}
 pros={[
     "Narrazione unica e coinvolgente",
     "Gameplay dinamico e soddifacente",

@@ -3,6 +3,7 @@
 	import Author from '$lib/components/Author.svelte';
 	import Seo from '$lib/components/SEO.svelte';
 	import type { Element } from '$lib/types';
+	import Tag from '$lib/components/Tag.svelte';
 	export let data: any;
 
 	let metadata: Element = data.meta;
@@ -13,7 +14,7 @@
 <Seo
 	title={metadata.title}
 	description={metadata.description}
-	image={'https://i.imgur.com/juSgfgF.png'}
+	image={metadata.image ? metadata.image : 'https://i.imgur.com/juSgfgF.png'}
 	isArticle={true}
 	author={'Daniele Avolio'}
 	publishDate={metadata.date}
@@ -31,7 +32,7 @@
 	<!-- tags -->
 	<div class="tags">
 		{#each data.meta.categories as category}
-			<span class="surface-4">&num;{category.toUpperCase()}</span>
+			<Tag category={category} from="progetti" />
 		{/each}
 	</div>
 

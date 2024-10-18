@@ -5,12 +5,19 @@
 
 	export let categories: string[] = [];
 
-	let activeFilters: string[] = [];
-	let isShowing = false;
+	export let activeFilters: string[] = [];
+	export let isShowing = false;
 	let filters: HTMLElement;
 	const dispatch = createEventDispatcher();
 
-	const handleClick = () => {
+	export const openForce = () => {
+		isShowing = true;
+		filters.style.setProperty('height', '300px');
+		filters.style.setProperty('width', '100%');
+		filters.style.setProperty('opacity', '1');
+	};
+
+	export const handleClick = () => {
 		isShowing = !isShowing;
 
 		if (isShowing) {
@@ -23,7 +30,7 @@
 		}
 	};
 
-	const clearFilters = () => {
+	export const clearFilters = () => {
 		activeFilters = [];
 
 		let items = document.querySelectorAll('.filter-item');
@@ -33,9 +40,9 @@
 		});
 		dispatch('filter', activeFilters);
 	};
-	const setActive = (i: number) => {
+	export const setActive = (i: number) => {
 		let target: any = document.getElementById(`-${i}`);
-		console.log(target?.textContent);
+		// console.log(target?.textContent);
 
 		let filter = target?.textContent;
 		if (activeFilters.includes(filter!)) {
@@ -52,6 +59,8 @@
 
 		dispatch('filter', activeFilters);
 	};
+
+	
 </script>
 
 <section>

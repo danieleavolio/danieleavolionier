@@ -6,12 +6,37 @@
 	import { BoxSelect } from 'lucide-svelte';
 	import { slide } from 'svelte/transition';
 	import Seo from '$lib/components/SEO.svelte';
+	import { projectsCategoryStore } from '$lib/stores/categoryStore';
+	import { onMount, tick } from 'svelte';
+	import Tag from '$lib/components/Tag.svelte';
 
-	export let data:any;
+	export let data: any;
+
+
+	let activeFilters: string[] = [];
+	let CatFilter: any;
+
+
+	onMount(() => {
+		projectsCategoryStore.subscribe((value) => {
+			if (value) {
+				let index = categories.indexOf(value);
+				if (!activeFilters.includes(value)) {
+					tick().then(() => {
+						CatFilter.clearFilters();
+						CatFilter.setActive(index);
+						CatFilter.openForce();
+						projectsCategoryStore.set(null);
+					});
+				}
+			}
+		});
+	});
+
 
 	let categories: string[] = [];
 	let projectToShow: Element[] = data.progetti;
-	data.progetti.forEach((progetto: { categories: any[]; }) => {
+	data.progetti.forEach((progetto: { categories: any[] }) => {
 		progetto.categories.forEach((tag) => {
 			categories.push(tag);
 		});
@@ -28,7 +53,7 @@
 			return;
 		}
 
-		projectToShow = data.progetti.filter((progetto: { categories: any; }) => {
+		projectToShow = data.progetti.filter((progetto: { categories: any }) => {
 			let progettoTags = progetto.categories;
 			let matches = 0;
 
@@ -45,7 +70,6 @@
 	};
 </script>
 
-
 <Seo
 	title={config.title}
 	description="La pagina che contiene tutti i miei progetti. Qui puoi trovare i progetti che ho realizzato, i progetti che sto realizzando e i progetti che realizzerò."
@@ -61,17 +85,22 @@
 				<p class="description">{progetto.description}</p>
 				<div class="tags">
 					{#each progetto.categories as category}
-						<p class="tag">{category.toUpperCase()}</p>
+						<Tag category={category} from="progetti" isActive={activeFilters.includes(category)} />
 					{/each}
 				</div>
 			</li>
 		{/each}
 		{#if projectToShow.length == 0}
-			<h1>No project found <BoxSelect size="2em" /></h1>
+			<h1>Nessun progetto trovato! <BoxSelect size="2em" /></h1>
 		{/if}
 	</ul>
 
-	<CategoriesFilter {categories} on:filter={handleFilter} />
+	<CategoriesFilter
+		bind:activeFilters
+		bind:this={CatFilter}
+		categories={categories}
+		on:filter={handleFilter}
+	/>
 </section>
 
 <style>
