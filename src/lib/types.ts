@@ -6,4 +6,5 @@ export type Element = {
 	date: string;
 	categories: string[];
 	published: boolean;
+	image?: string;
 };

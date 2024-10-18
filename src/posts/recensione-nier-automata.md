@@ -6,6 +6,7 @@ categories:
     - blog
     - videogiochi
     - recensioni
+image: "https://i.imgur.com/plqhqV4.png"
 published: true
 ---
 
@@ -26,7 +27,7 @@ published: true
     title="NieR: Automata - Recensione"
     author="Daniele Avolio"
     gameName="NieR: Automata"
-    gameImage="https://images.everyeye.it/img-screenshot/nier-automata-v1-507406.jpg"
+    gameImage="https://i.imgur.com/plqhqV4.png"
     ratingValue="10"
     reviewBody="NieR: Automata è una fusione impeccabile di narrazione coinvolgente, gameplay dinamico e meccaniche originali, creando un'esperienza unica che resta impressa nella mente dei giocatori. Un gioco che si distingue per la sua profondità filosofica e la sua capacità di mescolare diversi generi, rendendolo uno dei migliori action RPG degli ultimi anni."
     platform="PS4, Xbox One, PC"

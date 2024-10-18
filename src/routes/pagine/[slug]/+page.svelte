@@ -13,7 +13,7 @@
 <Seo
 	title={metadata.title}
 	description={metadata.description}
-	image={'https://i.imgur.com/juSgfgF.png'}
+	image={ metadata.image ? metadata.image: 'https://i.imgur.com/juSgfgF.png'}
 	isArticle={true}
 	author={'Daniele Avolio'}
 	publishDate={metadata.date}
