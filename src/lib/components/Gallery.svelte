@@ -17,9 +17,9 @@
 	let startX: number;
 	let startY: number;
 	let dist: number;
-	let threshold = 150; //required min distance traveled to be considered swipe
-	let restraint = 100; // maximum distance allowed at the same time in perpendicular direction
-	let allowedTime = 300; // maximum time allowed to travel that distance
+	let threshold = 50; //required min distance traveled to be considered swipe
+	let restraint = 160; // maximum distance allowed at the same time in perpendicular direction
+	let allowedTime = 500; // maximum time allowed to travel that distance
 	let elapsedTime: number;
 	let startTime: number;
 
@@ -80,6 +80,7 @@
 			<Modal bind:showModal={imageClicked} isSearch={false}>
 				<!-- svelte-ignore a11y-img-redundant-alt -->
 				{#if images[currentIndex].includes('mp4')}
+					<!-- svelte-ignore a11y-media-has-caption -->
 					<video controls src={images[currentIndex]} />
 				{:else}
 					<img class="modal-image" src={images[currentIndex]} alt="Image Gallery" />

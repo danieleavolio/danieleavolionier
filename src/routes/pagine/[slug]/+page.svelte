@@ -15,6 +15,7 @@
 	title={metadata.title}
 	description={metadata.description}
 	image={ metadata.image ? metadata.image: 'https://i.imgur.com/juSgfgF.png'}
+	hasImage={metadata.image ? true : false}
 	isArticle={true}
 	author={'Daniele Avolio'}
 	publishDate={metadata.date}
@@ -75,12 +76,10 @@
 		gap: var(--size-3);
 		margin-top: var(--size-7);
 		flex-wrap: wrap;
+		justify-content: center;
+		align-items: center;
 	}
 
-	.tags > * {
-		padding: var(--size-2) var(--size-3);
-		border-radius: var(--radious-round);
-	}
 
 	hgroup {
 		margin-bottom: var(--size-7);

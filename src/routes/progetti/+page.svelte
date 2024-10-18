@@ -153,11 +153,6 @@
 		flex-wrap: wrap;
 	}
 
-	.tag {
-		background-color: var(--automataColor);
-		color: var(--automataBg);
-		padding: 0.2em 0.5em;
-	}
 
 	@media (min-width: 768px) {
 		section {

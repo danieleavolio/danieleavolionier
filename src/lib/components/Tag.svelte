@@ -27,6 +27,12 @@
 		padding: 0.2em 0.5em;
 		cursor: pointer;
 		border-radius: 0;
+		transition: background-color 0.3s;
+		text-shadow: none;
+	}
+
+	.tag:hover {
+		background-color: var(--automataRed);
 	}
 
 	.active {

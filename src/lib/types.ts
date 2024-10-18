@@ -7,4 +7,5 @@ export type Element = {
 	categories: string[];
 	published: boolean;
 	image?: string;
+	hasImage?: boolean;
 };

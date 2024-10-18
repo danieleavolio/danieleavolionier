@@ -57,6 +57,17 @@
 			}
 		},
 		{
+			"src": "/pagine/implementare-search-engine-sveltekit",
+			"dest": "/pagine/implementare-search-engine-sveltekit/"
+		},
+		{
+			"src": "/pagine/implementare-search-engine-sveltekit/",
+			"status": 308,
+			"headers": {
+				"Location": "/pagine/implementare-search-engine-sveltekit"
+			}
+		},
+		{
 			"src": "/pagine/recensione-nier-automata",
 			"dest": "/pagine/recensione-nier-automata/"
 		},
@@ -253,6 +264,9 @@
 		},
 		"progetti.html": {
 			"path": "progetti"
+		},
+		"pagine/implementare-search-engine-sveltekit.html": {
+			"path": "pagine/implementare-search-engine-sveltekit"
 		},
 		"pagine/recensione-nier-automata.html": {
 			"path": "pagine/recensione-nier-automata"

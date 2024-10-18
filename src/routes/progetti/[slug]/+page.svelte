@@ -60,10 +60,6 @@
 		text-transform: capitalize;
 	}
 
-	h1 + p {
-		margin-top: var(--size-2);
-		color: var(--text-2);
-	}
 
 	h3 {
 		text-transform: none;
@@ -79,12 +75,10 @@
 		gap: var(--size-3);
 		margin-top: var(--size-7);
 		flex-wrap: wrap;
+		justify-content: center;
+		align-items: center;
 	}
 
-	.tags > * {
-		padding: var(--size-2) var(--size-3);
-		border-radius: var(--radious-round);
-	}
 
 	hgroup {
 		margin-bottom: var(--size-7);

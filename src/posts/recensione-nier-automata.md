@@ -3,9 +3,12 @@ title: NieR:Automata - Recensione
 description: Un mondo nato dopo la fine di una favola, un racconto di androidi e biomacchine, di filosofia e azione. La recensione di NieR:Automata.
 date: "10-18-2024"
 categories: 
-    - blog
     - videogiochi
     - recensioni
+    - action rpg
+    - pc
+    - ps4
+    - xbox one
 image: "https://i.imgur.com/plqhqV4.png"
 published: true
 ---
@@ -93,6 +96,13 @@ La difficoltà del gioco è un altro aspetto che potrebbe non piacere a tutti. A
 La `mappa` è stata anche uno dei problemi che molti giocatori hanno riscontrato. Non è molto intuitiva e spesso può risultare difficile orientarsi, soprattutto nelle sezioni più ampie e complesse. Questo potrebbe portare a momenti di smarrimento e a una certa frustrazione, soprattutto se si è alla ricerca di oggetti o missioni secondarie.
 
 ![Mappa](https://www.gameuidatabase.com/uploads/Nier-Automata06132020-045141-38333.jpg)
+
+### Missioni secondarie 
+
+Senza missioni secondarie NieR: Automata sarebbe un gioco molto più lineare e meno coinvolgente di quello che è realmente. Tra **spoiler** che vengono fatti se si è abbastanza scaltri da capire cosa sta succedendo e missioni che ti fanno riflettere su cosa stai facendo, il gioco è pieno di quest secondarie che ti fanno capire meglio il mondo in cui ti trovi e i personaggi che lo abitano. Il World Building che ne viene fuori è uno dei meglio costruiti di sempre e ti fa capire quanto sia profondo il mondo in cui ti trovi. D'altron canto, alcune missioni secondarie sono abbastanza ripetitive e **frustranti** a tal punto da farle saltare se non si è abbastanza interessati a completare il gioco al 100%. Tuttavia, sono dell'idea che la scelta sia **mirata** proprio per farti annoiare, per farti abbassare la guardia per poi colpirti con un colpo di scena che ti spezza letteralmente il cuore in due 💔.
+
+![Amnesia](https://nierautomata.wiki.fextralife.com/file/Nier-Automata/Amnesia_Resistance_Member.jpg?v=1515966443049)
+
 
 ### La difficoltà `FACILE`
 

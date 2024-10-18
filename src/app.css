@@ -397,11 +397,13 @@ a:visited:hover {
 }
 
 .prose h3{
-	font-size: 2.5rem;
 	font-weight: 600;
 	box-shadow: none;
 	text-align: center;
+	font-size: calc(1.5rem + 1.2vw);
+	letter-spacing: normal;
 }
+
 
 .pattern {
 	border-top: 2px solid var(--automataColor);

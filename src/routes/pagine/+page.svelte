@@ -97,11 +97,7 @@
 				<p class="description">{post.description}</p>
 				<div class="tags">
 					{#each post.categories as category}
-						<Tag
-							from="pagine"
-							{category}
-							isActive={activeFilters.includes(category)}
-						/>
+						<Tag from="pagine" {category} isActive={activeFilters.includes(category)} />
 					{/each}
 				</div>
 			</li>

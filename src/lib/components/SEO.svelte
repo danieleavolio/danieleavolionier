@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
- // Importa lo store di SvelteKit per ottenere l'URL corrente
+	// Importa lo store di SvelteKit per ottenere l'URL corrente
 
 	// Props comuni per qualsiasi pagina
 	export let title = '';
@@ -9,9 +9,9 @@
 
 	// Props specifici per articoli/blog post (facoltativi)
 	export let isArticle = false; // Booleano per indicare se è un blog post o una pagina generica
+	export let hasImage = false; // Booleano per indicare se l'immagine è stata fornita
 	export let author = '';
 	export let publishDate = '';
-	export let modifiedDate = '';
 	export let articleBody = '';
 
 	// Recupera dinamicamente l'URL corrente dal router di SvelteKit
@@ -29,11 +29,13 @@
 	<meta property="og:description" content={description} />
 	<meta property="og:type" content={isArticle ? 'article' : 'website'} />
 	<meta property="og:url" content={currentUrl} />
-	<meta property="og:image" content={image} />
-	<meta name="twitter:card" content="summary_large_image" />
+	{#if !hasImage}
+		<meta property="og:image" content={image} />
+		<meta name="twitter:image" content={image} />
+		<meta name="twitter:card" content="summary_large_image" />
+	{/if}
 	<meta name="twitter:title" content={title} />
 	<meta name="twitter:description" content={description} />
-	<meta name="twitter:image" content={image} />
 
 	<!-- JSON-LD Schema -->
 	{#if isArticle}
