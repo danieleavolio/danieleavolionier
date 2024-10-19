@@ -35,7 +35,6 @@ published: true
     gameImage="https://i.imgur.com/plqhqV4.png"
     ratingValue={ratingValue}
     reviewBody="NieR: Automata è una fusione impeccabile di narrazione coinvolgente, gameplay dinamico e meccaniche originali, creando un'esperienza unica che resta impressa nella mente dei giocatori. Un gioco che si distingue per la sua profondità filosofica e la sua capacità di mescolare diversi generi, rendendolo uno dei migliori action RPG degli ultimi anni."
-    platform="PS4, Xbox One, PC"
     datePublished="2024-10-18"
 />
 

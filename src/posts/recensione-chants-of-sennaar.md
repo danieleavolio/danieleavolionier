@@ -37,7 +37,6 @@ published: true
     gameImage="https://i.imgur.com/7OWKbi9.png"
     ratingValue={ratingValue}
     reviewBody="Chants of Sennaar è un capolavoro artistico che gioca con le barriere linguistiche e la diversità culturale per costruire un'esperienza unica basata sull'intuizione e la deduzione. Un viaggio tra lingue e culture diverse, un'esperienza artistica che sfida le barriere della comunicazione. La recensione di Chants of Sennaar ci porta alla scoperta di un capolavoro che unisce enigmi e deduzione in un'unica esperienza."
-    platform="PS4, Xbox One, PC, Nintendo Switch"
     datePublished="2024-10-19"
 />
 

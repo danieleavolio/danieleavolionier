@@ -77,9 +77,6 @@
 	};
 </script>
 
-<svelte:head>
-	<title>{config.title} Blog</title>
-</svelte:head>
 
 <Seo
 	title={config.title}
