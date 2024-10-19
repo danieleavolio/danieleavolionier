@@ -383,6 +383,10 @@ a:visited:hover {
 
 /* ... */
 
+.prose p{
+	text-align: justify;
+}
+
 .prose h1 {
 	font-size: 3rem;
 	font-weight: 600;
