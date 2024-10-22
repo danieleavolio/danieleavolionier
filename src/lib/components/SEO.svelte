@@ -6,7 +6,6 @@
 	export let description = '';
 	export let image = '';
 	export let isArticle = false;
-	export let hasImage = false;
 	export let author = '';
 	export let articleBody = '';
 
@@ -33,11 +32,9 @@
 	<meta property="og:description" content={isReview ? reviewBody : description} />
 	<meta property="og:type" content={isArticle ? 'article' : isReview ? 'review' : 'website'} />
 	<meta property="og:url" content={currentUrl} />
-	{#if !hasImage}
-		<meta property="og:image" content={isReview ? gameImage : image} />
-		<meta name="twitter:image" content={isReview ? gameImage : image} />
-		<meta name="twitter:card" content="summary_large_image" />
-	{/if}
+	<meta property="og:image" content={isReview ? gameImage : image} />
+	<meta name="twitter:image" content={isReview ? gameImage : image} />
+	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content={title} />
 	<meta name="twitter:description" content={isReview ? reviewBody : description} />
 
