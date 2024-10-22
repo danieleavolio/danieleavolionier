@@ -4,6 +4,7 @@ import { I as Icon } from "../../chunks/Icon.js";
 import { w as writable } from "../../chunks/index2.js";
 import "flexsearch";
 import { M as Modal } from "../../chunks/Modal.js";
+import { inject } from "@vercel/analytics";
 const footer_svelte_svelte_type_style_lang = "";
 const css$4 = {
   code: "footer.svelte-k2ae0s{padding-block:var(--size-7);border-top:1px solid var(--border)}p.svelte-k2ae0s{color:var(--text-2)}",
@@ -163,6 +164,7 @@ const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $isOpened, $$unsubscribe_isOpened;
   $$unsubscribe_isOpened = subscribe(isOpened, (value) => $isOpened = value);
   let { data } = $$props;
+  inject({ mode: "production" });
   const document = typeof window !== "undefined" ? window.document : null;
   if ($$props.data === void 0 && $$bindings.data && data !== void 0)
     $$bindings.data(data);
