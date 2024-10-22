@@ -31,21 +31,21 @@
         "name": "${gameName}",
         "image": "${gameImage}",
         "author": "Platinum Games",
-        "datePublished": "${datePublished}",
-        "platform": "${platform}"
       },
       "author": {
         "@type": "Person",
-        "name": "${author}"
+        "name": "${author}",
+        "url": "https://www.danieleavolio.it"
       },
       "reviewRating": {
         "@type": "Rating",
         "ratingValue": "${ratingValue}",
-        "bestRating": "10"
+        "bestRating": "10",
+        "worstRating": "0"
       },
       "publisher": {
         "@type": "Organization",
-        "name": "${author} Reviews"
+        "name": "${author}"
       },
       "reviewBody": "${reviewBody}"
     }

@@ -8,4 +8,10 @@ export type Element = {
 	published: boolean;
 	image?: string;
 	hasImage?: boolean;
+	isReview?: boolean;
+	gameName?: string;
+	gameImage?: string;
+	ratingValue?: number;
+	reviewBody?: string;
+	developer?: string;
 };

@@ -1,5 +1,5 @@
 ---
-title: NieR:Automata - Recensione
+title: Recensione NieR:Automata
 description: Un mondo nato dopo la fine di una favola, un racconto di androidi e biomacchine, di filosofia e azione. La recensione di NieR:Automata.
 date: "10-18-2024"
 categories: 
@@ -11,12 +11,17 @@ categories:
     - xbox one
 image: "https://i.imgur.com/plqhqV4.png"
 published: true
+isReview: true
+gameName: NieR:Automata
+gameImage: "https://i.imgur.com/plqhqV4.png"
+ratingValue: 9
+reviewBody: NieR:Automata è una fusione impeccabile di narrazione coinvolgente, gameplay dinamico e meccaniche originali, creando un'esperienza unica che resta impressa nella mente dei giocatori. Un gioco che si distingue per la sua profondità filosofica e la sua capacità di mescolare diversi generi, rendendolo uno dei migliori action RPG degli ultimi anni.
+developer: Platinum Games
 ---
 
 <script>
     import Gallery from '$lib/components/Gallery.svelte';
     import Grading from '$lib/components/Grading.svelte';
-    import SEOReview from '$lib/components/SEOReview.svelte';
 
     let gallery1 = [
         "https://media.wired.com/photos/5a3c6babb31861035861ccf0/master/w_2560%2Cc_limit/Automata-TopArt.jpg",
@@ -27,17 +32,6 @@ published: true
 
     let ratingValue = 9;
 </script>
-
-<SEOReview
-    title="NieR: Automata - Recensione"
-    author="Daniele Avolio"
-    gameName="NieR: Automata"
-    gameImage="https://i.imgur.com/plqhqV4.png"
-    ratingValue={ratingValue}
-    reviewBody="NieR: Automata è una fusione impeccabile di narrazione coinvolgente, gameplay dinamico e meccaniche originali, creando un'esperienza unica che resta impressa nella mente dei giocatori. Un gioco che si distingue per la sua profondità filosofica e la sua capacità di mescolare diversi generi, rendendolo uno dei migliori action RPG degli ultimi anni."
-    datePublished="2024-10-18"
-/>
-
 
 Con **NieR: Automata**, Yoko Taro e Platinum Games uniscono vari stili di gameplay per creare uno straordinario Action RPG.
 

@@ -1,5 +1,5 @@
 ---
-title: Chants Of Sennaar - Recensione
+title: Recensione Chants Of Sennaar 
 description: Un viaggio tra lingue e culture diverse, un'esperienza artistica che sfida le barriere della comunicazione. La recensione di Chants of Sennaar ci porta alla scoperta di un capolavoro che unisce enigmi e deduzione in un'unica esperienza.
 date: "10-19-2024"
 categories: 
@@ -12,12 +12,17 @@ categories:
     - nintendo switch
 image: "https://i.imgur.com/7OWKbi9.png"
 published: true
+isReview: true
+gameName: Chants Of Sennaar
+gameImage: "https://i.imgur.com/7OWKbi9.png"
+ratingValue: 8
+reviewBody: Chants of Sennaar è un capolavoro artistico che gioca con le barriere linguistiche e la diversità culturale per costruire un'esperienza unica basata sull'intuizione e la deduzione. Un viaggio tra lingue e culture diverse, un'esperienza artistica che sfida le barriere della comunicazione. La recensione di Chants of Sennaar ci porta alla scoperta di un capolavoro che unisce enigmi e deduzione in un'unica esperienza.
+developer: RUNDISC
 ---
 
 <script>
     import Gallery from '$lib/components/Gallery.svelte';
     import Grading from '$lib/components/Grading.svelte';
-    import SEOReview from '$lib/components/SEOReview.svelte';
 
     let gallery1 = [
         "https://i.kinja-img.com/image/upload/c_fit,q_60,w_1600/5e1791fd132e47b48e19d06d2f6a1b6f.jpg",
@@ -30,15 +35,6 @@ published: true
     let ratingValue = 8;
 </script>
 
-<SEOReview
-    title="Chants Of Sennaar - Recensione"
-    author="Daniele Avolio"
-    gameName="Chants Of Sennaar"
-    gameImage="https://i.imgur.com/7OWKbi9.png"
-    ratingValue={ratingValue}
-    reviewBody="Chants of Sennaar è un capolavoro artistico che gioca con le barriere linguistiche e la diversità culturale per costruire un'esperienza unica basata sull'intuizione e la deduzione. Un viaggio tra lingue e culture diverse, un'esperienza artistica che sfida le barriere della comunicazione. La recensione di Chants of Sennaar ci porta alla scoperta di un capolavoro che unisce enigmi e deduzione in un'unica esperienza."
-    datePublished="2024-10-19"
-/>
 
 ## Un enigma tra lingua e cultura
 
@@ -79,7 +75,7 @@ Questa meccanica si sviluppa in modo organico: *inizialmente*, i **simboli** son
 
 Un esempio particolarmente brillante di questa meccanica è la necessità di interpretare **non solo le parole**, ma anche il **contesto** in cui vengono utilizzate. Un segno può avere significati diversi a seconda della situazione o del personaggio con cui stai parlando, e questa ambiguità aggiunge un ulteriore livello di complessità al gioco. È una **sfida** costante che richiede attenzione ai dettagli, **pazienza** e una buona dose di **intuizione**.
 
-<center><iframe width="100%" height="450" src="https://www.youtube.com/embed/__hzPH3tcvA" title="Chants of Sennaar - Launch Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></center>
+![Campane](https://i.imgur.com/VNJ8cQv.png)
 
 ### Un'Arte che Racconta
 
@@ -93,7 +89,7 @@ La `Torre` stessa è un personaggio a sé, con i suoi **labirinti** di stanze, *
 
 La colonna sonora, con i suoi toni misteriosi e meditativi, completa perfettamente l'atmosfera, immergendoti ancora di più nel mondo enigmatico e affascinante di *Chants of Sennaar*. Il compositore **Thomas Brunet** ha creato una partitura che si adatta perfettamente all'ambientazione del gioco, con melodie eteree e ritmi ipnotici che ti catturano fin dal primo ascolto. La musica non è solo un accompagnamento, ma un elemento fondamentale per la creazione di un'atmosfera unica e coinvolgente che rende le aree di gioco ancora più suggestive e misteriose.
 
-<iframe style="border-radius:12px" src="https://open.spotify.com/embed/album/0ME8N5Ay9x5idqFtI0AXHz?utm_source=generator" width="100%" height="600px" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+![Atm](https://i.imgur.com/Z7Llpfh.jpeg)
 
 
 ### Oltre i Confini del Gioco

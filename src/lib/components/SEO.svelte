@@ -1,18 +1,22 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	// Importa lo store di SvelteKit per ottenere l'URL corrente
 
 	// Props comuni per qualsiasi pagina
 	export let title = '';
 	export let description = '';
 	export let image = '';
-
-	// Props specifici per articoli/blog post (facoltativi)
-	export let isArticle = false; // Booleano per indicare se è un blog post o una pagina generica
-	export let hasImage = false; // Booleano per indicare se l'immagine è stata fornita
+	export let isArticle = false;
+	export let hasImage = false;
 	export let author = '';
-	export let publishDate = '';
 	export let articleBody = '';
+
+	// Props specifici per recensioni di videogiochi
+	export let isReview = false;
+	export let gameName = '';
+	export let gameImage = '';
+	export let ratingValue = 0;
+	export let reviewBody = '';
+	export let developer = '';
 
 	// Recupera dinamicamente l'URL corrente dal router di SvelteKit
 	let currentUrl: string;
@@ -24,21 +28,22 @@
 <svelte:head>
 	<!-- Meta Tag Comuni -->
 	<title>{title}</title>
-	<meta name="description" content={description} />
+	<meta name="description" content={isReview ? reviewBody : description} />
 	<meta property="og:title" content={title} />
-	<meta property="og:description" content={description} />
-	<meta property="og:type" content={isArticle ? 'article' : 'website'} />
+	<meta property="og:description" content={isReview ? reviewBody : description} />
+	<meta property="og:type" content={isArticle ? 'article' : isReview ? 'review' : 'website'} />
 	<meta property="og:url" content={currentUrl} />
 	{#if !hasImage}
-		<meta property="og:image" content={image} />
-		<meta name="twitter:image" content={image} />
+		<meta property="og:image" content={isReview ? gameImage : image} />
+		<meta name="twitter:image" content={isReview ? gameImage : image} />
 		<meta name="twitter:card" content="summary_large_image" />
 	{/if}
 	<meta name="twitter:title" content={title} />
-	<meta name="twitter:description" content={description} />
+	<meta name="twitter:description" content={isReview ? reviewBody : description} />
 
 	<!-- JSON-LD Schema -->
 	{#if isArticle}
+		<!-- Schema per un articolo -->
 		{@html `
 		<script type="application/ld+json">
 		{
@@ -50,7 +55,6 @@
 				},
 			"headline": "${title}",
 			"image": ["${image}"],
-			"datePublished": "${publishDate}",
 			"author": {
 				"@type": "Person",
 				"name": "${author}"
@@ -63,27 +67,57 @@
 					"url": "https://i.imgur.com/HjK8Wmp.png"
 					}
 				},
-
 			"description": "${description}",
 			"articleBody": "${articleBody}"
-			}
 		}
 		</script>
-	`}
-	{:else}
+		`}
+	{:else if isReview}
+		<!-- Schema per una recensione -->
 		{@html `
 		<script type="application/ld+json">
 		{
-			{
+			"@context": "https://schema.org",
+			"@type": "Review",
+			"image": "${gameImage}",
+			"itemReviewed": {
+				"@type": "VideoGame",
+				"name": "${gameName}",
+				"image": "${gameImage}",
+				"author": "${developer}"
+			},
+			"author": {
+				"@type": "Person",
+				"name": "${author}",
+				"url": "https://www.danieleavolio.it"
+			},
+			"reviewRating": {
+				"@type": "Rating",
+				"ratingValue": "${ratingValue}",
+				"bestRating": "10",
+				"worstRating": "0"
+			},
+			"publisher": {
+				"@type": "Organization",
+				"name": "${author}"
+			},
+			"reviewBody": "${reviewBody}"
+		}
+		</script>
+		`}
+	{:else}
+		<!-- Schema per una pagina generica -->
+		{@html `
+		<script type="application/ld+json">
+		{
 			"@context": "https://schema.org",
 			"@type": "WebPage",
 			"name": "${title}",
 			"description": "${description}",
 			"url": "${currentUrl}",
 			"image": "${image}"
-			}
 		}
 		</script>
-	`}
+		`}
 	{/if}
 </svelte:head>

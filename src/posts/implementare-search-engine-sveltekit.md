@@ -8,6 +8,7 @@ categories:
     - blog
     - sveltekit
 published: true
+
 ---
 
 `Premessa`: Questo articolo è stato scritto dopo aver implementato dopo aver seguito la seguente guida: [How To Make A Blazing Fast SvelteKit Search](https://joyofcode.xyz/blazing-fast-sveltekit-search). Questo articolo è una traduzione e riadattamento di quanto scritto in quella guida, dopo averlo applicato al mio sito web.
