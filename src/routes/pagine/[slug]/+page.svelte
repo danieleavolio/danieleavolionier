@@ -114,7 +114,7 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		height: 300px; /* Altezza del banner */
+		min-height: 300px; /* Altezza del banner */
 		overflow: hidden; /* Nasconde le parti eccedenti */
 	}
 
