@@ -49,6 +49,7 @@
 		gap: 2rem;
 		padding: 1rem;
 		border-radius: 8px;
+		width: 100%;
 	}
 	.grade {
 		font-size: 4rem;
@@ -74,6 +75,7 @@
 		background-color: var(--automataBlack);
 		color: var(--automataWhite);
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		width: 100%;
 	}
 	.pros h3,
 	.cons h3 {
@@ -112,7 +114,9 @@
 		color: var(--automataWhite);
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 		grid-column: span 2;
+		width: 100%;
 	}
+
 
     @media (max-width: 900px) {
         .container {
@@ -130,5 +134,9 @@
         .final-comment {
             grid-column: span 1;
         }
+
+		.final-comment h2 {
+			word-break: break-word;
+		}
     }
 </style>
