@@ -41,7 +41,7 @@ Il gioco è un **avventura** spaziale in cui il giocatore esplora un sistema sol
 
 ![Camp](https://i.imgur.com/4YhLNoM.png)
 <center>
-    **Sfrido**, la luna di Cuore Legnoso
+    Sfrido, la luna di Cuore Legnoso
 </center>
 
 ### Una Narrazione Circolare
