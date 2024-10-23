@@ -57,6 +57,17 @@
 			}
 		},
 		{
+			"src": "/pagine/recensione-outer-wilds",
+			"dest": "/pagine/recensione-outer-wilds/"
+		},
+		{
+			"src": "/pagine/recensione-outer-wilds/",
+			"status": 308,
+			"headers": {
+				"Location": "/pagine/recensione-outer-wilds"
+			}
+		},
+		{
 			"src": "/pagine/recensione-chants-of-sennaar",
 			"dest": "/pagine/recensione-chants-of-sennaar/"
 		},
@@ -275,6 +286,9 @@
 		},
 		"progetti.html": {
 			"path": "progetti"
+		},
+		"pagine/recensione-outer-wilds.html": {
+			"path": "pagine/recensione-outer-wilds"
 		},
 		"pagine/recensione-chants-of-sennaar.html": {
 			"path": "pagine/recensione-chants-of-sennaar"

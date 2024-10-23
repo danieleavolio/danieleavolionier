@@ -149,4 +149,6 @@
 		position: relative;
 		z-index: 1; /* Il testo si trova sopra la sfumatura */
 	}
+
+	
 </style>

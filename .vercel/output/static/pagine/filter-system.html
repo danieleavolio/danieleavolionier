@@ -11,33 +11,33 @@
 	<link rel="icon" href="/favicon.png" /> 
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 	<link rel="manifest" href="/site.webmanifest">	
-		<link href="../_app/immutable/assets/0.fd9c2f0b.css" rel="stylesheet">
+		<link href="../_app/immutable/assets/0.af99449d.css" rel="stylesheet">
 		<link href="../_app/immutable/assets/Modal.37c0f23c.css" rel="stylesheet">
-		<link href="../_app/immutable/assets/7.7d3bdd3e.css" rel="stylesheet">
+		<link href="../_app/immutable/assets/7.aae705c9.css" rel="stylesheet">
 		<link href="../_app/immutable/assets/Author.931a7c92.css" rel="stylesheet">
 		<link href="../_app/immutable/assets/Tag.3905ac6a.css" rel="stylesheet">
 		<link href="../_app/immutable/assets/Grading.67c6c54f.css" rel="stylesheet">
-		<link rel="modulepreload" href="../_app/immutable/entry/start.d653323f.js">
+		<link rel="modulepreload" href="../_app/immutable/entry/start.f818cc9a.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/scheduler.38e9bcec.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/singletons.463c135b.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/singletons.4b30d006.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/control.c2cf8273.js">
-		<link rel="modulepreload" href="../_app/immutable/entry/app.5f3e46ea.js">
+		<link rel="modulepreload" href="../_app/immutable/entry/app.823280c5.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/preload-helper.a4192956.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/index.fa6e9378.js">
-		<link rel="modulepreload" href="../_app/immutable/nodes/0.ed560a20.js">
+		<link rel="modulepreload" href="../_app/immutable/nodes/0.0e215314.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/config.2fe9a967.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/spread.8a54911c.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/Icon.723a6cc1.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/each.ae5ef580.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/index.0d0aa15e.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/navigation.97470e07.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/navigation.0b8aa546.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/Modal.b484dbeb.js">
-		<link rel="modulepreload" href="../_app/immutable/nodes/7.2e847d83.js">
+		<link rel="modulepreload" href="../_app/immutable/nodes/7.8b633c06.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/dynamic-import-helper.be004503.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/Author.cdc96255.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/SEO.cd6d6e35.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/stores.37955c7d.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/Tag.dad8f434.js"><title>Implementazione di un Sistema di Filtri</title><!-- HEAD_svelte-4hwe27_START --><meta name="description" content="Come ho implementato un sistema di filtri per il mio blog"><meta property="og:title" content="Implementazione di un Sistema di Filtri"><meta property="og:description" content="Come ho implementato un sistema di filtri per il mio blog"><meta property="og:type" content="article"><meta property="og:url" content="http://sveltekit-prerender/pagine/filter-system"><meta property="og:image" content="https://i.imgur.com/juSgfgF.png"><meta name="twitter:image" content="https://i.imgur.com/juSgfgF.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Implementazione di un Sistema di Filtri"><meta name="twitter:description" content="Come ho implementato un sistema di filtri per il mio blog"> <!-- HTML_TAG_START -->
+		<link rel="modulepreload" href="../_app/immutable/chunks/SEO.d858e3af.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/stores.543abce5.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/Tag.12a5c691.js"><title>Implementazione di un Sistema di Filtri</title><!-- HEAD_svelte-4hwe27_START --><meta name="description" content="Come ho implementato un sistema di filtri per il mio blog"><meta property="og:title" content="Implementazione di un Sistema di Filtri"><meta property="og:description" content="Come ho implementato un sistema di filtri per il mio blog"><meta property="og:type" content="article"><meta property="og:url" content="http://sveltekit-prerender/pagine/filter-system"><meta property="og:image" content="https://i.imgur.com/juSgfgF.png"><meta name="twitter:image" content="https://i.imgur.com/juSgfgF.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Implementazione di un Sistema di Filtri"><meta name="twitter:description" content="Come ho implementato un sistema di filtri per il mio blog"> <!-- HTML_TAG_START -->
 		<script type="application/ld+json">
 		{
 			"@context": "https://schema.org",
@@ -69,7 +69,7 @@
 </head>
 
 <body data-sveltekit-preload-data="hover">
-	<div style="display: contents">  <div class="layout svelte-1bmlo4o"> <nav class="svelte-1chnx4l"><div class="nav-div svelte-1chnx4l">  <div class="home svelte-1chnx4l"><svg xmlns="http://www.w3.org/2000/svg" width="2.5em" height="2.5em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" cursor="pointer" fill-opacity="0" class="lucide-icon lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div> <div class="search-icon svelte-16w6dnk"><button class="svelte-16w6dnk" data-svelte-h="svelte-7udims"><span class="material-symbols-outlined svelte-16w6dnk">search</span></button></div>  <dialog class="svelte-9sq2pw search" this="0"> <div class="internal svelte-9sq2pw">     <a autofocus class="svelte-9sq2pw" data-svelte-h="svelte-1xniscw">CHIUDI</a></div> </dialog>  <div class="button-hamburger svelte-1chnx4l"><svg xmlns="http://www.w3.org/2000/svg" width="2.5em" height="2.5em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill-opacity="0" class="lucide-icon lucide lucide-settings "><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg></div></div></nav>  <main class="svelte-1bmlo4o"><div class="transition svelte-vcdv4c">  <article class="svelte-1w6do65"> <hgroup class="review-banner svelte-1w6do65"><h1 class="svelte-1w6do65">Implementazione di un Sistema di Filtri</h1> <h3 class="svelte-1w6do65">Come ho implementato un sistema di filtri per il mio blog</h3> <p class="svelte-1w6do65">Data: 5 set 2023</p> </hgroup>  <div class="tags svelte-1w6do65"><button class="tag  svelte-1y8qrki">PROGRAMMAZIONE</button><button class="tag  svelte-1y8qrki">WEB</button><button class="tag  svelte-1y8qrki">BLOG</button></div>  <div class="prose svelte-1w6do65"><h1 id="lidea" data-svelte-h="svelte-wu6zxj">L’idea</h1> <p data-svelte-h="svelte-16g8kcl">Al momento il numero di <strong>post</strong> è molto basso, ma in futuro (forse) il numero crescerà e sarà difficile trovare un post. Quindi ho deciso di implementare un <strong>sistema di filtri</strong>. L’idea è abbastanza semplice, perché lo sto facendo in Javascript e <strong>NON</strong> utilizzando un <strong>sistema API</strong>. Comunque, iniziamo.</p> <h2 id="il-risultato" data-svelte-h="svelte-1rsbrw7">Il risultato</h2> <p data-svelte-h="svelte-307ylj">Il risultato finale che volevo ottenere era un semplice <strong>dialogo</strong> in cui poter selezionare un tag preso dai <strong>post</strong> e quindi mostrare i <strong>post</strong> con quel tag. Quindi, ho iniziato a pensare a come farlo senza cambiare molto la <strong>UI di NieR Automata</strong>.</p> <img src="https://i.imgur.com/Uw65SzN.gif" alt="Sistema di Filtri" loading="lazy"> <p data-svelte-h="svelte-j5fhft">Passiamo al codice.</p> <h2 id="il-codice" data-svelte-h="svelte-5exm6r">Il codice</h2> <p data-svelte-h="svelte-marw3a"><strong>CSS</strong></p> <!-- HTML_TAG_START --><pre class="shiki one-dark-pro" style="background-color: #282c34" tabindex="0"><code><span class="line"><span style="color: #ABB2BF">&lt;</span><span style="color: #E06C75">style</span><span style="color: #ABB2BF">&gt;</span></span>
+	<div style="display: contents">  <div class="layout svelte-1bmlo4o"> <nav class="svelte-1chnx4l"><div class="nav-div svelte-1chnx4l">  <div class="home svelte-1chnx4l"><svg xmlns="http://www.w3.org/2000/svg" width="2.5em" height="2.5em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" cursor="pointer" fill-opacity="0" class="lucide-icon lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div> <div class="search-icon svelte-16w6dnk"><button class="svelte-16w6dnk" data-svelte-h="svelte-7udims"><span class="material-symbols-outlined svelte-16w6dnk">search</span></button></div>  <dialog class="svelte-9sq2pw search" this="0"> <div class="internal svelte-9sq2pw">     <a autofocus class="svelte-9sq2pw" data-svelte-h="svelte-1xniscw">CHIUDI</a></div> </dialog>  <div class="button-hamburger svelte-1chnx4l"><svg xmlns="http://www.w3.org/2000/svg" width="2.5em" height="2.5em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill-opacity="0" class="lucide-icon lucide lucide-settings "><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg></div></div></nav>  <main class="svelte-1bmlo4o"><div class="transition svelte-vcdv4c">  <article class="svelte-4vn856"> <hgroup class="review-banner svelte-4vn856"><h1 class="svelte-4vn856">Implementazione di un Sistema di Filtri</h1> <h3 class="svelte-4vn856">Come ho implementato un sistema di filtri per il mio blog</h3> <p class="svelte-4vn856">Data: 5 set 2023</p> </hgroup>  <div class="tags svelte-4vn856"><button class="tag  svelte-1y8qrki">PROGRAMMAZIONE</button><button class="tag  svelte-1y8qrki">WEB</button><button class="tag  svelte-1y8qrki">BLOG</button></div>  <div class="prose svelte-4vn856"><h1 id="lidea" data-svelte-h="svelte-wu6zxj">L’idea</h1> <p data-svelte-h="svelte-16g8kcl">Al momento il numero di <strong>post</strong> è molto basso, ma in futuro (forse) il numero crescerà e sarà difficile trovare un post. Quindi ho deciso di implementare un <strong>sistema di filtri</strong>. L’idea è abbastanza semplice, perché lo sto facendo in Javascript e <strong>NON</strong> utilizzando un <strong>sistema API</strong>. Comunque, iniziamo.</p> <h2 id="il-risultato" data-svelte-h="svelte-1rsbrw7">Il risultato</h2> <p data-svelte-h="svelte-307ylj">Il risultato finale che volevo ottenere era un semplice <strong>dialogo</strong> in cui poter selezionare un tag preso dai <strong>post</strong> e quindi mostrare i <strong>post</strong> con quel tag. Quindi, ho iniziato a pensare a come farlo senza cambiare molto la <strong>UI di NieR Automata</strong>.</p> <img src="https://i.imgur.com/Uw65SzN.gif" alt="Sistema di Filtri" loading="lazy"> <p data-svelte-h="svelte-j5fhft">Passiamo al codice.</p> <h2 id="il-codice" data-svelte-h="svelte-5exm6r">Il codice</h2> <p data-svelte-h="svelte-marw3a"><strong>CSS</strong></p> <!-- HTML_TAG_START --><pre class="shiki one-dark-pro" style="background-color: #282c34" tabindex="0"><code><span class="line"><span style="color: #ABB2BF">&lt;</span><span style="color: #E06C75">style</span><span style="color: #ABB2BF">&gt;</span></span>
 <span class="line"><span style="color: #C678DD">	</span><span style="color: #D19A66">.filter-title</span><span style="color: #ABB2BF"> &#123;</span></span>
 <span class="line"><span style="color: #ABB2BF">		display: </span><span style="color: #D19A66">flex</span><span style="color: #ABB2BF">;</span></span>
 <span class="line"><span style="color: #ABB2BF">		justify-content: </span><span style="color: #D19A66">space-between</span><span style="color: #ABB2BF">;</span></span>
@@ -244,7 +244,7 @@
 			
 			<script>
 				{
-					__sveltekit_1143gwq = {
+					__sveltekit_faje47 = {
 						base: new URL("..", location).pathname.slice(0, -1),
 						env: {}
 					};
@@ -254,8 +254,8 @@
 					const data = [null,null];
 
 					Promise.all([
-						import("../_app/immutable/entry/start.d653323f.js"),
-						import("../_app/immutable/entry/app.5f3e46ea.js")
+						import("../_app/immutable/entry/start.f818cc9a.js"),
+						import("../_app/immutable/entry/app.823280c5.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element, {
 							node_ids: [0, 7],
