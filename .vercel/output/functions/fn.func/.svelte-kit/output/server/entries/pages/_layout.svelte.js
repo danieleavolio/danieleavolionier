@@ -84,8 +84,10 @@ const SearchModal = create_ssr_component(($$result, $$props, $$bindings, slots) 
   $$result.css.add(css$3);
   let $$settled;
   let $$rendered;
+  let previous_head = $$result.head;
   do {
     $$settled = true;
+    $$result.head = previous_head;
     $$rendered = `<div class="search-icon svelte-16w6dnk"><button class="svelte-16w6dnk" data-svelte-h="svelte-7udims"><span class="material-symbols-outlined svelte-16w6dnk">search</span></button></div> ${validate_component(Modal, "Modal").$$render(
       $$result,
       { isSearch: true, dialog, showModal },

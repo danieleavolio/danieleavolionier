@@ -47,8 +47,10 @@ const Root = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     $$bindings.data_1(data_1);
   let $$settled;
   let $$rendered;
+  let previous_head = $$result.head;
   do {
     $$settled = true;
+    $$result.head = previous_head;
     {
       stores.page.set(page);
     }
@@ -104,7 +106,7 @@ const options = {
   root: Root,
   service_worker: false,
   templates: {
-    app: ({ head, body, assets: assets2, nonce, env }) => '<!DOCTYPE html>\r\n\r\n<html lang="en">\r\n\r\n<head>\r\n	<meta charset="utf-8" />\r\n	<meta name="viewport" content="width=device-width" />\r\n	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">\r\n	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">\r\n	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">\r\n	<link rel="icon" href="/favicon.png" /> \r\n	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">\r\n	<link rel="manifest" href="/site.webmanifest">	' + head + '\r\n	<meta name="google-site-verification" content="FTolVaK-x02wu54OEQqZv2yP7npBnNRQtI6mSv8W4RQ" />\r\n</head>\r\n\r\n<body data-sveltekit-preload-data="hover">\r\n	<div style="display: contents">' + body + "</div>\r\n</body>\r\n\r\n</html>",
+    app: ({ head, body, assets: assets2, nonce, env }) => '<!DOCTYPE html>\r\n\r\n<html lang="it">\r\n\r\n<head>\r\n	<meta charset="utf-8" />\r\n	<meta name="viewport" content="width=device-width" />\r\n	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">\r\n	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">\r\n	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">\r\n	<link rel="icon" href="/favicon.png" /> \r\n	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">\r\n	<link rel="manifest" href="/site.webmanifest">	' + head + '\r\n	<meta name="google-site-verification" content="FTolVaK-x02wu54OEQqZv2yP7npBnNRQtI6mSv8W4RQ" />\r\n</head>\r\n\r\n<body data-sveltekit-preload-data="hover">\r\n	<div style="display: contents">' + body + "</div>\r\n</body>\r\n\r\n</html>",
     error: ({ status, message }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<title>' + message + `</title>
 
 		<style>
@@ -176,7 +178,7 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1btukwp"
+  version_hash: "18ouyxe"
 };
 function get_hooks() {
   return {};
