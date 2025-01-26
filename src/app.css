@@ -393,6 +393,8 @@ a:visited:hover {
 	text-align: justify;
 }
 
+.prose table{margin: auto;}
+
 .prose h1 {
 	font-size: 3rem;
 	font-weight: 600;

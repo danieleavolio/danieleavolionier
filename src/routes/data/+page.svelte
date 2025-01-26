@@ -65,6 +65,7 @@
 		font-size: var(--font-size-fluid-2);
 	}
 
+
 	.stack {
 		display: flex;
 		flex-direction: column;

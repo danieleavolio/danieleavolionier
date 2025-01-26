@@ -4,7 +4,7 @@
 		{
 			name: 'LinkedIn',
 			url: 'https://www.linkedin.com/in/danieleavolio/',
-			icon: 'linkedin'
+			icon: 'lerna'
 		},
 		{
 			name: 'x',

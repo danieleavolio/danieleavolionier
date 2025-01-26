@@ -30,11 +30,11 @@
 					Ciao, sono <b>Daniele Avolio</b>, uno studente magistrale in informatica e intelligenza
 					artificiale presso l'<Link href="https://www.unical.it/">
 						<b>Università della Calabria</b>
-					</Link>. Sono appassionato di machine learning e data science. Ho esperienza pregressa
-					nello sviluppo frontend con
+					</Link>. Mi interessa il mondo del Machine Learning e Data Engineering. Ho esperienza come
+					sviluppatore frontend con
 					<Link href="https://kit.svelte.dev/"><b>SvelteKit</b></Link>
 					e <Link href="https://angular.dev/"><b>Angular</b></Link>. Quasi laureato magistrale in Computer Science & Artificial Intelligence, aspirante 
-					<b>Data Something</b>?, appassionato di <b>videogiochi</b> e <b>cultura pop giapponese</b>.
+					<b>Data <code>Something</code></b>, appassionato di <b>videogiochi</b> e <b>cultura pop giapponese</b>.
 				</p>
 				<div class="socials">
 					<a target="_blank" class="title" href="https://www.linkedin.com/in/danieleavolio/"
@@ -165,7 +165,6 @@
 		}
 
 		.socials {
-			justify-content: start;
 			margin-bottom: 0;
 		}
 	}

@@ -38,6 +38,7 @@
 		padding: 2em;
 	}
 
+
 	.search {
 		padding: 1em;
 		width: 80%;
@@ -53,6 +54,7 @@
 		justify-content: space-evenly;
 		height: 100%;
 	}
+
 
 	dialog::backdrop {
 		background: rgba(0, 0, 0, 0.3);

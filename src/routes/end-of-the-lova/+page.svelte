@@ -1,6 +1,7 @@
 <!-- src/routes/game/+page.svelte -->
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
+	import Seo from '$lib/components/SEO.svelte';
+import { onMount, onDestroy } from 'svelte';
 
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D;
@@ -390,6 +391,8 @@
 		}
 	});
 </script>
+
+<Seo title="End of the Lova" description="End" />
 
 <div class="game-container">
 	<canvas id="gameCanvas" />

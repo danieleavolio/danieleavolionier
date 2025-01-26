@@ -15,7 +15,7 @@ published: true
 
 *Link4Students* rappresenta il mio ambizioso progetto di tesi triennale di una piattaforma sociale dedicata agli studenti universitari. L'idea nasce dalla necessità di creare un ambiente online dove gli studenti possono connettersi, collaborare e condividere risorse educative in modo efficace e intuitivo.
 
-![logo](https://camo.githubusercontent.com/4e20b94b22b4a9cd6108452650a40bf717a8533f93de97b710be9ae36a8d030c/68747470733a2f2f692e696d6775722e636f6d2f623565364e74442e706e67)
+![logo](https://camo.githubusercontent.com/41e4f3c51d07f0dfb70c40afa81b516ceed025023d895841a929d48373105f06/68747470733a2f2f692e696d6775722e636f6d2f623565364e74442e706e67)
 
 ## Obiettivi del Progetto
 
