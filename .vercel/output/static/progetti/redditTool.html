@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+<html lang="it">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="icon" href="/favicon.png" /> 
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+	<link rel="manifest" href="/site.webmanifest">	
+		<link href="../_app/immutable/assets/0.1479e968.css" rel="stylesheet">
+		<link href="../_app/immutable/assets/Modal.e6359b44.css" rel="stylesheet">
+		<link href="../_app/immutable/assets/9.fbe182e2.css" rel="stylesheet">
+		<link href="../_app/immutable/assets/Author.931a7c92.css" rel="stylesheet">
+		<link href="../_app/immutable/assets/Tag.3905ac6a.css" rel="stylesheet">
+		<link rel="modulepreload" href="../_app/immutable/entry/start.a2c54dd7.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/scheduler.95a0eae5.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/singletons.6c8fe1bf.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/control.c2cf8273.js">
+		<link rel="modulepreload" href="../_app/immutable/entry/app.a78bb075.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/preload-helper.a4192956.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/index.92efbcc7.js">
+		<link rel="modulepreload" href="../_app/immutable/nodes/0.9215294e.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/config.2fe9a967.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/spread.8a54911c.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/Icon.6ae4231a.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/each.25e02fad.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/index.748c637d.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/navigation.b619607a.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/Modal.d8005a6f.js">
+		<link rel="modulepreload" href="../_app/immutable/nodes/9.571a3326.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/dynamic-import-helper.be004503.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/Author.e1e6e706.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/Tag.5962e64b.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/SEO.71e86f1a.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/stores.7ec5c7ea.js"><title>Reddit Post Analyzer</title><!-- HEAD_svelte-4hwe27_START --><meta name="description" content="Un piccolo tool “plug-and-play” per ricercare post Reddit e prepararli a qualunque analisi di data-science. Ancora un po’ buggato, ma già utile!"><meta property="og:title" content="Reddit Post Analyzer"><meta property="og:description" content="Un piccolo tool “plug-and-play” per ricercare post Reddit e prepararli a qualunque analisi di data-science. Ancora un po’ buggato, ma già utile!"><meta property="og:type" content="article"><meta property="og:url" content="http://sveltekit-prerender/progetti/redditTool"><meta property="og:image" content="https://i.imgur.com/juSgfgF.png"><meta name="twitter:image" content="https://i.imgur.com/juSgfgF.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Reddit Post Analyzer"><meta name="twitter:description" content="Un piccolo tool “plug-and-play” per ricercare post Reddit e prepararli a qualunque analisi di data-science. Ancora un po’ buggato, ma già utile!"> <!-- HTML_TAG_START -->
+		<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Article",
+			"mainEntityOfPage": {
+				"@type": "WebPage",
+				"@id": "http://sveltekit-prerender/progetti/redditTool"
+				},
+			"headline": "Reddit Post Analyzer",
+			"image": ["https://i.imgur.com/juSgfgF.png"],
+			"author": {
+				"@type": "Person",
+				"name": "Daniele Avolio"
+				},
+			"publisher": {
+				"@type": "Organization",
+				"name": "Daniele Avolio Blog",
+				"logo": {
+					"@type": "ImageObject",
+					"url": "https://i.imgur.com/HjK8Wmp.png"
+					}
+				},
+			"description": "Un piccolo tool “plug-and-play” per ricercare post Reddit e prepararli a qualunque analisi di data-science. Ancora un po’ buggato, ma già utile!",
+			"articleBody": "Un piccolo tool “plug-and-play” per ricercare post Reddit e prepararli a qualunque analisi di data-science. Ancora un po’ buggato, ma già utile!"
+		}
+		</script>
+		<!-- HTML_TAG_END --><!-- HEAD_svelte-4hwe27_END -->
+	<meta name="google-site-verification" content="FTolVaK-x02wu54OEQqZv2yP7npBnNRQtI6mSv8W4RQ" />
+</head>
+
+<body data-sveltekit-preload-data="hover">
+	<div style="display: contents">  <div class="layout svelte-1bmlo4o"> <nav class="svelte-1chnx4l"><div class="nav-div svelte-1chnx4l">  <div class="home svelte-1chnx4l"><svg xmlns="http://www.w3.org/2000/svg" width="2.5em" height="2.5em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" cursor="pointer" fill-opacity="0" class="lucide-icon lucide lucide-home "><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div> <div class="search-icon svelte-16w6dnk"><button class="svelte-16w6dnk" data-svelte-h="svelte-7udims"><span class="material-symbols-outlined svelte-16w6dnk">search</span></button></div>  <dialog class="svelte-1egqj1q search" this="0"> <div class="internal svelte-1egqj1q">     <a autofocus class="svelte-1egqj1q" data-svelte-h="svelte-1xniscw">CHIUDI</a></div> </dialog>  <div class="button-hamburger svelte-1chnx4l"><svg xmlns="http://www.w3.org/2000/svg" width="2.5em" height="2.5em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill-opacity="0" class="lucide-icon lucide lucide-settings "><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg></div></div></nav>  <main class="svelte-1bmlo4o"><div class="transition svelte-vcdv4c">  <article class="svelte-1stx62q"> <hgroup class="svelte-1stx62q"><h1 class="svelte-1stx62q">Reddit Post Analyzer</h1> <h3 class="svelte-1stx62q">Un piccolo tool “plug-and-play” per ricercare post Reddit e prepararli a qualunque analisi di data-science. Ancora un po’ buggato, ma già utile!</h3> <p>Data: 23 gen 2025</p></hgroup>  <div class="tags svelte-1stx62q"><button class="tag  svelte-1y8qrki">PYTHON</button><button class="tag  svelte-1y8qrki">STREAMLIT</button><button class="tag  svelte-1y8qrki">DATA ANALYSIS</button></div>  <div class="prose svelte-1stx62q"><h1 id="reddit-post-analyzer" data-svelte-h="svelte-163gbny">Reddit Post Analyzer</h1> <p data-svelte-h="svelte-1bdtp0v"><strong>Reddit Post Analyzer</strong> è una web-app scritta in Python che ti aiuta a <strong>raccogliere rapidamente post da Reddit</strong> per poi passarli al tuo workflow di analisi (topic modeling, LLM, dashboard esterne, ecc.).</p> <p data-svelte-h="svelte-9uwfty">L’obiettivo è offrirti un’esperienza <strong>plug-and-play</strong>: scarichi il repo, lanci <code>streamlit run app.py</code> e sei subito operativo.<br>
+È ancora <strong>un po’ buggato</strong> ✨ (l’UI può bloccarsi se fai tante query di fila), ma fa già il suo dovere.</p> <hr> <h2 id="perché-potrebbe-servirti-" data-svelte-h="svelte-1letz5v">Perché potrebbe servirti 🧐</h2> <ol data-svelte-h="svelte-sargww"><li><strong>Ricerca accademica</strong> – devi studiare il sentiment su un argomento di nicchia? Otterrai in pochi minuti un CSV pulito.</li> <li><strong>Monitoraggio brand/prodotto</strong> – estrai i post, poi caricali nel tuo sistema di BI.</li> <li><strong>Prototipazione veloce</strong> – vuoi testare un nuovo modello NLP? Evita di scrivere da zero lo scraper.</li></ol> <hr> <h2 id="limitazioni-da-conoscere-️" data-svelte-h="svelte-7ia9rf">Limitazioni da conoscere ⚠️</h2> <table data-svelte-h="svelte-n6h5xx"><thead><tr><th>Limite</th> <th>Dettagli</th></tr></thead> <tbody><tr><td><strong>Bug noti</strong></td> <td>Refresh ripetuti in Streamlit possono duplicare i log; alcune eccezioni sulla rete non sono gestite.</td></tr> <tr><td><strong>Rate limit Reddit</strong></td> <td>Reddit consente ±60 richieste/min. L’app si ferma se superi la quota giornaliera.</td></tr> <tr><td><strong>Solo una chiave API</strong></td> <td>Al momento non gestisco client multipli; se più utenti usano la stessa app bisogna condividere la quota.</td></tr></tbody></table> <hr> <h2 id="come-funziona-in-breve" data-svelte-h="svelte-5bke7c">Come funziona (in breve)</h2> <ol data-svelte-h="svelte-1qw1r73"><li>Inserisci <strong>query</strong> + <strong>numero di post</strong>.</li> <li>Lo script chiama la <strong>Reddit API</strong>, poi salva tutto in <strong>SQLite</strong>.</li> <li>Puoi esportare il dataset o visualizzarlo con i grafici incorporati.</li></ol> <hr> <h2 id="setup-rapido-️" data-svelte-h="svelte-14x39rv">Setup rapido 🛠️</h2> <!-- HTML_TAG_START --><pre class="shiki one-dark-pro" style="background-color: #282c34" tabindex="0"><code><span class="line"><span style="color: #61AFEF">git</span><span style="color: #ABB2BF"> </span><span style="color: #98C379">clone</span><span style="color: #ABB2BF"> </span><span style="color: #98C379">https://github.com/danieleavolio/RedditTool.git</span></span>
+<span class="line"><span style="color: #56B6C2">cd</span><span style="color: #ABB2BF"> </span><span style="color: #98C379">RedditTool</span></span>
+<span class="line"><span style="color: #61AFEF">python</span><span style="color: #ABB2BF"> </span><span style="color: #D19A66">-m</span><span style="color: #ABB2BF"> </span><span style="color: #98C379">venv</span><span style="color: #ABB2BF"> </span><span style="color: #98C379">venv</span><span style="color: #ABB2BF"> &amp;&amp; </span><span style="color: #56B6C2">source</span><span style="color: #ABB2BF"> </span><span style="color: #98C379">venv/bin/activate</span></span>
+<span class="line"><span style="color: #61AFEF">pip</span><span style="color: #ABB2BF"> </span><span style="color: #98C379">install</span><span style="color: #ABB2BF"> </span><span style="color: #D19A66">-r</span><span style="color: #ABB2BF"> </span><span style="color: #98C379">requirements.txt</span></span>
+<span class="line"><span style="color: #61AFEF">python</span><span style="color: #ABB2BF"> </span><span style="color: #98C379">-</span><span style="color: #ABB2BF"> &lt;&lt;</span><span style="color: #ABB2BF">EOF</span></span>
+<span class="line"><span style="color: #98C379">import nltk, sys</span></span>
+<span class="line"><span style="color: #98C379">nltk.download(&quot;vader_lexicon&quot;); nltk.download(&quot;punkt&quot;)</span></span>
+<span class="line"><span style="color: #ABB2BF">EOF</span></span>
+<span class="line"><span style="color: #61AFEF">streamlit</span><span style="color: #ABB2BF"> </span><span style="color: #98C379">run</span><span style="color: #ABB2BF"> </span><span style="color: #98C379">app.py</span></span></code></pre><!-- HTML_TAG_END --> <p data-svelte-h="svelte-1jhib3k">In meno di 5 minuti hai la dashboard pronta a girare su <code>localhost:8501</code>.</p> <hr> <h2 id="roadmap" data-svelte-h="svelte-vnoolq">Roadmap</h2> <ul class="contains-task-list" data-svelte-h="svelte-1wx3qbt"><li class="task-list-item"><input type="checkbox" disabled> Gestione completa degli errori di rete ↻</li> <li class="task-list-item"><input type="checkbox" disabled> Scheduler asincrono per scraping periodico 🕒</li> <li class="task-list-item"><input type="checkbox" disabled> Supporto PostgreSQL per dataset grandi 🐘</li> <li class="task-list-item"><input type="checkbox" disabled> Tema dark &amp; layout responsive migliore 🌙</li></ul> <hr> <p data-svelte-h="svelte-647znz">— <strong>Daniele Avolio</strong></p></div>  <div class="author svelte-sn0eh6"><div class="name-surname svelte-sn0eh6"><span>Daniele</span> <span class="username svelte-sn0eh6">lovaion</span> <span>Avolio</span></div> <p>Sviluppatore e amante del mondo dei videogiochi 🎮 e della cultura pop giapponese 🗾</p>   <div class="contacts svelte-wk71a5">  <img src="https://simpleicons.org/icons/lerna.svg" alt="LinkedIn" class="icon svelte-wk71a5"> <img src="https://simpleicons.org/icons/x.svg" alt="x" class="icon svelte-wk71a5"> <img src="https://simpleicons.org/icons/github.svg" alt="GitHub" class="icon svelte-wk71a5"> </div> </div> </article></div></main> <footer class="svelte-k2ae0s"><p class="svelte-k2ae0s">Daniele Avolio © 2025</p> </footer> </div> 
+			
+			<script>
+				{
+					__sveltekit_d0f3u8 = {
+						base: new URL("..", location).pathname.slice(0, -1),
+						env: {}
+					};
+
+					const element = document.currentScript.parentElement;
+
+					const data = [null,null];
+
+					Promise.all([
+						import("../_app/immutable/entry/start.a2c54dd7.js"),
+						import("../_app/immutable/entry/app.a78bb075.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 9],
+							data,
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+</body>
+
+</html>

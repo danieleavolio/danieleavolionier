@@ -19,7 +19,7 @@
 <div bind:this={pagedata} class="page-data">
 	<div class="top-header">
 		<Square />
-		<p>Daniele Avolio: Master-student</p>
+		<p>Daniele Avolio: Big Data Engineer</p>
 	</div>
 	<div class="outer-box">
 		<div class="inner-box">
@@ -27,18 +27,21 @@
 			<div class="main-features">
 				<p />
 				<p class="content">
-					Ciao, sono <b>Daniele Avolio</b>, uno studente magistrale in informatica e intelligenza
-					artificiale presso l'<Link href="https://www.unical.it/">
+					Ciao, sono <b>Daniele Avolio</b>, laureato magistrale in
+					<b>Informatica e Intelligenza Artificiale</b>
+					presso l'<Link href="https://www.unical.it/">
 						<b>Università della Calabria</b>
-					</Link>. Mi interessa il mondo del Machine Learning e Data Engineering. Ho esperienza come
-					sviluppatore frontend con
-					<Link href="https://kit.svelte.dev/"><b>SvelteKit</b></Link>
-					e <Link href="https://angular.dev/"><b>Angular</b></Link>. Quasi laureato magistrale in Computer Science & Artificial Intelligence, aspirante 
-					<b>Data <code>Something</code></b>, appassionato di <b>videogiochi</b> e <b>cultura pop giapponese</b>.
+					</Link>. Sono stato <b>Frontend Developer</b> e <b>Data Engineer</b>, con esperienza su
+					<Link href="https://kit.svelte.dev/"><b><code>SvelteKit</code></b></Link> e
+					<Link href="https://angular.dev/"><b><code>Angular</code></b></Link>. Attualmente lavoro
+					come <b><code>Data Engineer</code></b> presso
+					<Link href="https://agilelab.it/" target="_blank"><i>Agile Lab</i></Link>. Appassionato di
+					<b>videogiochi</b>
+					e <b>cultura pop giapponese</b>.
 				</p>
 				<div class="socials">
 					<a target="_blank" class="title" href="https://www.linkedin.com/in/danieleavolio/"
-						>Linkedin</a
+						>LinkedIn</a
 					>
 					<a target="_blank" href="https://twitter.com/avolio_daniele">Twitter</a>
 					<a target="_blank" href="https://github.com/danieleavolio">GitHub</a>
@@ -168,5 +171,4 @@
 			margin-bottom: 0;
 		}
 	}
-
 </style>

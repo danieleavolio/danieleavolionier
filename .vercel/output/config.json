@@ -167,6 +167,17 @@
 			}
 		},
 		{
+			"src": "/progetti/redditTool",
+			"dest": "/progetti/redditTool/"
+		},
+		{
+			"src": "/progetti/redditTool/",
+			"status": 308,
+			"headers": {
+				"Location": "/progetti/redditTool"
+			}
+		},
+		{
 			"src": "/progetti/youtube-downloader",
 			"dest": "/progetti/youtube-downloader/"
 		},
@@ -316,6 +327,9 @@
 		},
 		"pagine/nier-ui.html": {
 			"path": "pagine/nier-ui"
+		},
+		"progetti/redditTool.html": {
+			"path": "progetti/redditTool"
 		},
 		"progetti/youtube-downloader.html": {
 			"path": "progetti/youtube-downloader"

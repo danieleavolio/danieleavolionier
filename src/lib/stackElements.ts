@@ -5,32 +5,39 @@ export interface stackElement {
     color: string;
 }
 
-const stackElements: stackElement[] = [
 
+const stackElements: stackElement[] = [
     {
-        slug:"master",
-        title: "Laurea Magistrale in Informatica",
+        slug: "Agile Lab Experience",
+        title: "Agile Lab Experience",
+        color: "red"
+    },
+    {
+        slug: "Lutech Experience",
+        title: "Lutech Experience",
+        color: "red"
+    },
+    {
+        slug: "erasmus",
+        title: "Erasmus all'IST di Lisbona",
+        color: "yellow"
+    },
+    {
+        slug: "master",
+        title: "Laurea Magistrale in Informatica e I.A.",
         color: "black"
     },
 
     {
-        slug: "erasmus",
-        title: "Erasmus at Instituto Superior Técnico",
-        color: "yellow"
-    },
-
-    {
-        slug: "frontend",
-        title: "Frontend Developer",
+        slug: "IET Experience",
+        title: "IET Experience",
         color: "red"
     },
-
     {
         slug: "bachelor",
         title: "Laurea Triennale in Informatica",
         color: "yellow"
     },
-
     {
         slug: "skills",
         title: "Skills",
@@ -41,6 +48,6 @@ const stackElements: stackElement[] = [
         title: "Privato",
         color: "black"
     },
-]
+];
 
 export default stackElements;
