@@ -2,6 +2,17 @@
 	"version": 3,
 	"routes": [
 		{
+			"src": "/admin",
+			"dest": "/admin/"
+		},
+		{
+			"src": "/admin/",
+			"status": 308,
+			"headers": {
+				"Location": "/admin"
+			}
+		},
+		{
 			"src": "/appunti",
 			"dest": "/appunti/"
 		},
@@ -282,6 +293,9 @@
 	"overrides": {
 		"index.html": {
 			"path": ""
+		},
+		"admin.html": {
+			"path": "admin"
 		},
 		"appunti.html": {
 			"path": "appunti"

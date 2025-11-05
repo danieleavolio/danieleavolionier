@@ -2,7 +2,9 @@
 	import Modal from '$lib/components/Modal.svelte';
 	import Seo from '$lib/components/SEO.svelte';
 	import * as config from '$lib/config';
-	import stackElements, { type stackElement } from '$lib/stackElements';
+	import type { stackElement } from '$lib/types';
+	import stackElements from '$lib/stackElements.json';
+
 	let showModal = false;
 
 	let selectedItem = 'None';
