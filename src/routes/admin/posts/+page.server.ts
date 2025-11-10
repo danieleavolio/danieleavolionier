@@ -24,18 +24,24 @@ function parseFrontmatter(content) {
 	return { frontmatter: {}, body: content };
 }
 
-export function load() {
-	const posts = fs.readdirSync(POSTS_DIR).map(file => {
-		const content = fs.readFileSync(path.join(POSTS_DIR, file), 'utf-8');
-		const { frontmatter, body } = parseFrontmatter(content);
-		return {
-			slug: file.replace(/\.md$/, ''),
-			title: frontmatter.title,
-			description: frontmatter.description,
-			categories: frontmatter.categories ? frontmatter.categories.replace(/[\[\]]/g, '').split(',').map(c => c.trim().replace(/"/g, '')) : [],
-			content: body.trim()
-		};
-	});
+export async function load() {
+	const modules = import.meta.glob('/src/posts/*.md');
+
+	const posts = await Promise.all(
+		Object.entries(modules).map(async ([path, resolver]) => {
+			const resolved = await resolver();
+			const { metadata, default: content } = resolved;
+			const slug = path.split('/').pop()?.replace('.md', '');
+
+			return {
+				slug,
+				title: metadata.title,
+				description: metadata.description,
+				categories: metadata.categories,
+				content
+			};
+		})
+	);
 
 	return { posts };
 }

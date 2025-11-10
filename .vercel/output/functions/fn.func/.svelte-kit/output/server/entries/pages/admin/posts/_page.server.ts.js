@@ -4,34 +4,22 @@ import path from "path";
 const prerender = false;
 const POSTS_DIR = path.resolve("src/posts");
 const ADMIN_PASSWORD = "password";
-function parseFrontmatter(content) {
-  const match = content.match(/---\r?\n([\s\S]+?)\r?\n---/);
-  if (match) {
-    const frontmatter = match[1];
-    const body = content.slice(match[0].length);
-    const data = {};
-    frontmatter.split("\n").forEach((line) => {
-      const [key, ...value] = line.split(":");
-      if (key && value) {
-        data[key.trim()] = value.join(":").trim();
-      }
-    });
-    return { frontmatter: data, body };
-  }
-  return { frontmatter: {}, body: content };
-}
-function load() {
-  const posts = fs.readdirSync(POSTS_DIR).map((file) => {
-    const content = fs.readFileSync(path.join(POSTS_DIR, file), "utf-8");
-    const { frontmatter, body } = parseFrontmatter(content);
-    return {
-      slug: file.replace(/\.md$/, ""),
-      title: frontmatter.title,
-      description: frontmatter.description,
-      categories: frontmatter.categories ? frontmatter.categories.replace(/[\[\]]/g, "").split(",").map((c) => c.trim().replace(/"/g, "")) : [],
-      content: body.trim()
-    };
-  });
+async function load() {
+  const modules = /* @__PURE__ */ Object.assign({ "/src/posts/erasmus.md": () => import("../../../../chunks/erasmus.js").then((n) => n._), "/src/posts/filter-system.md": () => import("../../../../chunks/filter-system.js").then((n) => n._), "/src/posts/how-to-fix-pixel-7-pro-volume-button-falling-off.md": () => import("../../../../chunks/how-to-fix-pixel-7-pro-volume-button-falling-off.js").then((n) => n._), "/src/posts/implementare-search-engine-sveltekit.md": () => import("../../../../chunks/implementare-search-engine-sveltekit.js").then((n) => n._), "/src/posts/magistrale-informatica-unical.md": () => import("../../../../chunks/magistrale-informatica-unical.js").then((n) => n._), "/src/posts/nier-ui.md": () => import("../../../../chunks/nier-ui.js").then((n) => n._), "/src/posts/primo-modello-di-machine-learning.md": () => import("../../../../chunks/primo-modello-di-machine-learning.js").then((n) => n._), "/src/posts/recensione-chants-of-sennaar.md": () => import("../../../../chunks/recensione-chants-of-sennaar.js").then((n) => n._), "/src/posts/recensione-nier-automata.md": () => import("../../../../chunks/recensione-nier-automata.js").then((n) => n._), "/src/posts/recensione-outer-wilds.md": () => import("../../../../chunks/recensione-outer-wilds.js").then((n) => n._) });
+  const posts = await Promise.all(
+    Object.entries(modules).map(async ([path2, resolver]) => {
+      const resolved = await resolver();
+      const { metadata, default: content } = resolved;
+      const slug = path2.split("/").pop()?.replace(".md", "");
+      return {
+        slug,
+        title: metadata.title,
+        description: metadata.description,
+        categories: metadata.categories,
+        content
+      };
+    })
+  );
   return { posts };
 }
 const actions = {
