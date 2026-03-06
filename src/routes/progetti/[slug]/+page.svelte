@@ -3,18 +3,22 @@
 	import Author from '$lib/components/Author.svelte';
 	import Seo from '$lib/components/SEO.svelte';
 	import type { Element } from '$lib/types';
+	import * as config from '$lib/config';
 	import Tag from '$lib/components/Tag.svelte';
-	export let data: any;
+	import type { PageData } from './$types';
 
+	export let data: PageData;
+
+	const siteUrl = config.url.replace(/\/$/, '');
 	let metadata: Element = data.meta;
+	$: fallbackOg = `${siteUrl}/og/progetti/${data.slug}.svg`;
+	$: seoImage = metadata.image || fallbackOg;
 </script>
-
-<!-- SEO -->
 
 <Seo
 	title={metadata.title}
 	description={metadata.description}
-	image={metadata.image ? metadata.image : 'https://i.imgur.com/juSgfgF.png'}
+	image={seoImage}
 	isArticle={true}
 	author={'Daniele Avolio'}
 	publishDate={metadata.date}
@@ -22,26 +26,22 @@
 />
 
 <article>
-	<!-- TITLE -->
 	<hgroup>
 		<h1>{data.meta.title}</h1>
 		<h3>{data.meta.description}</h3>
 		<p>Data: {formatDate(data.meta.date)}</p>
 	</hgroup>
 
-	<!-- tags -->
 	<div class="tags">
 		{#each data.meta.categories as category}
-			<Tag category={category} from="progetti" />
+			<Tag {category} from="progetti" />
 		{/each}
 	</div>
 
-	<!-- POST -->
 	<div class="prose">
 		<svelte:component this={data.content} />
 	</div>
 
-	<!-- AUTHOR -->
 	<Author
 		name="Daniele"
 		surname="Avolio"
@@ -61,7 +61,6 @@
 		font-weight: 600;
 	}
 
-
 	h3 {
 		text-transform: none;
 	}
@@ -78,7 +77,6 @@
 		justify-content: center;
 		align-items: center;
 	}
-
 
 	hgroup {
 		margin-bottom: var(--size-7);

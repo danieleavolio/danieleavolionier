@@ -1,82 +1,72 @@
-import FlexSearch from 'flexsearch'
+import FlexSearch from 'flexsearch';
 import type { Element } from '$lib/types';
 
+let postsIndex: FlexSearch.Index;
+let posts: Element[];
 
-let postsIndex: FlexSearch.Index
-let posts: Element[]
+export function createIndex(data: { posts: Element[]; progetti: Element[] }) {
+	postsIndex = new FlexSearch.Index({ tokenize: 'forward' });
 
-export function createIndex(data: any) {
-    // create the posts index
-    postsIndex = new FlexSearch.Index({ tokenize: 'forward' })
+	const merged = data.posts.concat(data.progetti);
+	merged.forEach((post, i) => {
+		const item = `${post.title} ${post.description}`;
+		postsIndex.add(i, item);
+	});
 
-
-    data = data.posts.concat(data.progetti);
-    
-    data.forEach((post: { title: any; description: any; }, i: FlexSearch.Id) => {
-        // index the title and content together
-        const item = `${post.title} ${post.description}`
-        // add the item to the index 👍️
-        postsIndex.add(i, item)
-    })
-
-    posts = data
+	posts = merged;
 }
 
 export function searchPostsIndex(searchTerm: string) {
-    // escape special regex characters
-    const match = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-    // return matching post indexes 💪
-    const results = postsIndex.search(match)
+	if (!searchTerm.trim()) return [];
 
-    return results
-        // filter the posts based on the matched index
-        .map((index) => posts[index as number])
-        // you can do whatever you want at this point 👌
-        .map(({ slug, title, description }) => {
-            return {
-                slug,
-                // replace match in title with a marker
-                title: replaceTextWithMarker(title, match),
-                // match words in post and replace matches with marker
-                content: getMatches(description, match, 3)
-            }
-        })
+	const match = escapeRegex(searchTerm);
+	const results = postsIndex.search(match);
+
+	return results
+		.map((index) => posts[index as number])
+		.map(({ slug, title, description }) => {
+			return {
+				slug,
+				title: replaceTextWithMarker(title, match),
+				content: getMatches(description, match, 3)
+			};
+		});
 }
 
-
 function getMatches(text: string, searchTerm: string, limit = 1) {
-    // create dynamic regex 😎
-    const regex = new RegExp(searchTerm, 'gi')
-    // word indexes
-    const indexes = []
-    // matches count
-    let matches = 0
-    // current match in loop
-    let match
+	const regex = new RegExp(searchTerm, 'gi');
+	const indexes: number[] = [];
+	let matches = 0;
+	let match: RegExpExecArray | null;
 
-    while ((match = regex.exec(text)) !== null && matches < limit) {
-        // push that shit
-        indexes.push(match.index)
-        // increment matches
-        matches++
-    }
+	while ((match = regex.exec(text)) !== null && matches < limit) {
+		indexes.push(match.index);
+		matches++;
+	}
 
-    // take the word index...
-    return indexes.map((index) => {
-        // go back 20 characters
-        const start = index - 20
-        // go forward 80 characters
-        const end = index + 80
-        // yoink the text
-        const excerpt = text.substring(start, end).trim()
-        // return excerpt 🤝
-        return `...${replaceTextWithMarker(excerpt, searchTerm)}...`
-    })
+	return indexes.map((index) => {
+		const start = Math.max(0, index - 20);
+		const end = index + 80;
+		const excerpt = text.substring(start, end).trim();
+		return `...${replaceTextWithMarker(excerpt, searchTerm)}...`;
+	});
 }
 
 function replaceTextWithMarker(text: string, match: string) {
-    // create dynamic regex 😎
-    const regex = new RegExp(match, 'gi')
-    // preserves the text casing 🤙
-    return text.replaceAll(regex, (match) => `<mark>${match}</mark>`)
+	const safeText = escapeHtml(text);
+	const regex = new RegExp(match, 'gi');
+	return safeText.replaceAll(regex, (m) => `<mark>${m}</mark>`);
+}
+
+function escapeRegex(text: string) {
+	return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function escapeHtml(text: string) {
+	return text
+		.replaceAll('&', '&amp;')
+		.replaceAll('<', '&lt;')
+		.replaceAll('>', '&gt;')
+		.replaceAll('"', '&quot;')
+		.replaceAll("'", '&#39;');
 }

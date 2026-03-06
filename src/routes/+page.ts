@@ -1,8 +1,11 @@
 import type { Element } from '$lib/types';
 
 export async function load({ fetch }) {
-	const response = await fetch('api/posts');
-	const posts: Element[] = await response.json();
+	const postsResponse = await fetch('/api/posts');
+	const projectsResponse = await fetch('/api/progetti');
 
-	return { posts };
+	const posts: Element[] = await postsResponse.json();
+	const progetti: Element[] = await projectsResponse.json();
+
+	return { posts, progetti };
 }

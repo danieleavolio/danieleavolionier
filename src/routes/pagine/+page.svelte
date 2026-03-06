@@ -1,7 +1,7 @@
 <script lang="ts">
 	import CategoriesFilter from '$lib/components/CategoriesFilter.svelte';
 	import * as config from '$lib/config';
-	import type { Element } from '$lib/types.js';
+	import type { Element, FaqItem } from '$lib/types';
 	import { formatDate } from '$lib/utils';
 	import { slide } from 'svelte/transition';
 	import { BoxSelect } from 'lucide-svelte';
@@ -9,17 +9,31 @@
 	import Tag from '$lib/components/Tag.svelte';
 	import { onMount, tick } from 'svelte';
 	import { categoryStore } from '$lib/stores/categoryStore.js';
-	export let data;
+	import type { PageData } from './$types';
+
+	export let data: PageData;
+
+	const faqItems: FaqItem[] = [
+		{
+			question: 'Come cerco articoli per argomento?',
+			answer:
+				'Puoi usare il filtro categorie per restringere i post su temi come SvelteKit, programmazione, recensioni e AI.'
+		},
+		{
+			question: 'I post sono ordinati per data?',
+			answer: 'Si, i contenuti vengono mostrati dal piu recente al piu vecchio.'
+		}
+	];
 
 	let activeFilters: string[] = [];
 	let CatFilter: any;
+	let categories: string[] = [];
+	let postToShow: Element[] = data.posts;
 
 	onMount(() => {
-		categoryStore.subscribe((value) => {
+		const unsubscribe = categoryStore.subscribe((value) => {
 			if (value) {
-				// Get the value index in the categories array
-				let index = categories.indexOf(value);
-				// If the string value is not in the CatFilter.activeFilters array, add it
+				const index = categories.indexOf(value);
 				if (!activeFilters.includes(value)) {
 					tick().then(() => {
 						CatFilter.clearFilters();
@@ -30,66 +44,45 @@
 				}
 			}
 		});
+
+		return unsubscribe;
 	});
 
-	// create event dispatcher
-	let categories: string[] = [];
-	let postToShow: Element[] = data.posts;
-	//For each post, add the tags to the tags array
 	data.posts.forEach((post) => {
 		post.categories.forEach((tag) => {
 			categories.push(tag);
 		});
 	});
-
-	//Sort the tags array alphabetically
 	categories.sort();
-
-	//Create a set to remove duplicates
 	categories = [...new Set(categories)];
 
-	const handleFilter = (e: any) => {
-		let filters: string[] = e.detail;
+	const handleFilter = (e: CustomEvent<string[]>) => {
+		const filters = e.detail;
 
-		// If there are no filters, show all posts
 		if (filters.length === 0) {
 			postToShow = data.posts;
 			return;
 		}
 
-		// Filter posts
 		postToShow = data.posts.filter((post) => {
-			let postTags = post.categories;
-			let matches = 0;
-
-			// For each filter, check if the post has the tag
-			filters.forEach((filter: string) => {
-				if (postTags.includes(filter)) {
-					matches++;
-				}
-			});
-
-			// If the number of matches is equal to the number of filters, the post has all the tags
-			if (matches === filters.length) {
-				return true;
-			}
+			const matches = filters.filter((filter) => post.categories.includes(filter)).length;
+			return matches === filters.length;
 		});
 	};
 </script>
 
-
 <Seo
 	title={config.title}
-	description="La pagina dei post del blog. Qui potete trovare tutti i post scritti da me medesimo su vari argomenti che vanno dalla programmazione, alle recensioni di videogiochi e fino ad aggiornamenti generici sulla mia vita."
+	description="La pagina dei post del blog. Qui trovi articoli su sviluppo web, intelligenza artificiale, recensioni e aggiornamenti personali."
 	image="https://i.imgur.com/juSgfgF.png"
-	isArticle={false}
+	{faqItems}
 />
 
 <section>
 	<ul class="posts">
-		{#each postToShow as post, i}
+		{#each postToShow as post}
 			<li transition:slide class="post">
-				<a href="pagine/{post.slug}" class="title">{post.title}</a>
+				<a href={`/pagine/${post.slug}`} class="title">{post.title}</a>
 				<p class="date">{formatDate(post.date)}</p>
 				<p class="description">{post.description}</p>
 				<div class="tags">
@@ -99,7 +92,7 @@
 				</div>
 			</li>
 		{/each}
-		{#if postToShow.length == 0}
+		{#if postToShow.length === 0}
 			<h1>Nessun post trovato! <BoxSelect size="2em" /></h1>
 		{/if}
 	</ul>

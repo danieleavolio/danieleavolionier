@@ -25,7 +25,7 @@
 		<div class="inner-box">
 			<img alt="Daniele Avolio Avatar" src="images/avatar.png" />
 			<div class="main-features">
-				<p />
+				<p></p>
 				<p class="content">
 					Ciao, sono <b>Daniele Avolio</b>, laureato magistrale in
 					<b>Informatica e Intelligenza Artificiale</b>
@@ -47,7 +47,7 @@
 					<a target="_blank" href="https://github.com/danieleavolio">GitHub</a>
 					<a href="mailto:daniele.avolio14@gmail.com">EMAIL</a>
 				</div>
-				<a target="_blank" href="CV-DA.pdf">CV</a>
+				<a target="_blank" href="/CV-DA.pdf">CV</a>
 			</div>
 		</div>
 	</div>

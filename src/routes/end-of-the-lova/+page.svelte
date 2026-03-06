@@ -1,7 +1,7 @@
 <!-- src/routes/game/+page.svelte -->
 <script lang="ts">
 	import Seo from '$lib/components/SEO.svelte';
-import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D;
@@ -45,8 +45,6 @@ import { onMount, onDestroy } from 'svelte';
 	};
 
 	function initGame() {
-
-
 		if (!canvas || !ctx) return;
 
 		// if the ost is already playing, don't play it again
@@ -66,7 +64,6 @@ import { onMount, onDestroy } from 'svelte';
 		gameActive = true;
 		showRestartButton = false;
 
-
 		requestAnimationFrame(gameLoop);
 	}
 
@@ -75,8 +72,6 @@ import { onMount, onDestroy } from 'svelte';
 		OST.currentTime = 0;
 		initGame();
 	}
-
-
 
 	function isOverlapping(newEnemy: any, existingEnemies: any[]) {
 		return existingEnemies.some((enemy) => {
@@ -164,7 +159,6 @@ import { onMount, onDestroy } from 'svelte';
 
 	function shoot() {
 		if (keys.Space && gameTime - ship.lastShot >= ship.shootDelay) {
-
 			// Shoot multiple bullets
 			const bulletSpread = [0]; // Three bullets with spread
 			bulletSpread.forEach((spread) => {
@@ -194,15 +188,17 @@ import { onMount, onDestroy } from 'svelte';
 				enemy.y += 2;
 			}
 
-			enemy.projectiles = enemy.projectiles.filter((p: { angle: number; x: number; y: number; active: any; }) => {
-				const speed = 1.2;
-				const radius = 60;
-				p.angle = (p.angle || 0) + 0.05;
-				p.x += Math.cos(p.angle) * radius * 0.05;
-				p.y += speed;
+			enemy.projectiles = enemy.projectiles.filter(
+				(p: { angle: number; x: number; y: number; active: any }) => {
+					const speed = 1.2;
+					const radius = 60;
+					p.angle = (p.angle || 0) + 0.05;
+					p.x += Math.cos(p.angle) * radius * 0.05;
+					p.y += speed;
 
-				return p.y < canvas.height && p.active && p.x > 0 && p.x < canvas.width;
-			});
+					return p.y < canvas.height && p.active && p.x > 0 && p.x < canvas.width;
+				}
+			);
 
 			if (gameTime - enemy.lastShot > 700) {
 				enemy.projectiles.push({
@@ -229,40 +225,48 @@ import { onMount, onDestroy } from 'svelte';
 				) {
 					enemy.health--;
 					projectile.active = false;
-
 				}
 			});
 		});
 
 		textEnemies.forEach((enemy) => {
-			enemy.projectiles.forEach((projectile: { x: number; width: any; y: number; height: any; active: boolean; }) => {
-				if (
-					projectile.x < ship.x + ship.width &&
-					projectile.x + projectile.width > ship.x &&
-					projectile.y < ship.y + ship.height &&
-					projectile.y + projectile.height > ship.y
-				) {
-					ship.lives--;
-					projectile.active = false;
+			enemy.projectiles.forEach(
+				(projectile: { x: number; width: any; y: number; height: any; active: boolean }) => {
+					if (
+						projectile.x < ship.x + ship.width &&
+						projectile.x + projectile.width > ship.x &&
+						projectile.y < ship.y + ship.height &&
+						projectile.y + projectile.height > ship.y
+					) {
+						ship.lives--;
+						projectile.active = false;
+					}
 				}
-			});
+			);
 		});
 
 		textEnemies = textEnemies.filter((enemy) => enemy.health > 0);
 
 		// If the enemy projectiles are hit by the ship projectiles, remove them
 		textEnemies.forEach((enemy) => {
-			enemy.projectiles = enemy.projectiles.filter((p: { x: number; y: number; width: number; height: number; active: boolean; }) => {
-				const hit = shipProjectiles.some((sp) => {
-					return p.x < sp.x + sp.width && p.x + p.width > sp.x && p.y < sp.y + sp.height && p.y + p.height > sp.y;
-				});
+			enemy.projectiles = enemy.projectiles.filter(
+				(p: { x: number; y: number; width: number; height: number; active: boolean }) => {
+					const hit = shipProjectiles.some((sp) => {
+						return (
+							p.x < sp.x + sp.width &&
+							p.x + p.width > sp.x &&
+							p.y < sp.y + sp.height &&
+							p.y + p.height > sp.y
+						);
+					});
 
-				if (hit) {
-					p.active = false;
+					if (hit) {
+						p.active = false;
+					}
+
+					return p.active;
 				}
-
-				return p.active;
-			});
+			);
 		});
 	}
 
@@ -286,7 +290,7 @@ import { onMount, onDestroy } from 'svelte';
 			}
 
 			ctx.fillStyle = 'red';
-			enemy.projectiles.forEach((p: { x: number; y: number; width: number; }) => {
+			enemy.projectiles.forEach((p: { x: number; y: number; width: number }) => {
 				ctx.beginPath();
 				ctx.arc(p.x, p.y, p.width / 2, 0, Math.PI * 2);
 				ctx.fill();
@@ -328,12 +332,10 @@ import { onMount, onDestroy } from 'svelte';
 				showEncouragingMessages();
 
 				requestAnimationFrame(animateEndGame);
-
 			}
 		}
 
 		animateEndGame();
-
 	}
 
 	function gameLoop(timestamp: number) {
@@ -395,7 +397,7 @@ import { onMount, onDestroy } from 'svelte';
 <Seo title="End of the Lova" description="End" />
 
 <div class="game-container">
-	<canvas id="gameCanvas" />
+	<canvas id="gameCanvas"></canvas>
 	{#if showRestartButton}
 		<button on:click={restartGame}>Restart</button>
 	{/if}

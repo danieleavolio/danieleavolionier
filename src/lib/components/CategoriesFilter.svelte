@@ -59,8 +59,6 @@
 
 		dispatch('filter', activeFilters);
 	};
-
-	
 </script>
 
 <section>
@@ -81,7 +79,7 @@
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<div on:click={() => setActive(i)}>
 				<p class="filter-item" id="-{i}">
-					<span class="backdrop" /><Cpu />{category}
+					<span class="backdrop"></span><Cpu />{category}
 				</p>
 			</div>
 		{/each}

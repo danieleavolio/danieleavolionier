@@ -13,33 +13,31 @@
 		currentIndex = (currentIndex - 1 + images.length) % images.length;
 	}
 
-	// If phone scrolling is enabled, the user can swipe left or right to change the image
 	let startX: number;
 	let startY: number;
 	let dist: number;
-	let threshold = 50; //required min distance traveled to be considered swipe
-	let restraint = 160; // maximum distance allowed at the same time in perpendicular direction
-	let allowedTime = 500; // maximum time allowed to travel that distance
+	const threshold = 50;
+	const restraint = 160;
+	const allowedTime = 500;
 	let elapsedTime: number;
 	let startTime: number;
 
 	function handleTouchStart(e: TouchEvent) {
-		let touchobj = e.changedTouches[0];
+		const touchobj = e.changedTouches[0];
 		dist = 0;
 		startX = touchobj.pageX;
 		startY = touchobj.pageY;
-		startTime = new Date().getTime(); // record time when finger first makes contact with surface
+		startTime = new Date().getTime();
 	}
 
 	function handleTouchMove(e: TouchEvent) {
-		e.preventDefault(); // prevent scrolling when inside DIV
+		e.preventDefault();
 	}
 
 	function handleTouchEnd(e: TouchEvent) {
-		let touchobj = e.changedTouches[0];
-		dist = touchobj.pageX - startX; // get total dist traveled by finger while in contact with surface
-		elapsedTime = new Date().getTime() - startTime; // get time elapsed
-		// check that elapsed time is within specified, and distance moved is greater than specified
+		const touchobj = e.changedTouches[0];
+		dist = touchobj.pageX - startX;
+		elapsedTime = new Date().getTime() - startTime;
 		if (
 			elapsedTime <= allowedTime &&
 			Math.abs(dist) >= threshold &&
@@ -56,18 +54,16 @@
 
 <div
 	class="gallery"
+	role="region"
+	aria-label="Galleria immagini"
 	on:touchstart={handleTouchStart}
 	on:touchmove={handleTouchMove}
 	on:touchend={handleTouchEnd}
 >
 	<div class="image-container">
-		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 		{#if images.length > 0}
-			<!-- svelte-ignore a11y-img-redundant-alt -->
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			{#if images[currentIndex].includes('mp4')}
-				<!-- svelte-ignore a11y-media-has-caption -->
-				<video controls src={images[currentIndex]} />
+				<video controls src={images[currentIndex]}></video>
 			{:else}
 				<img
 					on:click={() => (imageClicked = !imageClicked)}
@@ -75,19 +71,16 @@
 					alt="Image Gallery"
 				/>
 			{/if}
-			<!-- If you click the image it will open a modal with the image -->
 
 			<Modal bind:showModal={imageClicked} isSearch={false}>
-				<!-- svelte-ignore a11y-img-redundant-alt -->
 				{#if images[currentIndex].includes('mp4')}
-					<!-- svelte-ignore a11y-media-has-caption -->
-					<video controls src={images[currentIndex]} />
+					<video controls src={images[currentIndex]}></video>
 				{:else}
 					<img class="modal-image" src={images[currentIndex]} alt="Image Gallery" />
 				{/if}
 			</Modal>
 		{:else}
-			<p>Qualcosa è andato stortissimo...</p>
+			<p>Qualcosa e andato stortissimo...</p>
 		{/if}
 	</div>
 	<div class="controls">
@@ -103,23 +96,21 @@
 			><span class="material-symbols-outlined"> arrow_forward</span></button
 		>
 	</div>
-	
 </div>
 
 <style>
-	
 	.gallery {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		width: 100%;
-		max-width: 1000px; /* Set a max-width for the gallery */
-		margin: 0 auto; /* Center the gallery */
+		max-width: 1000px;
+		margin: 0 auto;
 		padding: 1.2em;
 	}
 	.image-container {
 		width: 100%;
-		overflow: hidden; /* Ensure the container does not grow with the image */
+		overflow: hidden;
 		border: 1px solid var(--automataBlackOpacity);
 		border-radius: 5px;
 	}

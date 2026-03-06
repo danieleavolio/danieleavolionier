@@ -1,13 +1,10 @@
 <script lang="ts">
 	import NotesHolder from '$lib/components/NotesHolder.svelte';
-	import type { PageData } from './$types';
 	import { notes } from '$lib/notes_files_desc';
 	import Highlit from '$lib/components/Highlit.svelte';
-	import * as config from "$lib/config"
+	import * as config from '$lib/config';
 	import Seo from '$lib/components/SEO.svelte';
-	export let data: PageData;
 </script>
-
 
 <Seo
 	title={config.title}
@@ -19,19 +16,19 @@
 	<div class="title">
 		<h1>Appunti</h1>
 		<i>
-			Appunti di Unical Informatica, sia Magistrale che Triennale. 
-			Puoi trovare appunti di vari corsi, tra cui: <b>Machine Learning, Statistica, ecc.</b>
+			Appunti di Unical Informatica, sia Magistrale che Triennale. Puoi trovare appunti di vari
+			corsi, tra cui: <b>Machine Learning, Statistica, ecc.</b>
 			<br />
 			Nota che gli appunti non sono completi e potrebbero contenere errori. Non fare affidamento al 100%
-			su di essi e consulta sempre il materiale ufficiale fornito dai professori. Ci tengo a specificare che gli <b>appunti 
-            sono 100% gratuiti!</b> Mi raccomando, buona fortuna per gli esami!
+			su di essi e consulta sempre il materiale ufficiale fornito dai professori. Ci tengo a specificare
+			che gli <b>appunti sono 100% gratuiti!</b> Mi raccomando, buona fortuna per gli esami!
 		</i>
 
 		<Highlit type="warning">
 			<p>
 				<b>Nota:</b> Alcuni appunti possono contenere screen di slide o materiale didattico fornito dai
-				professori. Se un professore ritiene che il materiale violi i suoi diritti d'autore o che gli dia noia, mi contatti
-				e provvederò a rimuoverlo immediatamente!
+				professori. Se un professore ritiene che il materiale violi i suoi diritti d'autore o che gli
+				dia noia, mi contatti e provvedero a rimuoverlo immediatamente!
 			</p>
 			<a href="mailto:daniele.avolio14@gmail.com">
 				<span class="material-symbols-outlined"> warning </span>Contattami
