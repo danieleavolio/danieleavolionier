@@ -19,3 +19,9 @@ export type Element = {
 	reviewBody?: string;
 	developer?: string;
 };
+
+export interface stackElement {
+	slug: string;
+	title: string;
+	color: string;
+}

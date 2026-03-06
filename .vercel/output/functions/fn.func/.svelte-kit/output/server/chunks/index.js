@@ -83,12 +83,16 @@ function text(body, init) {
     headers
   });
 }
+function fail(status, data) {
+  return new ActionFailure(status, data);
+}
 export {
   ActionFailure as A,
   HttpError as H,
   NotFound as N,
   Redirect as R,
   error as e,
+  fail as f,
   json as j,
   text as t
 };

@@ -2,7 +2,9 @@
 	import Modal from '$lib/components/Modal.svelte';
 	import Seo from '$lib/components/SEO.svelte';
 	import * as config from '$lib/config';
-	import stackElements, { type stackElement } from '$lib/stackElements';
+	import type { stackElement } from '$lib/types';
+	import stackElements from '$lib/stackElements.json';
+
 	let showModal = false;
 
 	let selectedItem = 'None';
@@ -17,8 +19,6 @@
 	};
 </script>
 
-
-
 <Seo
 	title={config.title}
 	description="La pagina che contiene dati personali ed esperienze lavorative. Qui puoi trovare i dati personali e le esperienze lavorative di Daniele Avolio."
@@ -31,7 +31,7 @@
 		</p>
 		{#if selectedModalContent}
 			<div class="prose">
-				<svelte:component class="insider" this={selectedModalContent.default} />
+				<svelte:component this={selectedModalContent.default} class="insider" />
 			</div>
 		{/if}
 	</Modal>
@@ -39,8 +39,8 @@
 	<div class="stack">
 		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 		{#each stackElements as element}
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<p class="stack-element stack-{element.color}" on:click={() => handleModalClick(element)}>
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<p class="stack-element stack-{element.color}" on:click={() => handleModalClick(element)}>
 				{element.title}
 			</p>
 		{/each}
@@ -64,7 +64,6 @@
 		text-align: center;
 		font-size: var(--font-size-fluid-2);
 	}
-
 
 	.stack {
 		display: flex;
@@ -98,7 +97,7 @@
 		background-color: var(--automataWhiteOpacity);
 	}
 
-	.stack-black{
+	.stack-black {
 		background-color: var(--automataBlackOpacity);
 		color: var(--automataBg);
 	}
@@ -119,9 +118,8 @@
 		background-color: var(--automataWhite);
 	}
 
-	.stack-black:hover{
+	.stack-black:hover {
 		background-color: var(--automataColor);
 		color: var(--automataBg);
 	}
-
 </style>
