@@ -6,6 +6,7 @@ export const prerender = false;
 
 const POSTS_DIR = path.resolve('src/posts');
 const ADMIN_PASSWORD = 'password'; // Change this to a secure password
+const IS_READONLY_RUNTIME = !!process.env.VERCEL;
 
 type FrontmatterData = Record<string, string>;
 
@@ -31,6 +32,10 @@ function isAuthorized(
 	cookieValue: string | undefined
 ): boolean {
 	return password === ADMIN_PASSWORD || cookieValue === ADMIN_PASSWORD;
+}
+
+function formatErrorMessage(error: unknown): string {
+	return error instanceof Error ? error.message : 'Errore sconosciuto';
 }
 
 export async function load({ cookies }) {
@@ -70,6 +75,12 @@ export const actions = {
 
 		if (!isAuthorized(password, cookies.get('admin_auth'))) {
 			return fail(401, { message: 'Password non valida' });
+		}
+
+		if (IS_READONLY_RUNTIME) {
+			return fail(403, {
+				message: 'Operazione non disponibile in produzione: filesystem in sola lettura.'
+			});
 		}
 
 		cookies.set('admin_auth', ADMIN_PASSWORD, {
@@ -113,7 +124,9 @@ ${content}`;
 			fs.writeFileSync(path.join(POSTS_DIR, `${newSlug}.md`), fileContent);
 			return { message: 'Post salvato con successo!' };
 		} catch (error) {
-			return fail(500, { message: 'Errore during il salvataggio del post' });
+			return fail(500, {
+				message: `Errore durante il salvataggio del post: ${formatErrorMessage(error)}`
+			});
 		}
 	},
 	remove: async ({ request, cookies }) => {
@@ -123,6 +136,12 @@ ${content}`;
 
 		if (!isAuthorized(password, cookies.get('admin_auth'))) {
 			return fail(401, { message: 'Password non valida' });
+		}
+
+		if (IS_READONLY_RUNTIME) {
+			return fail(403, {
+				message: 'Operazione non disponibile in produzione: filesystem in sola lettura.'
+			});
 		}
 
 		if (!slug) {
@@ -138,7 +157,9 @@ ${content}`;
 			fs.unlinkSync(filePath);
 			return { message: 'Post eliminato con successo!' };
 		} catch (error) {
-			return fail(500, { message: "Errore durante l'eliminazione del post" });
+			return fail(500, {
+				message: `Errore durante l'eliminazione del post: ${formatErrorMessage(error)}`
+			});
 		}
 	}
 };
