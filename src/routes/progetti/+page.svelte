@@ -28,13 +28,14 @@
 	let activeFilters: string[] = [];
 	let CatFilter: any;
 	let categories: string[] = [];
-	let projectToShow: Element[] = data.progetti;
+	const allProjects: Element[] = Array.isArray(data.progetti) ? data.progetti : [];
+	let projectToShow: Element[] = allProjects;
 
 	onMount(() => {
 		const unsubscribe = projectsCategoryStore.subscribe((value) => {
 			if (value) {
 				const index = categories.indexOf(value);
-				if (!activeFilters.includes(value)) {
+				if (!activeFilters.includes(value) && index >= 0) {
 					tick().then(() => {
 						CatFilter.clearFilters();
 						CatFilter.setActive(index);
@@ -48,24 +49,29 @@
 		return unsubscribe;
 	});
 
-	data.progetti.forEach((progetto) => {
-		progetto.categories.forEach((tag) => {
+	allProjects.forEach((progetto) => {
+		const projectCategories = Array.isArray(progetto.categories) ? progetto.categories : [];
+		projectCategories.forEach((tag) => {
 			categories.push(tag);
 		});
 	});
 	categories.sort();
 	categories = [...new Set(categories)];
 
+	const getCategories = (project: Element) =>
+		Array.isArray(project.categories) ? project.categories : [];
+
 	const handleFilter = (e: CustomEvent<string[]>) => {
 		const filters = e.detail;
 
 		if (filters.length === 0) {
-			projectToShow = data.progetti;
+			projectToShow = allProjects;
 			return;
 		}
 
-		projectToShow = data.progetti.filter((progetto) => {
-			const matches = filters.filter((filter) => progetto.categories.includes(filter)).length;
+		projectToShow = allProjects.filter((progetto) => {
+			const projectCategories = getCategories(progetto);
+			const matches = filters.filter((filter) => projectCategories.includes(filter)).length;
 			return matches === filters.length;
 		});
 	};
@@ -86,7 +92,7 @@
 				<p class="date">{formatDate(progetto.date)}</p>
 				<p class="description">{progetto.description}</p>
 				<div class="tags">
-					{#each progetto.categories as category}
+					{#each getCategories(progetto) as category}
 						<Tag {category} from="progetti" isActive={activeFilters.includes(category)} />
 					{/each}
 				</div>

@@ -3,7 +3,7 @@
 	import { Square } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
-	import type { FaqItem } from '$lib/types';
+	import type { Element, FaqItem } from '$lib/types';
 	import Profile from './profile.svelte';
 	import { goto } from '$app/navigation';
 	import Seo from '$lib/components/SEO.svelte';
@@ -27,8 +27,10 @@
 		}
 	];
 
-	$: latestPosts = data.posts.slice(0, 3);
-	$: latestProjects = data.progetti.slice(0, 3);
+	$: posts = Array.isArray(data.posts) ? data.posts : [];
+	$: projects = Array.isArray(data.progetti) ? data.progetti : [];
+	$: latestPosts = posts.slice(0, 3);
+	$: latestProjects = projects.slice(0, 3);
 
 	onMount(() => {
 		const handleMousemove = (e: MouseEvent) => {
@@ -59,6 +61,8 @@
 			window.removeEventListener('keydown', handleKeydown);
 		};
 	});
+
+	const categoryList = (item: Element) => (Array.isArray(item.categories) ? item.categories : []);
 </script>
 
 <Seo
@@ -90,6 +94,9 @@
 				<li>
 					<a href={`/pagine/${post.slug}`}>{post.title}</a>
 					<p>{formatDate(post.date)}</p>
+					{#if categoryList(post).length}
+						<small>{categoryList(post).join(' · ')}</small>
+					{/if}
 				</li>
 			{/each}
 		</ul>
@@ -102,6 +109,9 @@
 				<li>
 					<a href={`/progetti/${project.slug}`}>{project.title}</a>
 					<p>{formatDate(project.date)}</p>
+					{#if categoryList(project).length}
+						<small>{categoryList(project).join(' · ')}</small>
+					{/if}
 				</li>
 			{/each}
 		</ul>
@@ -226,6 +236,12 @@
 	.latest-panel p {
 		margin-top: 0.4rem;
 		color: var(--text-2);
+	}
+
+	.latest-panel small {
+		display: block;
+		margin-top: 0.3rem;
+		color: var(--automataBlackOpacity);
 	}
 
 	@media (min-width: 1000px) {

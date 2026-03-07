@@ -11,6 +11,7 @@
 
 	const siteUrl = config.url.replace(/\/$/, '');
 	let metadata: Element = data.meta;
+	$: metadataCategories = Array.isArray(metadata.categories) ? metadata.categories : [];
 	$: fallbackOg = `${siteUrl}/og/progetti/${data.slug}.svg`;
 	$: seoImage = metadata.image || fallbackOg;
 </script>
@@ -33,7 +34,7 @@
 	</hgroup>
 
 	<div class="tags">
-		{#each data.meta.categories as category}
+		{#each metadataCategories as category}
 			<Tag {category} from="progetti" />
 		{/each}
 	</div>

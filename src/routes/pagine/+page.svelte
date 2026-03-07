@@ -28,13 +28,14 @@
 	let activeFilters: string[] = [];
 	let CatFilter: any;
 	let categories: string[] = [];
-	let postToShow: Element[] = data.posts;
+	const allPosts: Element[] = Array.isArray(data.posts) ? data.posts : [];
+	let postToShow: Element[] = allPosts;
 
 	onMount(() => {
 		const unsubscribe = categoryStore.subscribe((value) => {
 			if (value) {
 				const index = categories.indexOf(value);
-				if (!activeFilters.includes(value)) {
+				if (!activeFilters.includes(value) && index >= 0) {
 					tick().then(() => {
 						CatFilter.clearFilters();
 						CatFilter.setActive(index);
@@ -48,24 +49,28 @@
 		return unsubscribe;
 	});
 
-	data.posts.forEach((post) => {
-		post.categories.forEach((tag) => {
+	allPosts.forEach((post) => {
+		const postCategories = Array.isArray(post.categories) ? post.categories : [];
+		postCategories.forEach((tag) => {
 			categories.push(tag);
 		});
 	});
 	categories.sort();
 	categories = [...new Set(categories)];
 
+	const getCategories = (post: Element) => (Array.isArray(post.categories) ? post.categories : []);
+
 	const handleFilter = (e: CustomEvent<string[]>) => {
 		const filters = e.detail;
 
 		if (filters.length === 0) {
-			postToShow = data.posts;
+			postToShow = allPosts;
 			return;
 		}
 
-		postToShow = data.posts.filter((post) => {
-			const matches = filters.filter((filter) => post.categories.includes(filter)).length;
+		postToShow = allPosts.filter((post) => {
+			const postCategories = getCategories(post);
+			const matches = filters.filter((filter) => postCategories.includes(filter)).length;
 			return matches === filters.length;
 		});
 	};
@@ -86,7 +91,7 @@
 				<p class="date">{formatDate(post.date)}</p>
 				<p class="description">{post.description}</p>
 				<div class="tags">
-					{#each post.categories as category}
+					{#each getCategories(post) as category}
 						<Tag from="pagine" {category} isActive={activeFilters.includes(category)} />
 					{/each}
 				</div>
