@@ -7,13 +7,15 @@ export const prerender = false;
 const PROJECTS_DIR = path.resolve('src/progetti');
 const ADMIN_PASSWORD = 'password'; // Change this to a secure password
 
-function parseFrontmatter(content) {
+type FrontmatterData = Record<string, string>;
+
+function parseFrontmatter(content: string): { frontmatter: FrontmatterData; body: string } {
 	const match = content.match(/---\r?\n([\s\S]+?)\r?\n---/);
 	if (match) {
 		const frontmatter = match[1];
 		const body = content.slice(match[0].length);
-		const data = {};
-		frontmatter.split('\n').forEach((line) => {
+		const data: FrontmatterData = {};
+		frontmatter.split('\n').forEach((line: string) => {
 			const [key, ...value] = line.split(':');
 			if (key && value) {
 				data[key.trim()] = value.join(':').trim();
@@ -24,7 +26,14 @@ function parseFrontmatter(content) {
 	return { frontmatter: {}, body: content };
 }
 
-export function load() {
+function isAuthorized(
+	password: FormDataEntryValue | null,
+	cookieValue: string | undefined
+): boolean {
+	return password === ADMIN_PASSWORD || cookieValue === ADMIN_PASSWORD;
+}
+
+export function load({ cookies }) {
 	const projects = fs.readdirSync(PROJECTS_DIR).map((file) => {
 		const content = fs.readFileSync(path.join(PROJECTS_DIR, file), 'utf-8');
 		const { frontmatter, body } = parseFrontmatter(content);
@@ -36,17 +45,20 @@ export function load() {
 				? frontmatter.categories
 						.replace(/[[\]]/g, '')
 						.split(',')
-						.map((c) => c.trim().replace(/'"'/g, ''))
+						.map((c: string) => c.trim().replace(/["']/g, ''))
 				: [],
 			content: body.trim()
 		};
 	});
 
-	return { projects };
+	return {
+		projects,
+		authenticated: cookies.get('admin_auth') === ADMIN_PASSWORD
+	};
 }
 
 export const actions = {
-	default: async ({ request }) => {
+	default: async ({ request, cookies }) => {
 		const data = await request.formData();
 
 		const password = data.get('password');
@@ -56,9 +68,16 @@ export const actions = {
 		const content = data.get('content');
 		const slug = data.get('slug');
 
-		if (password !== ADMIN_PASSWORD) {
+		if (!isAuthorized(password, cookies.get('admin_auth'))) {
 			return fail(401, { message: 'Password non valida' });
 		}
+
+		cookies.set('admin_auth', ADMIN_PASSWORD, {
+			path: '/',
+			maxAge: 60 * 60 * 24 * 30,
+			sameSite: 'lax',
+			httpOnly: false
+		});
 
 		if (!title || !description || !categories || !content) {
 			return fail(400, { message: 'Tutti i campi sono obbligatori' });
@@ -80,7 +99,8 @@ export const actions = {
 			.split(',')
 			.map((c: string) => c.trim());
 
-		const fileContent = `---\ntitle: "${title}"
+		const fileContent = `---
+title: "${title}"
 description: "${description}"
 date: "${date}"
 categories: [${categoriesArray.map((c: string) => `"${c}"`).join(', ')}]
@@ -94,6 +114,31 @@ ${content}`;
 			return { message: 'Progetto salvato con successo!' };
 		} catch (error) {
 			return fail(500, { message: 'Errore during il salvataggio del progetto' });
+		}
+	},
+	delete: async ({ request, cookies }) => {
+		const data = await request.formData();
+		const password = data.get('password');
+		const slug = data.get('slug')?.toString();
+
+		if (!isAuthorized(password, cookies.get('admin_auth'))) {
+			return fail(401, { message: 'Password non valida' });
+		}
+
+		if (!slug) {
+			return fail(400, { message: 'Slug mancante' });
+		}
+
+		const filePath = path.join(PROJECTS_DIR, `${slug}.md`);
+		if (!fs.existsSync(filePath)) {
+			return fail(404, { message: 'Progetto non trovato' });
+		}
+
+		try {
+			fs.unlinkSync(filePath);
+			return { message: 'Progetto eliminato con successo!' };
+		} catch (error) {
+			return fail(500, { message: "Errore durante l'eliminazione del progetto" });
 		}
 	}
 };

@@ -2,15 +2,24 @@
 	import { enhance } from '$app/forms';
 	import { fade } from 'svelte/transition';
 	import { browser } from '$app/environment';
+	import { onMount } from 'svelte';
 
 	export let data;
 	export let form;
 
-	let isAuthenticated = false;
+	let isAuthenticated = data?.authenticated ?? false;
 	let password = '';
 	let errorMessage = '';
 
-	let selectedPost = {
+	type EditablePost = {
+		slug: string;
+		title: string;
+		description: string;
+		categories: string[];
+		content: string;
+	};
+
+	let selectedPost: EditablePost = {
 		slug: '',
 		title: '',
 		description: '',
@@ -18,8 +27,15 @@
 		content: ''
 	};
 
+	onMount(() => {
+		if (!isAuthenticated && document.cookie.includes('admin_auth=password')) {
+			isAuthenticated = true;
+		}
+	});
+
 	function checkPassword() {
 		if (password === 'password') {
+			document.cookie = 'admin_auth=password; path=/; max-age=2592000; SameSite=Lax';
 			isAuthenticated = true;
 		} else {
 			errorMessage = 'Password non valida';
@@ -29,7 +45,13 @@
 		}
 	}
 
-	function editPost(post) {
+	function logout() {
+		document.cookie = 'admin_auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+		isAuthenticated = false;
+		password = '';
+	}
+
+	function editPost(post: EditablePost) {
 		selectedPost = post;
 	}
 
@@ -43,7 +65,8 @@
 		};
 	}
 
-	$: preview = browser && window.marked && window.marked.parse(selectedPost.content);
+	const getMarked = () => (browser ? (window as any).marked : null);
+	$: preview = getMarked() ? getMarked().parse(selectedPost.content) : '';
 </script>
 
 <svelte:head>
@@ -67,10 +90,24 @@
 		<div class="post-list">
 			<h2>Posts</h2>
 			<button on:click={newPost}>Nuovo Post</button>
+			<button on:click={logout} class="logout-button">Logout</button>
 			<ul>
 				{#each data.posts as post}
-					<li on:click={() => editPost(post)}>
-						<span>{post.title}</span>
+					<li>
+						<button type="button" class="item-button" on:click={() => editPost(post)}>
+							{post.title}
+						</button>
+						<form
+							method="POST"
+							action="?/delete"
+							use:enhance
+							on:submit={(event) => {
+								if (!confirm(`Eliminare il post \"${post.title}\"?`)) event.preventDefault();
+							}}
+						>
+							<input type="hidden" name="slug" value={post.slug} />
+							<button type="submit" class="delete-button">Elimina</button>
+						</form>
 					</li>
 				{/each}
 			</ul>
@@ -79,7 +116,6 @@
 		<div class="editor-grid">
 			<form method="POST" use:enhance>
 				<h1>{selectedPost.slug ? 'Modifica Post' : 'Nuovo Post'}</h1>
-				<input type="hidden" name="password" value={password} />
 				<input type="hidden" name="slug" value={selectedPost.slug} />
 
 				<label for="title">Titolo</label>
@@ -142,10 +178,23 @@
 	}
 
 	.post-list li {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.5rem;
 		margin-bottom: 0.5rem;
-		cursor: pointer;
 		padding: 0.5rem;
 		border-radius: 4px;
+	}
+
+	.item-button {
+		background: transparent;
+		border: none;
+		color: inherit;
+		cursor: pointer;
+		text-align: left;
+		padding: 0;
+		flex: 1;
 	}
 
 	.post-list li:hover {
@@ -203,6 +252,13 @@
 		transition: all 0.1s ease-in-out;
 		text-align: center;
 		margin-top: 1rem;
+	}
+
+	.delete-button,
+	.logout-button {
+		letter-spacing: 0.12rem;
+		padding: 0.2rem 0.6rem;
+		margin-top: 0;
 	}
 
 	button:hover,
