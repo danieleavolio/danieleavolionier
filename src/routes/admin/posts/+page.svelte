@@ -99,7 +99,7 @@
 						</button>
 						<form
 							method="POST"
-							action="?/delete"
+							action="?/remove"
 							use:enhance
 							on:submit={(event) => {
 								if (!confirm(`Eliminare il post \"${post.title}\"?`)) event.preventDefault();

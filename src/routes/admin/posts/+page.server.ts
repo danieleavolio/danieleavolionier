@@ -116,7 +116,7 @@ ${content}`;
 			return fail(500, { message: 'Errore during il salvataggio del post' });
 		}
 	},
-	delete: async ({ request, cookies }) => {
+	remove: async ({ request, cookies }) => {
 		const data = await request.formData();
 		const password = data.get('password');
 		const slug = data.get('slug')?.toString();
