@@ -114,7 +114,7 @@
 		</div>
 
 		<div class="editor-grid">
-			<form method="POST" use:enhance>
+			<form method="POST" action="?/save" use:enhance>
 				<h1>{selectedProject.slug ? 'Modifica Progetto' : 'Nuovo Progetto'}</h1>
 				<input type="hidden" name="slug" value={selectedProject.slug} />
 

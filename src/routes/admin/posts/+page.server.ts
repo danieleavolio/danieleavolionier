@@ -63,7 +63,7 @@ export async function load({ cookies }) {
 }
 
 export const actions = {
-	default: async ({ request, cookies }) => {
+	save: async ({ request, cookies }) => {
 		const data = await request.formData();
 
 		const password = data.get('password');
