@@ -1,11 +1,10 @@
 import { error } from '@sveltejs/kit';
-
-const posts = import.meta.glob('/src/posts/*.md', { eager: true });
-const projects = import.meta.glob('/src/progetti/*.md', { eager: true });
+import { getContentBySlug } from '$lib/server/content';
+import { supabaseAdmin } from '$lib/server/supabase';
 
 export const prerender = false;
 
-export function GET({ params }) {
+export async function GET({ params }) {
 	const section = params.section;
 	const slug = params.slug;
 
@@ -13,16 +12,17 @@ export function GET({ params }) {
 		throw error(404, 'Not found');
 	}
 
-	const source = section === 'pagine' ? posts : projects;
-	const match = Object.entries(source).find(([filePath]) => filePath.endsWith(`/${slug}.md`));
-
-	if (!match) {
+	const item = await getContentBySlug(
+		supabaseAdmin,
+		section === 'pagine' ? 'posts' : 'projects',
+		slug
+	);
+	if (!item) {
 		throw error(404, 'Not found');
 	}
 
-	const module = match[1] as { metadata?: { title?: string; description?: string } };
-	const title = module.metadata?.title || slug.replace(/-/g, ' ');
-	const description = module.metadata?.description || 'Daniele Avolio';
+	const title = item.title || slug.replace(/-/g, ' ');
+	const description = item.description || 'Daniele Avolio';
 
 	const svg = createOgSvg(title, description, section);
 

@@ -1,5 +1,6 @@
-import type { PageServerLoad } from './$types';
+import { listPublishedContent } from '$lib/server/content';
+import { supabaseAdmin } from '$lib/server/supabase';
 
-export const load = (async () => {
-    return {};
-}) satisfies PageServerLoad;
+export async function load() {
+	return { posts: await listPublishedContent(supabaseAdmin, 'posts') };
+}

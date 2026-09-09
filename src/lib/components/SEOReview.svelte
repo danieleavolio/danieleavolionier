@@ -5,8 +5,6 @@
 	export let gameImage = '';
 	export let ratingValue = 0;
 	export let reviewBody = '';
-	export let platform = '';
-	export let datePublished = '';
 </script>
 
 <svelte:head>

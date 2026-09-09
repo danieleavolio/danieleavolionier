@@ -5,6 +5,7 @@
 	import type { Element } from '$lib/types';
 	import * as config from '$lib/config';
 	import Tag from '$lib/components/Tag.svelte';
+	import RichContent from '$lib/components/RichContent.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -39,9 +40,7 @@
 		{/each}
 	</div>
 
-	<div class="prose">
-		<svelte:component this={data.content} />
-	</div>
+	<RichContent html={data.contentHtml} />
 
 	<Author
 		name="Daniele"
@@ -64,10 +63,6 @@
 
 	h3 {
 		text-transform: none;
-	}
-
-	.prose {
-		margin-top: 1rem;
 	}
 
 	.tags {

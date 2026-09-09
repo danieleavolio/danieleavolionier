@@ -1,26 +1,25 @@
 import fs from 'node:fs';
 import path from 'node:path';
-
-export const prerender = true;
+import { listPublishedContent, listNowItems } from '$lib/server/content';
+import { supabaseAdmin } from '$lib/server/supabase';
 
 const siteURL = 'https://www.danieleavolio.it';
 
-const navHeaderLinks = ['/', '/pagine', '/progetti', '/data', '/appunti'];
+const navHeaderLinks = ['/', '/pagine', '/progetti', '/now', '/data', '/appunti'];
 
 export async function GET() {
-	const blogPosts = import.meta.glob('/src/posts/*.md');
-	const blogLinks = Object.keys(blogPosts).map(
-		(path) => `/pagine/${path.split('/').pop()?.replace('.md', '')}`
-	);
-
-	const projectPosts = import.meta.glob('/src/progetti/*.md');
-	const projectLinks = Object.keys(projectPosts).map(
-		(path) => `/progetti/${path.split('/').pop()?.replace('.md', '')}`
-	);
+	const [posts, projects, nowItems] = await Promise.all([
+		listPublishedContent(supabaseAdmin, 'posts'),
+		listPublishedContent(supabaseAdmin, 'projects'),
+		listNowItems(supabaseAdmin)
+	]);
+	const blogLinks = posts.map((post) => `/pagine/${post.slug}`);
+	const projectLinks = projects.map((project) => `/progetti/${project.slug}`);
+	const nowLinks = nowItems.length ? ['/now'] : [];
 
 	const staticFileLinks = getStaticFileLinks('static/files', '/files');
 
-	const links = [...navHeaderLinks, ...blogLinks, ...projectLinks, ...staticFileLinks];
+	const links = [...navHeaderLinks, ...blogLinks, ...projectLinks, ...nowLinks, ...staticFileLinks];
 
 	const uniqueLinks = [...new Set(links)];
 	const now = new Date().toISOString();

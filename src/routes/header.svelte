@@ -34,6 +34,7 @@
 			<ul class="links">
 				<li><a href="/pagine">BLOG</a></li>
 				<li><a href="/progetti">PROGETTI</a></li>
+				<li><a href="/now">NOW</a></li>
 				<li><a href="/data">DATA</a></li>
 				<li><a href="/appunti">APPUNTI</a></li>
 				<SearchModal />
@@ -62,6 +63,7 @@
 		<a on:click={() => handleClick()} href="/">D.A</a>
 		<a on:click={() => handleClick()} href="/pagine">BLOG</a>
 		<a on:click={() => handleClick()} href="/progetti">PROGETTI</a>
+		<a on:click={() => handleClick()} href="/now">NOW</a>
 		<a on:click={() => handleClick()} href="/data">DATA</a>
 		<a on:click={() => handleClick()} href="/appunti">APPUNTI</a>
 	</div>

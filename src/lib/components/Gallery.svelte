@@ -63,20 +63,23 @@
 	<div class="image-container">
 		{#if images.length > 0}
 			{#if images[currentIndex].includes('mp4')}
-				<video controls src={images[currentIndex]}></video>
+				<video controls src={images[currentIndex]}><track kind="captions" /></video>
 			{:else}
-				<img
+				<button
+					class="image-button"
+					type="button"
 					on:click={() => (imageClicked = !imageClicked)}
-					src={images[currentIndex]}
-					alt="Image Gallery"
-				/>
+					aria-label="Apri immagine a schermo intero"
+				>
+					<img src={images[currentIndex]} alt="" />
+				</button>
 			{/if}
 
 			<Modal bind:showModal={imageClicked} isSearch={false}>
 				{#if images[currentIndex].includes('mp4')}
-					<video controls src={images[currentIndex]}></video>
+					<video controls src={images[currentIndex]}><track kind="captions" /></video>
 				{:else}
-					<img class="modal-image" src={images[currentIndex]} alt="Image Gallery" />
+					<img class="modal-image" src={images[currentIndex]} alt="" />
 				{/if}
 			</Modal>
 		{:else}
@@ -155,6 +158,13 @@
 
 	.image-container img {
 		cursor: pointer;
+	}
+	.image-button {
+		display: block;
+		width: 100%;
+		padding: 0;
+		border: 0;
+		background: transparent;
 	}
 
 	.modal-image {

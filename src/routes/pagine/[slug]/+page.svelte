@@ -6,6 +6,7 @@
 	import { formatDate } from '$lib/utils';
 	import Tag from '$lib/components/Tag.svelte';
 	import ShareComponent from '$lib/components/ShareComponent.svelte';
+	import RichContent from '$lib/components/RichContent.svelte';
 	import { page } from '$app/stores';
 	import type { PageData } from './$types';
 
@@ -59,9 +60,7 @@
 		{/each}
 	</div>
 
-	<div class="prose">
-		<svelte:component this={data.content} />
-	</div>
+	<RichContent html={data.contentHtml} />
 
 	<ShareComponent postTitle={metadata.title} postUrl={$page.url.href} />
 
@@ -86,10 +85,6 @@
 
 	h3 {
 		text-transform: none;
-	}
-
-	.prose {
-		margin-top: 1rem;
 	}
 
 	.tags {

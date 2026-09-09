@@ -1,22 +1,14 @@
 import { json } from '@sveltejs/kit';
-import type { Element } from '$lib/types';
+import { searchContent } from '$lib/server/content';
+import { supabaseAdmin } from '$lib/server/supabase';
 
-export const prerender = true;
+export async function GET() {
+	const content = await searchContent(supabaseAdmin);
+	const posts = content.filter((item) => item.slug && item.metadata?.contentType === 'posts');
+	const progetti = content.filter((item) => item.slug && item.metadata?.contentType === 'projects');
 
-export async function GET({ fetch }) {
-	const postsResponse = await fetch('/api/posts');
-	const posts: Element[] = await postsResponse.json();
-
-	for (const post of posts) {
-		post.slug = `pagine/${post.slug}`;
-	}
-
-	const projectsResponse = await fetch('/api/progetti');
-	const progetti: Element[] = await projectsResponse.json();
-
-	for (const project of progetti) {
-		project.slug = `progetti/${project.slug}`;
-	}
-
-	return json({ posts, progetti });
+	return json({
+		posts: posts.map((post) => ({ ...post, slug: `pagine/${post.slug}` })),
+		progetti: progetti.map((project) => ({ ...project, slug: `progetti/${project.slug}` }))
+	});
 }

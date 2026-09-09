@@ -12,7 +12,8 @@
 		"format": "prettier --write .",
 		"prepare": "husky install",
 		"new:post": "node scripts/new-content.mjs post",
-		"new:project": "node scripts/new-content.mjs project"
+		"new:project": "node scripts/new-content.mjs project",
+		"migrate:content": "node scripts/migrate_to_supabase.js"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-vercel": "^6.3.3",
@@ -38,15 +39,27 @@
 	"dependencies": {
 		"@fontsource/jetbrains-mono": "^5.0.8",
 		"@fontsource/manrope": "^5.0.8",
+		"@supabase/ssr": "^0.12.6",
+		"@supabase/supabase-js": "^2.115.0",
+		"@tiptap/core": "^3.31.3",
+		"@tiptap/extension-image": "^3.31.3",
+		"@tiptap/extension-link": "^3.31.3",
+		"@tiptap/extension-placeholder": "^3.31.3",
+		"@tiptap/extension-underline": "^3.31.3",
+		"@tiptap/pm": "^3.31.3",
+		"@tiptap/starter-kit": "^3.31.3",
+		"@types/sanitize-html": "^2.16.1",
 		"@vercel/analytics": "^1.6.1",
-		"danieleavolio": "file:",
+		"dotenv": "^17.4.2",
 		"flexsearch": "^0.7.43",
 		"i": "^0.3.7",
 		"lucide-svelte": "^0.577.0",
+		"marked": "^18.0.11",
 		"open-props": "^1.5.11",
 		"rehype-slug": "^5.1.0",
 		"remark-toc": "^8.0.1",
 		"remark-unwrap-images": "^3.0.1",
+		"sanitize-html": "^2.17.7",
 		"shiki": "^0.14.3"
 	},
 	"lint-staged": {
