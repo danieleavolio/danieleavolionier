@@ -1,9 +1,8 @@
 import { json } from '@sveltejs/kit';
 import { searchContent } from '$lib/server/content';
-import { supabaseAdmin } from '$lib/server/supabase';
 
-export async function GET() {
-	const content = await searchContent(supabaseAdmin);
+export async function GET({ locals }) {
+	const content = await searchContent(locals.supabase);
 	const posts = content.filter((item) => item.slug && item.metadata?.contentType === 'posts');
 	const progetti = content.filter((item) => item.slug && item.metadata?.contentType === 'projects');
 

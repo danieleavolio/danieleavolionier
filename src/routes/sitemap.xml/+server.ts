@@ -1,17 +1,16 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { listPublishedContent, listNowItems } from '$lib/server/content';
-import { supabaseAdmin } from '$lib/server/supabase';
 
 const siteURL = 'https://www.danieleavolio.it';
 
 const navHeaderLinks = ['/', '/pagine', '/progetti', '/now', '/data', '/appunti'];
 
-export async function GET() {
+export async function GET({ locals }) {
 	const [posts, projects, nowItems] = await Promise.all([
-		listPublishedContent(supabaseAdmin, 'posts'),
-		listPublishedContent(supabaseAdmin, 'projects'),
-		listNowItems(supabaseAdmin)
+		listPublishedContent(locals.supabase, 'posts'),
+		listPublishedContent(locals.supabase, 'projects'),
+		listNowItems(locals.supabase)
 	]);
 	const blogLinks = posts.map((post) => `/pagine/${post.slug}`);
 	const projectLinks = projects.map((project) => `/progetti/${project.slug}`);

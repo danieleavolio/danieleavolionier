@@ -1,10 +1,9 @@
 import { listPublishedContent } from '$lib/server/content';
-import { supabaseAdmin } from '$lib/server/supabase';
 
-export async function load() {
+export async function load({ locals }) {
 	const [posts, progetti] = await Promise.all([
-		listPublishedContent(supabaseAdmin, 'posts'),
-		listPublishedContent(supabaseAdmin, 'projects')
+		listPublishedContent(locals.supabase, 'posts'),
+		listPublishedContent(locals.supabase, 'projects')
 	]);
 
 	return { posts, progetti };

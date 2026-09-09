@@ -1,10 +1,9 @@
 import { error } from '@sveltejs/kit';
 import { getContentBySlug } from '$lib/server/content';
-import { supabaseAdmin } from '$lib/server/supabase';
 
 export const prerender = false;
 
-export async function GET({ params }) {
+export async function GET({ params, locals }) {
 	const section = params.section;
 	const slug = params.slug;
 
@@ -13,7 +12,7 @@ export async function GET({ params }) {
 	}
 
 	const item = await getContentBySlug(
-		supabaseAdmin,
+		locals.supabase,
 		section === 'pagine' ? 'posts' : 'projects',
 		slug
 	);
