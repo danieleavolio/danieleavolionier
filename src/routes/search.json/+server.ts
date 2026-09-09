@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { searchContent } from '$lib/server/content';
+import { searchContent } from '$lib/server/public-content';
 
 export async function GET({ locals }) {
 	const content = await searchContent(locals.supabase);

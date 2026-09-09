@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { listPublishedContent, listNowItems } from '$lib/server/content';
+import { listPublishedContent, listNowItems } from '$lib/server/public-content';
 
 const siteURL = 'https://www.danieleavolio.it';
 

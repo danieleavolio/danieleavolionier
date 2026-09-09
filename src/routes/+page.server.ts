@@ -1,4 +1,4 @@
-import { listPublishedContent } from '$lib/server/content';
+import { listPublishedContent } from '$lib/server/public-content';
 
 export async function load({ locals }) {
 	const [posts, progetti] = await Promise.all([

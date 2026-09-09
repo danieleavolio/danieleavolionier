@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { getContentBySlug } from '$lib/server/content';
+import { getContentBySlug } from '$lib/server/public-content';
 
 export async function load({ params, locals }) {
 	const post = await getContentBySlug(locals.supabase, 'posts', params.slug);

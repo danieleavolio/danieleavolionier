@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { getContentBySlug } from '$lib/server/content';
+import { getContentBySlug } from '$lib/server/public-content';
 
 export const prerender = false;
 
