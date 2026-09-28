@@ -1104,6 +1104,9 @@
 		if (typeof window !== 'undefined') {
 			window.removeEventListener('keydown', handleKeyDown);
 			window.removeEventListener('keyup', handleKeyUp);
+			if (typeof cancelAnimationFrame !== 'undefined' && animFrameId) {
+				cancelAnimationFrame(animFrameId);
+			}
 		}
 		if (OST) {
 			OST.pause();
@@ -1112,7 +1115,6 @@
 		if (audioCtx) {
 			audioCtx.close().catch(() => {});
 		}
-		cancelAnimationFrame(animFrameId);
 	});
 </script>
 
