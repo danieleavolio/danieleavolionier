@@ -33,7 +33,16 @@
 				<li class:active={selected.id === item.id}>
 					<button type="button" class="select-item" on:click={() => edit(item)}>{item.title}</button
 					>
-					<form method="POST" action="?/remove" use:enhance>
+					<form
+						method="POST"
+						action="?/remove"
+						use:enhance
+						on:submit={(event) => {
+							if (!confirm(`Sei sicuro di voler eliminare "${item.title}"?`)) {
+								event.preventDefault();
+							}
+						}}
+					>
 						<input type="hidden" name="id" value={item.id} />
 						<button type="submit" class="delete" aria-label={`Elimina ${item.title}`}>×</button>
 					</form>

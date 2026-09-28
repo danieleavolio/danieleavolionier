@@ -4,7 +4,7 @@
 	export let showModal: any; // boolean
 	export let isSearch = false; // boolean
 
-	export let dialog:any = 0; // HTMLDialogElement
+	export let dialog: any = 0; // HTMLDialogElement
 
 	$: if (dialog && showModal) {
 		dialog.showModal();
@@ -18,8 +18,13 @@
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
-<dialog bind:this={dialog} on:close={close} on:click|self={() => dialog.close()} transition:fade
-	class:search={isSearch}>
+<dialog
+	bind:this={dialog}
+	on:close={close}
+	on:click|self={() => dialog.close()}
+	transition:fade
+	class:search={isSearch}
+>
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div on:click|stopPropagation class="internal">
 		<slot name="header" />
@@ -38,7 +43,6 @@
 		padding: 2em;
 	}
 
-
 	.search {
 		padding: 1em;
 		width: 80%;
@@ -54,7 +58,6 @@
 		justify-content: space-evenly;
 		height: 100%;
 	}
-
 
 	dialog::backdrop {
 		background: rgba(0, 0, 0, 0.3);

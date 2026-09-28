@@ -1,7 +1,8 @@
 import { error } from '@sveltejs/kit';
-import { markdownToHtml, sanitizeContentHtml } from '$lib/server/content';
-import type { ContentTable } from '$lib/server/content';
+import { sanitizeContentHtml } from '$lib/server/sanitize';
 import type { RichTextDocument } from '$lib/types';
+
+export type ContentTable = 'posts' | 'projects';
 
 export type EditableContent = {
 	slug: string;
@@ -27,7 +28,7 @@ function normalizeRow(row: Record<string, any>): EditableContent {
 		categories: Array.isArray(row.categories) ? row.categories : [],
 		image: row.image ?? '',
 		published: row.published !== false,
-		contentHtml: sanitizeContentHtml(row.content_html) || markdownToHtml(row.content, metadata),
+		contentHtml: sanitizeContentHtml(row.content_html),
 		contentJson: row.content_json ?? null,
 		legacyContent: row.legacy_content ?? row.content ?? null,
 		metadata
@@ -86,7 +87,8 @@ export async function saveContent(
 	}
 
 	const contentHtml = sanitizeContentHtml(form.get('content_html')?.toString() ?? '');
-	if (!contentHtml) throw error(400, 'Il contenuto non può essere vuoto.');
+	const stripped = contentHtml.replace(/<p><\/p>/g, '').trim();
+	if (!contentHtml || !stripped) throw error(400, 'Il contenuto non può essere vuoto.');
 
 	const categories = (form.get('categories')?.toString() ?? '')
 		.split(',')
@@ -95,6 +97,7 @@ export async function saveContent(
 	const metadata = parseJson(form.get('metadata')) ?? {};
 	const contentJson = parseJson(form.get('content_json')) as RichTextDocument | null;
 	const date = form.get('date')?.toString() || new Date().toISOString().slice(0, 10);
+	const originalSlug = form.get('original_slug')?.toString().trim();
 
 	const { error: saveError } = await supabase.from(table).upsert({
 		slug,
@@ -111,6 +114,10 @@ export async function saveContent(
 	});
 
 	if (saveError) throw saveError;
+
+	if (originalSlug && originalSlug !== slug) {
+		await supabase.from(table).delete().eq('slug', originalSlug);
+	}
 }
 
 export async function removeContent(

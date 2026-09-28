@@ -53,12 +53,10 @@ export async function getContentBySlug(
 	return data ? toElement(data, table) : null;
 }
 
-export async function listNowItems(supabase: any): Promise<NowItem[]> {
-	const { data, error } = await supabase
-		.from('now_items')
-		.select('*')
-		.eq('published', true)
-		.order('position', { ascending: true });
+export async function listNowItems(supabase: any, includeDrafts = false): Promise<NowItem[]> {
+	let query = supabase.from('now_items').select('*').order('position', { ascending: true });
+	if (!includeDrafts) query = query.eq('published', true);
+	const { data, error } = await query;
 	if (error) throw error;
 	return (data ?? []) as NowItem[];
 }

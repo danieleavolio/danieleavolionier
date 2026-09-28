@@ -1,3 +1,5 @@
+<svelte:options immutable={true} />
+
 <svelte:head>
 	<title>Privacy Policy | Astra</title>
 	<meta
@@ -6,8 +8,6 @@
 	/>
 	<meta name="robots" content="index, follow" />
 </svelte:head>
-
-<svelte:options immutable={true} />
 
 <article class="privacy-page">
 	<header class="privacy-header">
@@ -24,8 +24,8 @@
 	<section aria-labelledby="titolare">
 		<h2 id="titolare">1. Titolare del trattamento</h2>
 		<p>
-			Il titolare dell'app Astra è <strong>Daniele Avolio</strong>. Per richieste relative alla privacy
-			o all'utilizzo dell'app è possibile contattare il titolare tramite il
+			Il titolare dell'app Astra è <strong>Daniele Avolio</strong>. Per richieste relative alla
+			privacy o all'utilizzo dell'app è possibile contattare il titolare tramite il
 			<a href="https://github.com/danieleavolio" rel="noreferrer">profilo GitHub pubblico</a>.
 		</p>
 	</section>
@@ -33,13 +33,15 @@
 	<section aria-labelledby="nessuna-raccolta">
 		<h2 id="nessuna-raccolta">2. Nessuna raccolta o condivisione di dati personali</h2>
 		<p>
-			<strong>Astra non raccoglie dati personali, non li salva su server esterni e non li condivide
-			con terze parti.</strong>
+			<strong
+				>Astra non raccoglie dati personali, non li salva su server esterni e non li condivide con
+				terze parti.</strong
+			>
 		</p>
 		<p>
-			Le statistiche, i conteggi, le preferenze e gli eventuali log generati dall'app vengono salvati
-			esclusivamente in locale sul telefono dell'utente. Il titolare non può accedere a questi dati,
-			non li riceve e non li utilizza per identificare l'utente.
+			Le statistiche, i conteggi, le preferenze e gli eventuali log generati dall'app vengono
+			salvati esclusivamente in locale sul telefono dell'utente. Il titolare non può accedere a
+			questi dati, non li riceve e non li utilizza per identificare l'utente.
 		</p>
 		<p>
 			La disinstallazione dell'app o la cancellazione dei suoi dati tramite le impostazioni Android
@@ -50,10 +52,10 @@
 	<section aria-labelledby="accessibility-service">
 		<h2 id="accessibility-service">3. Utilizzo dell'AccessibilityService</h2>
 		<p>
-			Astra utilizza l'API Android <strong>AccessibilityService</strong> esclusivamente per rilevare
-			quando viene aperta un'app che l'utente ha scelto personalmente di monitorare. A questo scopo,
-			il servizio intercetta gli eventi Android di cambio finestra e registra solo l'informazione
-			necessaria a determinare quale app monitorata è stata aperta.
+			Astra utilizza l'API Android <strong>AccessibilityService</strong> esclusivamente per rilevare quando
+			viene aperta un'app che l'utente ha scelto personalmente di monitorare. A questo scopo, il servizio
+			intercetta gli eventi Android di cambio finestra e registra solo l'informazione necessaria a determinare
+			quale app monitorata è stata aperta.
 		</p>
 		<p><strong>L'AccessibilityService di Astra:</strong></p>
 		<ul>
@@ -80,7 +82,9 @@
 			Astra e il titolare non hanno accesso ai dati finanziari, ai numeri delle carte di credito o
 			agli altri dati completi del metodo di pagamento dell'utente. Le informazioni relative al
 			pagamento sono gestite da Google secondo i suoi
-			<a href="https://policies.google.com/privacy" rel="noreferrer">termini e la sua informativa sulla privacy</a>.
+			<a href="https://policies.google.com/privacy" rel="noreferrer"
+				>termini e la sua informativa sulla privacy</a
+			>.
 		</p>
 	</section>
 
@@ -88,8 +92,8 @@
 		<h2 id="minori">5. Minori</h2>
 		<p>
 			Astra non raccoglie consapevolmente dati personali di minori né richiede la creazione di un
-			account. Gli acquisti in-app sono soggetti alle impostazioni e alle autorizzazioni dell'account
-			Google Play utilizzato sul dispositivo.
+			account. Gli acquisti in-app sono soggetti alle impostazioni e alle autorizzazioni
+			dell'account Google Play utilizzato sul dispositivo.
 		</p>
 	</section>
 
@@ -97,8 +101,8 @@
 		<h2 id="modifiche">6. Modifiche a questa informativa</h2>
 		<p>
 			Questa Privacy Policy può essere aggiornata quando necessario, ad esempio in caso di modifiche
-			all'app o alle funzionalità del sistema operativo Android. La versione aggiornata sarà pubblicata
-			in questa pagina con la relativa data di aggiornamento.
+			all'app o alle funzionalità del sistema operativo Android. La versione aggiornata sarà
+			pubblicata in questa pagina con la relativa data di aggiornamento.
 		</p>
 	</section>
 
@@ -107,7 +111,9 @@
 		<p>
 			Per domande o richieste riguardanti questa informativa, l'app Astra o i dati memorizzati sul
 			dispositivo, è possibile contattare il titolare tramite il
-			<a href="https://github.com/danieleavolio" rel="noreferrer">profilo GitHub di Daniele Avolio</a>.
+			<a href="https://github.com/danieleavolio" rel="noreferrer"
+				>profilo GitHub di Daniele Avolio</a
+			>.
 		</p>
 	</section>
 </article>

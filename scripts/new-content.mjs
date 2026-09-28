@@ -6,12 +6,16 @@ const slugArg = process.argv[3];
 const titleArg = process.argv[4];
 
 if (!mode || !['post', 'project'].includes(mode)) {
-	console.error('Uso: npm run new:post -- <slug> "Titolo" oppure npm run new:project -- <slug> "Titolo"');
+	console.error(
+		'Uso: npm run new:post -- <slug> "Titolo" oppure npm run new:project -- <slug> "Titolo"'
+	);
 	process.exit(1);
 }
 
 if (!slugArg) {
-	console.error('Devi specificare lo slug. Esempio: npm run new:post -- seo-svelte "SEO con Svelte"');
+	console.error(
+		'Devi specificare lo slug. Esempio: npm run new:post -- seo-svelte "SEO con Svelte"'
+	);
 	process.exit(1);
 }
 
@@ -48,7 +52,7 @@ fs.writeFileSync(outputFile, template, 'utf8');
 console.log(`Creato: ${outputFile}`);
 console.log('Prossimi step:');
 console.log(`1) Completa frontmatter e testo in ${folder}/${slug}.md`);
-console.log('2) Aggiungi l\'immagine OG in static/images/og/');
+console.log("2) Aggiungi l'immagine OG in static/images/og/");
 console.log('3) Metti published: true quando vuoi pubblicare.');
 
 function normalizeSlug(input) {

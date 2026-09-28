@@ -8,7 +8,6 @@
 	scroll-behavior: smooth;
 }
 
-
 html {
 	/* font */
 	--font-sans: 'Manrope', sans-serif;
@@ -93,9 +92,6 @@ html {
 	}
 }
 
-
-
-
 [color-scheme='dark'] {
 	color-scheme: dark;
 
@@ -124,7 +120,7 @@ html {
 	--border: var(--border-light);
 }
 
-hr{
+hr {
 	background: var(--automataBlackOpacity);
 	border-radius: 10px;
 }
@@ -141,7 +137,7 @@ pre {
 	cursor: inherit;
 }
 
-mark{
+mark {
 	background-color: var(--automataYellowOpacity);
 	color: var(--automataBlackO);
 	border-radius: 0;
@@ -154,7 +150,8 @@ body {
 	min-height: inherit;
 	background-size: 4px 4px;
 	background-repeat: repeat;
-	background-image: linear-gradient(90deg, transparent, transparent 3px, rgba(0, 0, 0, 0.07) 4px),
+	background-image:
+		linear-gradient(90deg, transparent, transparent 3px, rgba(0, 0, 0, 0.07) 4px),
 		linear-gradient(transparent, transparent 3px, rgba(0, 0, 0, 0.07) 4px);
 }
 
@@ -166,7 +163,8 @@ html {
 	font-weight: 300;
 	margin: 0;
 	min-height: 100vh;
-	box-shadow: inset 0 0 150px rgba(var(--automataColor), 0.4),
+	box-shadow:
+		inset 0 0 150px rgba(var(--automataColor), 0.4),
 		inset 0 0 150px rgba(var(--automataColor), 0.3);
 	display: flex;
 	min-height: 100vh;
@@ -177,9 +175,6 @@ html {
 article {
 	line-height: 2.3rem;
 }
-
-
-
 
 img {
 	border-radius: var(--radius-1);
@@ -200,14 +195,16 @@ li {
 	padding-inline-start: 0;
 	padding-left: 4rem;
 	padding-bottom: 1em;
-	background-image: linear-gradient(90deg,
-			rgba(77, 73, 62, 0.2),
-			rgba(77, 73, 62, 0.2) 14px,
-			transparent 14px,
-			transparent 20px,
-			rgba(77, 73, 62, 0.2) 20px,
-			rgba(77, 73, 62, 0.2) 23px,
-			transparent 23px);
+	background-image: linear-gradient(
+		90deg,
+		rgba(77, 73, 62, 0.2),
+		rgba(77, 73, 62, 0.2) 14px,
+		transparent 14px,
+		transparent 20px,
+		rgba(77, 73, 62, 0.2) 20px,
+		rgba(77, 73, 62, 0.2) 23px,
+		transparent 23px
+	);
 	margin-bottom: 2rem;
 	max-inline-size: var(--size-content-3);
 }
@@ -226,7 +223,6 @@ td {
 	padding: 0.5rem;
 }
 
-
 h1 {
 	font-size: var(--font-size-fluid-3);
 }
@@ -242,8 +238,6 @@ h3 {
 h4 {
 	font-size: var(--font-size-fluid-0);
 }
-
-
 
 h1,
 h2,
@@ -296,7 +290,6 @@ a {
 	border-right: none;
 	transition: all 0.1s ease-in-out;
 	text-align: center;
-	
 
 	&::before {
 		content: '';
@@ -331,7 +324,6 @@ a {
 		&::before {
 			width: 100%;
 		}
-		
 	}
 }
 
@@ -342,11 +334,11 @@ article a {
 	&:hover {
 		&::after {
 			display: none;
-			content: "";
+			content: '';
 		}
 
 		&::before {
-			content: "";
+			content: '';
 			display: none;
 		}
 
@@ -354,8 +346,6 @@ article a {
 		color: var(--automataWhite);
 	}
 }
-
-
 
 a:visited {
 	text-decoration: none;
@@ -389,11 +379,13 @@ a:visited:hover {
 
 /* ... */
 
-.prose p{
+.prose p {
 	text-align: justify;
 }
 
-.prose table{margin: auto;}
+.prose table {
+	margin: auto;
+}
 
 .prose h1 {
 	font-size: 3rem;
@@ -435,7 +427,7 @@ hgroup h1 {
 	tab-size: 2;
 }
 
-.prose h3{
+.prose h3 {
 	font-weight: 600;
 	box-shadow: none;
 	text-align: center;
@@ -443,22 +435,36 @@ hgroup h1 {
 	letter-spacing: normal;
 }
 
-
 .pattern {
 	border-top: 2px solid var(--automataColor);
 }
 
 .pattern-inner {
 	height: 40px;
-	background-size: 50px 3px, 50px 1px, 50px 1px, 50px 1px, 50px 1px, 50px 1px, 50px 1px, 50px 1px,
+	background-size:
+		50px 3px,
+		50px 1px,
+		50px 1px,
+		50px 1px,
+		50px 1px,
+		50px 1px,
+		50px 1px,
+		50px 1px,
 		50px 1px;
-	background-position: 0 0, 22px 4px, 22px 5px, 22px 6px, 22px 7px, 28px 12px, 28px 13px, 28px 14px,
+	background-position:
+		0 0,
+		22px 4px,
+		22px 5px,
+		22px 6px,
+		22px 7px,
+		28px 12px,
+		28px 13px,
+		28px 14px,
 		28px 15px;
-	background-image: linear-gradient(90deg,
-			var(--automataColor),
-			var(--automataColor) 10px,
-			transparent 10px),
-		linear-gradient(90deg,
+	background-image:
+		linear-gradient(90deg, var(--automataColor), var(--automataColor) 10px, transparent 10px),
+		linear-gradient(
+			90deg,
 			rgba(var(--automataColor), 0.4),
 			rgba(var(--automataColor), 0.4) 1px,
 			rgba(var(--automataColor), 0.8) 1px,
@@ -477,8 +483,10 @@ hgroup h1 {
 			rgba(var(--automataColor), 0.9) 15px,
 			rgba(var(--automataColor), 0.4) 15px,
 			rgba(var(--automataColor), 0.4) 16px,
-			transparent 16px),
-		linear-gradient(90deg,
+			transparent 16px
+		),
+		linear-gradient(
+			90deg,
 			rgba(var(--automataColor), 0.9),
 			rgba(var(--automataColor), 0.9) 1px,
 			rgba(var(--automataColor), 1) 1px,
@@ -497,8 +505,10 @@ hgroup h1 {
 			rgba(var(--automataColor), 1) 15px,
 			rgba(var(--automataColor), 0.9) 15px,
 			rgba(var(--automataColor), 0.9) 16px,
-			transparent 16px),
-		linear-gradient(90deg,
+			transparent 16px
+		),
+		linear-gradient(
+			90deg,
 			rgba(var(--automataColor), 0.9),
 			rgba(var(--automataColor), 0.9) 1px,
 			rgba(var(--automataColor), 1) 1px,
@@ -517,8 +527,10 @@ hgroup h1 {
 			rgba(var(--automataColor), 1) 15px,
 			rgba(var(--automataColor), 0.9) 15px,
 			rgba(var(--automataColor), 0.9) 16px,
-			transparent 16px),
-		linear-gradient(90deg,
+			transparent 16px
+		),
+		linear-gradient(
+			90deg,
 			rgba(var(--automataColor), 0.4),
 			rgba(var(--automataColor), 0.4) 1px,
 			rgba(var(--automataColor), 0.8) 1px,
@@ -537,8 +549,10 @@ hgroup h1 {
 			rgba(var(--automataColor), 0.9) 15px,
 			rgba(var(--automataColor), 0.4) 15px,
 			rgba(var(--automataColor), 0.4) 16px,
-			transparent 16px),
-		linear-gradient(90deg,
+			transparent 16px
+		),
+		linear-gradient(
+			90deg,
 			rgba(var(--automataColor), 0.4),
 			rgba(var(--automataColor), 0.4) 1px,
 			rgba(var(--automataColor), 0.8) 1px,
@@ -547,8 +561,10 @@ hgroup h1 {
 			rgba(var(--automataColor), 0.9) 3px,
 			rgba(var(--automataColor), 0.4) 3px,
 			rgba(var(--automataColor), 0.4) 4px,
-			transparent 4px),
-		linear-gradient(90deg,
+			transparent 4px
+		),
+		linear-gradient(
+			90deg,
 			rgba(var(--automataColor), 0.9),
 			rgba(var(--automataColor), 0.9) 1px,
 			rgba(var(--automataColor), 1) 1px,
@@ -557,8 +573,10 @@ hgroup h1 {
 			rgba(var(--automataColor), 1) 3px,
 			rgba(var(--automataColor), 0.9) 3px,
 			rgba(var(--automataColor), 0.9) 4px,
-			transparent 4px),
-		linear-gradient(90deg,
+			transparent 4px
+		),
+		linear-gradient(
+			90deg,
 			rgba(var(--automataColor), 0.9),
 			rgba(var(--automataColor), 0.9) 1px,
 			rgba(var(--automataColor), 1) 1px,
@@ -567,8 +585,10 @@ hgroup h1 {
 			rgba(var(--automataColor), 1) 3px,
 			rgba(var(--automataColor), 0.9) 3px,
 			rgba(var(--automataColor), 0.9) 4px,
-			transparent 4px),
-		linear-gradient(90deg,
+			transparent 4px
+		),
+		linear-gradient(
+			90deg,
 			rgba(var(--automataColor), 0.4),
 			rgba(var(--automataColor), 0.4) 1px,
 			rgba(var(--automataColor), 0.8) 1px,
@@ -577,7 +597,8 @@ hgroup h1 {
 			rgba(var(--automataColor), 0.9) 3px,
 			rgba(var(--automataColor), 0.4) 3px,
 			rgba(var(--automataColor), 0.4) 4px,
-			transparent 4px);
+			transparent 4px
+		);
 	background-repeat: repeat-x;
 }
 
@@ -585,7 +606,7 @@ hgroup h1 {
 	list-style-type: initial;
 }
 
-.prose :is(ul, ol)>li {
+.prose :is(ul, ol) > li {
 	background-image: none;
 }
 
@@ -594,12 +615,12 @@ pre {
 	word-wrap: break-word;
 }
 
-code{
+code {
 	white-space: pre-wrap;
 	word-wrap: break-word;
 	background-color: var(--automataRed);
 }
 
-pre code{
+pre code {
 	background: transparent;
 }

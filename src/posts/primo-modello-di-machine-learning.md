@@ -1,11 +1,11 @@
 ---
 title: Primo Modello di Machine Learning [AI]
 description: In questo post, vedremo come creare un semplice modello di predizione del prezzo delle case utilizzando Python e scikit-learn. L'obiettivo è fornire una guida passo-passo per costruire un modello predittivo utilizzando regressione lineare.
-date: "06-19-2024-19:30"
-categories: 
-    - machine-learning
-    - python
-    - scikit-learn
+date: '06-19-2024-19:30'
+categories:
+  - machine-learning
+  - python
+  - scikit-learn
 published: true
 ---
 

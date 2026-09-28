@@ -1,19 +1,19 @@
 ---
 title: Come implementare un motore di ricerca in SvelteKit
 description: Cercare all'interno del proprio sito web potrebbe essere necessario per rendere più facile la navigazione ai propri utenti. Wow in SvelteKit non è poi cosi difficile!
-date: "10-18-2024"
-categories: 
-    - programmazione
-    - web
-    - blog
-    - sveltekit
+date: '10-18-2024'
+categories:
+  - programmazione
+  - web
+  - blog
+  - sveltekit
 published: true
-
 ---
 
 `Premessa`: Questo articolo è stato scritto dopo aver implementato dopo aver seguito la seguente guida: [How To Make A Blazing Fast SvelteKit Search](https://joyofcode.xyz/blazing-fast-sveltekit-search). Questo articolo è una traduzione e riadattamento di quanto scritto in quella guida, dopo averlo applicato al mio sito web.
 
 ![Motore di ricerca](https://i.imgur.com/LviXblo.gif)
+
 <center>Esempio di motore di ricerca in SvelteKit </center>
 
 ## Dipendenze
@@ -52,31 +52,28 @@ Dove:
 import type { Element } from '$lib/types';
 import { json } from '@sveltejs/kit';
 
+export const prerender = true;
 
-export const prerender = true
+export async function GET({ fetch }) {
+	// Fetch dei post
+	const response = await fetch('api/posts');
+	const posts: Element[] = await response.json();
 
-export async function GET({fetch}) {
+	// Aggiunta poiché ho 2 tipi di pagine
+	posts.forEach((post) => {
+		post.slug = 'pagine/' + post.slug;
+	});
 
-    // Fetch dei post
-    const response = await fetch('api/posts');
-    const posts: Element[] = await response.json();
+	// Fetch dei progetti
+	const res2 = await fetch('api/progetti');
+	const progetti: Element[] = await res2.json();
 
-    // Aggiunta poiché ho 2 tipi di pagine
-    posts.forEach(post => {
-        post.slug = 'pagine/' + post.slug;
-    });
+	progetti.forEach((post) => {
+		post.slug = 'progetti/' + post.slug;
+	});
 
-    // Fetch dei progetti
-    const res2 = await fetch('api/progetti');
-    const progetti: Element[] = await res2.json();
-
-    progetti.forEach(post => {
-        post.slug = 'progetti/' + post.slug;
-    });
-
-
-    // Ritorno dei dati come JSON
-    return json({ posts, progetti});
+	// Ritorno dei dati come JSON
+	return json({ posts, progetti });
 }
 ```
 
@@ -85,92 +82,90 @@ export async function GET({fetch}) {
 #### `search.json`
 
 ```typescript
-import FlexSearch from 'flexsearch'
+import FlexSearch from 'flexsearch';
 import type { Element } from '$lib/types';
 
-
-let postsIndex: FlexSearch.Index
-let posts: Element[]
+let postsIndex: FlexSearch.Index;
+let posts: Element[];
 
 export function createIndex(data: any) {
-    // Crea un indice di ricerca per i post
+	// Crea un indice di ricerca per i post
 
-    // Tokenize 'forward' per accettare anche le ricerche parziali
-    // mentre per le ricerche esatte si può usare 'strict'
-    postsIndex = new FlexSearch.Index({ tokenize: 'forward' })
+	// Tokenize 'forward' per accettare anche le ricerche parziali
+	// mentre per le ricerche esatte si può usare 'strict'
+	postsIndex = new FlexSearch.Index({ tokenize: 'forward' });
 
+	// Join perché ho sia i post che i progetti
+	data = data.posts.concat(data.progetti);
 
-    // Join perché ho sia i post che i progetti
-    data = data.posts.concat(data.progetti);
-    
-    data.forEach((post: { title: any; description: any; }, i: FlexSearch.Id) => {
+	data.forEach((post: { title: any; description: any }, i: FlexSearch.Id) => {
+		// Crea un item con il titolo e la descrizione del post
+		const item = `${post.title} ${post.description}`;
 
-        // Crea un item con il titolo e la descrizione del post
-        const item = `${post.title} ${post.description}`
+		// Aggiungi l'item all'indice
+		postsIndex.add(i, item);
+	});
 
-        // Aggiungi l'item all'indice
-        postsIndex.add(i, item)
-    })
-
-    posts = data
+	posts = data;
 }
 
-    export function searchPostsIndex(searchTerm: string) {
-    // escape special regex characters
-    const match = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-    // return matching post indexes 💪
-    const results = postsIndex.search(match)
+export function searchPostsIndex(searchTerm: string) {
+	// escape special regex characters
+	const match = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	// return matching post indexes 💪
+	const results = postsIndex.search(match);
 
-    return results
-        // filter the posts based on the matched index
-        .map((index) => posts[index as number])
-        // you can do whatever you want at this point 👌
-        .map(({ slug, title, description }) => {
-            return {
-                slug,
-                // replace match in title with a marker
-                title: replaceTextWithMarker(title, match),
-                // match words in post and replace matches with marker
-                content: getMatches(description, match, 3)
-            }
-        })
+	return (
+		results
+			// filter the posts based on the matched index
+			.map((index) => posts[index as number])
+			// you can do whatever you want at this point 👌
+			.map(({ slug, title, description }) => {
+				return {
+					slug,
+					// replace match in title with a marker
+					title: replaceTextWithMarker(title, match),
+					// match words in post and replace matches with marker
+					content: getMatches(description, match, 3)
+				};
+			})
+	);
 }
-
 
 function getMatches(text: string, searchTerm: string, limit = 1) {
-    // Regex per la ricerca
-    const regex = new RegExp(searchTerm, 'gi')
-    // Indici
-    const indexes = []
-    // Matches
-    let matches = 0
-    // Loop per trovare i match
-    let match
-    while ((match = regex.exec(text)) !== null && matches < limit) {
-        // Aggiungi l'indice
-        indexes.push(match.index)
-        // Incrementa i match
-        matches++
-    }
+	// Regex per la ricerca
+	const regex = new RegExp(searchTerm, 'gi');
+	// Indici
+	const indexes = [];
+	// Matches
+	let matches = 0;
+	// Loop per trovare i match
+	let match;
+	while ((match = regex.exec(text)) !== null && matches < limit) {
+		// Aggiungi l'indice
+		indexes.push(match.index);
+		// Incrementa i match
+		matches++;
+	}
 
-    // Ritorna l'array di indici
-    return indexes.map((index) => {
-        // Vai indietro di 20 caratteri
-        const start = index - 20
-        // Vai avanti di 80 caratteri
-        const end = index + 80
-        // Estrai il testo
-        const excerpt = text.substring(start, end).trim()
-        // Ritorna l'estratto con i match
-        return `...${replaceTextWithMarker(excerpt, searchTerm)}...`
-    })
+	// Ritorna l'array di indici
+	return indexes.map((index) => {
+		// Vai indietro di 20 caratteri
+		const start = index - 20;
+		// Vai avanti di 80 caratteri
+		const end = index + 80;
+		// Estrai il testo
+		const excerpt = text.substring(start, end).trim();
+		// Ritorna l'estratto con i match
+		return `...${replaceTextWithMarker(excerpt, searchTerm)}...`;
+	});
 }
 
 function replaceTextWithMarker(text: string, match: string) {
-    // Regex per la ricerca
-    const regex = new RegExp(match, 'gi')
-    // Ritorna il testo con il match evidenziato
-    return text.replaceAll(regex, (match) => `<mark>${match}</mark>`)
+	// Regex per la ricerca
+	const regex = new RegExp(match, 'gi');
+	// Ritorna il testo con il match evidenziato
+	return text.replaceAll(regex, (match) => `<mark>${match}</mark>`);
 }
 ```
 
@@ -340,19 +335,19 @@ Praticamente, quello che succede è che:
 Io ho lasciato lo **style** che ho per il mio componente, che non andrà bene per voi, poiché all'interno utilizzo anche un **Modal** per andare a fare la ricerca senza invadere la pagina. Quello che è importante è la **logica** del motore di ricerca.
 
 La logica del componente è molto semplice:
+
 1. Quando il componente è montato, prendiamo i post dal nostro endpoint e creiamo l'indice di ricerca.
 2. Quando il componente è pronto, cerchiamo all'interno dell'indice in base alla nostra ricerca.
 3. Mostriamo i risultati.
 
 ## Conclusioni
 
-Nel suo articolo [Joy Of Code](https://joyofcode.xyz/) aggiunge anche una parte utilizzando un **Web Worker** per aumentare le performance del motore di ricerca, ma io non l'ho implementata poiché non ho avuto problemi di performance. Se avete problemi di performance, vi consiglio di dare un'occhiata al suo articolo perché quì per ora non troverete nulla a riguardo. 
+Nel suo articolo [Joy Of Code](https://joyofcode.xyz/) aggiunge anche una parte utilizzando un **Web Worker** per aumentare le performance del motore di ricerca, ma io non l'ho implementata poiché non ho avuto problemi di performance. Se avete problemi di performance, vi consiglio di dare un'occhiata al suo articolo perché quì per ora non troverete nulla a riguardo.
 
 Potrebbero anche esserci situazioni inadeguate in cui anche con 1 sola lettera, il motore di ricerca vi ritorna risultati, ma questo è dovuto al fatto che io ho voluto fare una ricerca parziale e non esatta. Se volete fare una ricerca esatta, potete cambiare il parametro `tokenize` all'interno del file `search.ts` da `forward` a `strict` come detto in precedenza.
 
 ![Risultati ricerca](https://i.imgur.com/Pgfiqwi.png)
+
 <center>Risultati della ricerca un po' esagerati</center>
 
 Attualmente non penso che il motore sia ottimale, perché io non ho ancora implementato la ricerca per i tag e neanche per contenuto all'interno dei post, perché non ho ancora rimodellato alcune parti dei dati per essere accessibili senza troppi magheggi. In futuro chissà, magari lo implementerò ma sicuramente non è ora il momento.
-
-

@@ -1,4 +1,3 @@
-
 <pre>
 █████████████████████████████████████████████████████████████████████████████
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
@@ -8,11 +7,12 @@
 <summary><b>System Boot Sequence</b></summary>
 
 ```yaml
-LOADING: "BOOTING SYSTEM..."
+LOADING: 'BOOTING SYSTEM...'
 MEMORY_CORE: READY
 PERSONALITY_LAYER: STABLE
-SIGNATURE: "AGL_D-170"
+SIGNATURE: 'AGL_D-170'
 ```
+
 </details>
 
 <details>
@@ -27,6 +27,7 @@ SIGNATURE: "AGL_D-170"
 > Network Link: [Encrypted]
 > Auth Token: ✅ VALID
 ```
+
 </details>
 
 <details>
@@ -39,6 +40,7 @@ SIGNATURE: "AGL_D-170"
 ~ Data Path: /rookie/init
 ~ Experience: 0%
 ```
+
 </details>
 
 <details>
@@ -50,6 +52,7 @@ Spark=LOCKED
 Scala=OFFLINE
 Cloud=UNDEFINED
 ```
+
 </details>
 
 <details>
@@ -57,13 +60,14 @@ Cloud=UNDEFINED
 
 ```json
 {
-  "Access": "ROOKIE_CLASS_C",
-  "Remote": true,
-  "Onboarding": "2025-07-21",
-  "Assignment": "HIDDEN",
-  "ProjectID": "██████"
+	"Access": "ROOKIE_CLASS_C",
+	"Remote": true,
+	"Onboarding": "2025-07-21",
+	"Assignment": "HIDDEN",
+	"ProjectID": "██████"
 }
 ```
+
 </details>
 
 <blockquote>

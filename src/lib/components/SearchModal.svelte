@@ -32,8 +32,7 @@
 	</button>
 </div>
 
-
-<Modal bind:dialog={dialog} bind:showModal isSearch={true}>
+<Modal bind:dialog bind:showModal isSearch={true}>
 	{#if search === 'ready'}
 		<div class="search">
 			<input
@@ -52,7 +51,7 @@
 						{#each results as result (result.slug)}
 							<div
 								on:click={() => {
-									goto("/" + result.slug);
+									goto('/' + result.slug);
 									showModal = false;
 									searchTerm = '';
 									dialog.close();
@@ -80,12 +79,12 @@
 		padding: 1em;
 	}
 
-	.search-icon{
+	.search-icon {
 		transform: translateY(0);
 	}
 
 	@media (min-width: 1300px) {
-		.search-icon{
+		.search-icon {
 			transform: translateY(-10px);
 		}
 	}

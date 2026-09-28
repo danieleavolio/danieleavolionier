@@ -1,18 +1,19 @@
 ---
 title: Webcam Emotion Detection
 description: Piccolo progettod di Machine Learning per rilevare le emozioni umane tramite la webcam, lightweigth e facile da usare.
-date: "07-04-2024-16:00"
-categories: 
-    - Machine Learning
-    - Computer Vision
-    - Python
-    - OpenCV
-    - TensorFlow
+date: '07-04-2024-16:00'
+categories:
+  - Machine Learning
+  - Computer Vision
+  - Python
+  - OpenCV
+  - TensorFlow
 published: true
 ---
+
 # Sistema di Rilevamento delle Emozioni
 
-Questo progetto è progettato per rilevare e analizzare le emozioni dai flussi video in tempo reale. Utilizza un **pretrained** per identificare i volti umani e **FER** per classificare le loro emozioni in diverse categorie come *neutro, felice, triste, sorpresa, paura, disgusto e arrabbiato*. Il sistema traccia anche l'andamento delle emozioni dominanti nel tempo, fornendo preziose informazioni sulle dinamiche emotive. Lo scopo principale era quello di realizzare un'interfaccia grafica semplice e che fosse facile da usare, per poter essere utilizzata da chiunque.
+Questo progetto è progettato per rilevare e analizzare le emozioni dai flussi video in tempo reale. Utilizza un **pretrained** per identificare i volti umani e **FER** per classificare le loro emozioni in diverse categorie come _neutro, felice, triste, sorpresa, paura, disgusto e arrabbiato_. Il sistema traccia anche l'andamento delle emozioni dominanti nel tempo, fornendo preziose informazioni sulle dinamiche emotive. Lo scopo principale era quello di realizzare un'interfaccia grafica semplice e che fosse facile da usare, per poter essere utilizzata da chiunque.
 
 ## Caratteristiche
 
@@ -32,8 +33,7 @@ Questo progetto è progettato per rilevare e analizzare le emozioni dai flussi v
 
 ## Installazione
 
-Controllare la repository *github* per clonare il progetto e installare le dipendenze necessarie. Tutte le informazioni sono disponibili nel file `requirements.txt`.
-
+Controllare la repository _github_ per clonare il progetto e installare le dipendenze necessarie. Tutte le informazioni sono disponibili nel file `requirements.txt`.
 
 ## Utilizzo
 
@@ -45,9 +45,9 @@ Per avviare il sistema di rilevamento delle emozioni, esegui lo script principal
 
 ## Complicazioni e Limitazioni
 
-Attualmente il progetto funziona solamente con 1 volto alla volta e non è in grado di rilevare emozioni da volti parzialmente visibili o coperti. Inoltre, la precisione del rilevamento delle emozioni può variare in base alla qualità dell'immagine e alla luce ambientale. Il modello è molto molto leggero appunto per funzionare in tempo reale, quindi non è il più accurato in assoluto; piuttosto è un buon compromesso tra accuratezza e velocità. 
+Attualmente il progetto funziona solamente con 1 volto alla volta e non è in grado di rilevare emozioni da volti parzialmente visibili o coperti. Inoltre, la precisione del rilevamento delle emozioni può variare in base alla qualità dell'immagine e alla luce ambientale. Il modello è molto molto leggero appunto per funzionare in tempo reale, quindi non è il più accurato in assoluto; piuttosto è un buon compromesso tra accuratezza e velocità.
 
-Posso dire che in condizioni di scarsa luce si comporta comunque in modo accettabile e con una webcam abbastanza di scarsa qualità, quindi è un buon compromesso per un uso generale. 
+Posso dire che in condizioni di scarsa luce si comporta comunque in modo accettabile e con una webcam abbastanza di scarsa qualità, quindi è un buon compromesso per un uso generale.
 
 ## Risolvere le Complicazioni
 
@@ -62,6 +62,6 @@ Semplicemente utilizzando un modello più complesso e pesante, si potrebbe migli
 
 ## Conclusione
 
-Puoi trovare il progetto sulla pagina **github** qui [Webcam Emotion Detection](https://github.com/danieleavolio/WebcamEmotionDetection)! 
+Puoi trovare il progetto sulla pagina **github** qui [Webcam Emotion Detection](https://github.com/danieleavolio/WebcamEmotionDetection)!
 
 Per qualsiasi domanda o suggerimento, non esitare a contattarmi!

@@ -30,7 +30,16 @@
 				<li class:active={selected.slug === item.slug}>
 					<button type="button" class="select-item" on:click={() => edit(item)}>{item.title}</button
 					>
-					<form method="POST" action="?/remove" use:enhance>
+					<form
+						method="POST"
+						action="?/remove"
+						use:enhance
+						on:submit={(event) => {
+							if (!confirm(`Sei sicuro di voler eliminare "${item.title}"?`)) {
+								event.preventDefault();
+							}
+						}}
+					>
 						<input type="hidden" name="slug" value={item.slug} />
 						<button type="submit" class="delete" aria-label={`Elimina ${item.title}`}>×</button>
 					</form>
@@ -38,7 +47,11 @@
 			{/each}
 		</ul>
 	</aside>
-	<section class="editor-panel"><AdminContentEditor item={selected} {form} /></section>
+	<section class="editor-panel">
+		{#key selected.slug || selected}
+			<AdminContentEditor item={selected} {form} />
+		{/key}
+	</section>
 </div>
 
 <style>

@@ -20,9 +20,38 @@ if (!url || (!dryRun && !key)) {
 const supabase = dryRun ? null : createClient(url, key);
 
 const allowedTags = [
-	'a', 'blockquote', 'br', 'code', 'div', 'em', 'figcaption', 'figure', 'h1', 'h2', 'h3', 'h4',
-	'h5', 'h6', 'hr', 'iframe', 'img', 'li', 'ol', 'p', 'pre', 'source', 'strong', 'table', 'tbody',
-	'td', 'tfoot', 'th', 'thead', 'tr', 'ul', 'video'
+	'a',
+	'blockquote',
+	'br',
+	'code',
+	'div',
+	'em',
+	'figcaption',
+	'figure',
+	'h1',
+	'h2',
+	'h3',
+	'h4',
+	'h5',
+	'h6',
+	'hr',
+	'iframe',
+	'img',
+	'li',
+	'ol',
+	'p',
+	'pre',
+	'source',
+	'strong',
+	'table',
+	'tbody',
+	'td',
+	'tfoot',
+	'th',
+	'thead',
+	'tr',
+	'ul',
+	'video'
 ];
 
 function sanitize(html) {
@@ -32,7 +61,16 @@ function sanitize(html) {
 			a: ['href', 'target', 'rel'],
 			code: ['class'],
 			div: ['class', 'data-rich-block', 'data-images', 'data-grade', 'data-max', 'data-title'],
-			iframe: ['src', 'title', 'width', 'height', 'allow', 'allowfullscreen', 'loading', 'frameborder'],
+			iframe: [
+				'src',
+				'title',
+				'width',
+				'height',
+				'allow',
+				'allowfullscreen',
+				'loading',
+				'frameborder'
+			],
 			img: ['src', 'alt', 'title', 'width', 'height', 'loading'],
 			pre: ['class'],
 			source: ['src', 'type'],
@@ -40,12 +78,19 @@ function sanitize(html) {
 		},
 		allowedSchemes: ['http', 'https', 'mailto'],
 		allowProtocolRelative: false,
-		allowedIframeHostnames: ['www.youtube.com', 'youtube.com', 'open.spotify.com', 'player.vimeo.com']
+		allowedIframeHostnames: [
+			'www.youtube.com',
+			'youtube.com',
+			'open.spotify.com',
+			'player.vimeo.com'
+		]
 	});
 }
 
 function galleryImages(source, name) {
-	const declaration = source.match(new RegExp(`(?:const|let|var)\\s+${name}\\s*=\\s*\\[([\\s\\S]*?)\\]`, 'm'));
+	const declaration = source.match(
+		new RegExp(`(?:const|let|var)\\s+${name}\\s*=\\s*\\[([\\s\\S]*?)\\]`, 'm')
+	);
 	if (!declaration) return [];
 	return [...declaration[1].matchAll(/['"](https?:\/\/[^'"]+)['"]/g)].map((match) => match[1]);
 }
@@ -95,7 +140,11 @@ function parseFrontmatter(source) {
 			values[key] = [];
 			currentList = key;
 		} else if (raw.trim().startsWith('[')) {
-			values[key] = raw.replace(/[\[\]]/g, '').split(',').map(parseValue).filter(Boolean);
+			values[key] = raw
+				.replace(/[\[\]]/g, '')
+				.split(',')
+				.map(parseValue)
+				.filter(Boolean);
 			currentList = null;
 		} else {
 			values[key] = parseValue(raw);
@@ -111,35 +160,46 @@ function normalizeDate(value) {
 	const parsed = new Date(value);
 	if (!Number.isNaN(parsed.getTime())) return parsed.toISOString().slice(0, 10);
 	const parts = String(value).split('-');
-	if (parts.length >= 3 && parts[2].length >= 4) return `${parts[2].slice(0, 4)}-${parts[0]}-${parts[1]}`;
+	if (parts.length >= 3 && parts[2].length >= 4)
+		return `${parts[2].slice(0, 4)}-${parts[0]}-${parts[1]}`;
 	return new Date().toISOString().slice(0, 10);
 }
 
 function readEntries(directory, contentType) {
 	const absolute = path.join(root, 'src', directory);
-	return fs.readdirSync(absolute).filter((file) => file.endsWith('.md')).map((file) => {
-		const source = fs.readFileSync(path.join(absolute, file), 'utf8');
-		const { values, body } = parseFrontmatter(source);
-		const slug = file.replace(/\.md$/, '');
-		const metadata = {};
-		for (const key of ['isReview', 'gameName', 'gameImage', 'ratingValue', 'reviewBody', 'developer']) {
-			if (values[key] !== undefined) metadata[key] = values[key];
-		}
-		return {
-			slug,
-			title: values.title || slug,
-			description: values.description || '',
-			date: normalizeDate(values.date),
-			image: values.image || null,
-			categories: Array.isArray(values.categories) ? values.categories : [],
-			published: values.published !== false,
-			content: body,
-			content_html: markdownToHtml(body, values),
-			content_json: null,
-			legacy_content: body,
-			metadata: { ...metadata, contentType }
-		};
-	});
+	return fs
+		.readdirSync(absolute)
+		.filter((file) => file.endsWith('.md'))
+		.map((file) => {
+			const source = fs.readFileSync(path.join(absolute, file), 'utf8');
+			const { values, body } = parseFrontmatter(source);
+			const slug = file.replace(/\.md$/, '');
+			const metadata = {};
+			for (const key of [
+				'isReview',
+				'gameName',
+				'gameImage',
+				'ratingValue',
+				'reviewBody',
+				'developer'
+			]) {
+				if (values[key] !== undefined) metadata[key] = values[key];
+			}
+			return {
+				slug,
+				title: values.title || slug,
+				description: values.description || '',
+				date: normalizeDate(values.date),
+				image: values.image || null,
+				categories: Array.isArray(values.categories) ? values.categories : [],
+				published: values.published !== false,
+				content: body,
+				content_html: markdownToHtml(body, values),
+				content_json: null,
+				legacy_content: body,
+				metadata: { ...metadata, contentType }
+			};
+		});
 }
 
 async function migrateTable(table, directory) {

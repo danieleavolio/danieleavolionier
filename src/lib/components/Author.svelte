@@ -3,7 +3,7 @@
 	export let surname = 'Surname';
 	export let username = 'Username';
 	export let description = 'Description';
-    
+
 	import Contacts from './Contacts.svelte';
 </script>
 

@@ -1,11 +1,11 @@
 ---
 title: Fine della magistrale in Informatica all'Unical
 description: Wow, è finita la magistrale in Informatica all'Unical. Manca solo tesi e tirocinio e poi ci siamo!
-date: "09-12-2024-17:30"
-categories: 
-    - blog
-    - università
-    - vita
+date: '09-12-2024-17:30'
+categories:
+  - blog
+  - università
+  - vita
 published: true
 ---
 
@@ -15,7 +15,7 @@ Fa strano, ormai è praticamente finita. Sono riuscito a superare tutti gli esam
 
 ## Gli esami
 
-Devo fare la **top 3** degli esami più tosti della *magistrale*? Ma non ci sono dubbi a riguardo lol:
+Devo fare la **top 3** degli esami più tosti della _magistrale_? Ma non ci sono dubbi a riguardo lol:
 
 1. `Statistica`: Ma senza proprio nessun dubbio. Ho dovuto studiare come un pazzo per superare l'esame, andare contro ogni mio istinto e cercare di capire come funzionano le cose. Alla fine ce l'ho fatta e sono soddisfatto. Soddisfatto di cosa? Di non aver capito nulla? Forse.
 2. `Informatica Teorica`: Che dire, letteralmente impossibile avere la testa per farci entrare tutto. Letteralmente la prima parte veniva sovrascritta dalla seconda, ma è stato sicuramente uno degli esami più fighi che ho fatto. Comunque, alla fine, `P = NP`, per dire.
@@ -23,7 +23,7 @@ Devo fare la **top 3** degli esami più tosti della *magistrale*? Ma non ci sono
 
 ## La tesi
 
-Un grosso 
+Un grosso
 
 <p align="center">
 BOH
@@ -35,7 +35,7 @@ Sto aspettando di ricevere conferma da un'azienda **segreta** per fare sia la te
 
 ## Il futuro
 
-Sì, il futuro. Cosa ci sarà? 
+Sì, il futuro. Cosa ci sarà?
 
 <h1 align="center">
 BOOOOOOOH
@@ -45,6 +45,4 @@ BOOOOOOOH
 <p align="center">🤙🤙🤙 Sicuramente non il dottorato 🤙🤙🤙</p>
 </blockquote>
 
-
 Al prossimo aggiornamento inutile! 🥳
-

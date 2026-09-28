@@ -1,11 +1,11 @@
 ---
 title: Implementazione di un Sistema di Filtri
 description: Come ho implementato un sistema di filtri per il mio blog
-date: "09-05-2023-14:30"
-categories: 
-    - programmazione
-    - web
-    - blog
+date: '09-05-2023-14:30'
+categories:
+  - programmazione
+  - web
+  - blog
 published: true
 ---
 
@@ -24,6 +24,7 @@ Passiamo al codice.
 ## Il codice
 
 **CSS**
+
 ```css
 <style>
 	.filter-title {
@@ -125,6 +126,7 @@ Passiamo al codice.
 ```
 
 **Svelte**
+
 ```typescript
 <section>
 	<div class="filter-title" on:click={() => handleClick()} id="1">
@@ -155,6 +157,7 @@ Le funzioni principali sono gestite nel div **filter-title**, il cui script verr
 Poi, per ogni categoria nella lista, la **stringa** viene aggiunta a un array chiamato **activeFilters**. Questo array viene utilizzato per filtrare i post inviandolo con un **eventDispatcher** al componente che gestisce il **materiale del blog**.
 
 **Typescript**
+
 ```typescript
 <script>
 	import { ChevronsDownUp, ChevronsUpDown, Cpu } from 'lucide-svelte';
@@ -220,6 +223,3 @@ Non c'è molto altro da dire, il codice si spiega praticamente da solo. Puoi cop
 ## Conclusione
 
 Sono abbastanza soddisfatto del risultato, è semplice e funziona. Non sono sicuro se lo aggiornerò in futuro, ma probabilmente lo farò. Spero che questo post ti sia piaciuto e ci vediamo nel prossimo!
-
-
-

@@ -1,25 +1,24 @@
 ---
 title: Link4Students
 description: Tesi Triennale in Informatica - Portale per studenti
-date: "04-22-2022-16:00"
-categories: 
-    - SvelteKit
-    - Node.js
-    - Firebase
-    - TypeScript
+date: '04-22-2022-16:00'
+categories:
+  - SvelteKit
+  - Node.js
+  - Firebase
+  - TypeScript
 published: true
 ---
 
-
 ## Introduzione
 
-*Link4Students* rappresenta il mio ambizioso progetto di tesi triennale di una piattaforma sociale dedicata agli studenti universitari. L'idea nasce dalla necessità di creare un ambiente online dove gli studenti possono connettersi, collaborare e condividere risorse educative in modo efficace e intuitivo.
+_Link4Students_ rappresenta il mio ambizioso progetto di tesi triennale di una piattaforma sociale dedicata agli studenti universitari. L'idea nasce dalla necessità di creare un ambiente online dove gli studenti possono connettersi, collaborare e condividere risorse educative in modo efficace e intuitivo.
 
 ![logo](https://camo.githubusercontent.com/41e4f3c51d07f0dfb70c40afa81b516ceed025023d895841a929d48373105f06/68747470733a2f2f692e696d6775722e636f6d2f623565364e74442e706e67)
 
 ## Obiettivi del Progetto
 
-Il cuore di *Link4Students* è stato progettato per facilitare la comunicazione e lo scambio di conoscenze tra gli studenti. L'obiettivo principale è fornire una piattaforma user-friendly che permetta agli utenti di:
+Il cuore di _Link4Students_ è stato progettato per facilitare la comunicazione e lo scambio di conoscenze tra gli studenti. L'obiettivo principale è fornire una piattaforma user-friendly che permetta agli utenti di:
 
 - Registrarsi e accedere in modo sicuro.
 - Pubblicare e condividere materiali didattici come appunti, dispense e esercizi.
@@ -27,13 +26,12 @@ Il cuore di *Link4Students* è stato progettato per facilitare la comunicazione 
 
 ## Tecnologie Utilizzate
 
-Per realizzare *Link4Students*, ho optato per un'architettura moderna e scalabile:
+Per realizzare _Link4Students_, ho optato per un'architettura moderna e scalabile:
 
 - **SvelteKit**: Utilizzato per lo sviluppo dell'interfaccia utente, garantendo una navigazione fluida e reattiva.
 - **Node.js e Firebase**: Implementati per gestire il backend dell'applicazione e il database, assicurando prestazioni ottimali e sicurezza dei dati.
 - **TypeScript**: Adottato per migliorare la manutenibilità del codice e ridurre potenziali errori durante lo sviluppo.
-![](https://i.imgur.com/BsdyF0F.png)
-
+  ![](https://i.imgur.com/BsdyF0F.png)
 
 ## Implementazione e Funzionalità Chiave
 
@@ -47,14 +45,13 @@ Gli studenti possono caricare e condividere risorse educative in vari formati. L
 
 ### Interfaccia Utente Intuitiva
 
-L'esperienza utente è stata al centro dello sviluppo di *Link4Students*. L'interfaccia è stata progettata per essere semplice e intuitiva, permettendo agli utenti di navigare facilmente tra le diverse sezioni e interagire senza difficoltà.
+L'esperienza utente è stata al centro dello sviluppo di _Link4Students_. L'interfaccia è stata progettata per essere semplice e intuitiva, permettendo agli utenti di navigare facilmente tra le diverse sezioni e interagire senza difficoltà.
 
 ### Recensione e valutazione dei corsi
 
 Gli studenti possono esprimere opinioni e valutazioni sui corsi universitari, fornendo feedback prezioso per gli altri utenti. Questa funzionalità promuove la trasparenza e l'informazione tra gli studenti.
 
 ![](https://i.imgur.com/GvS21dV.png)
-
 
 ## Sfide e Risultati
 

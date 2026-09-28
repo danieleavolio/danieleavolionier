@@ -76,6 +76,11 @@
 	});
 
 	onDestroy(() => editor?.destroy());
+	$: if (editor && (html || json) && editor.getHTML() !== html) {
+		if (!editor.isFocused) {
+			editor.commands.setContent(json ?? html ?? '', { emitUpdate: false });
+		}
+	}
 </script>
 
 {#if editor}
@@ -95,30 +100,43 @@
 			on:click={() => editor?.chain().focus().toggleUnderline().run()}
 			class:active={editor.isActive('underline')}>U</button
 		>
-		<button type="button" on:click={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
-			>H2</button
+		<button
+			type="button"
+			on:click={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
+			class:active={editor.isActive('heading', { level: 2 })}>H2</button
 		>
-		<button type="button" on:click={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()}
-			>H3</button
+		<button
+			type="button"
+			on:click={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()}
+			class:active={editor.isActive('heading', { level: 3 })}>H3</button
 		>
-		<button type="button" on:click={() => editor?.chain().focus().toggleBulletList().run()}
-			>Lista</button
+		<button
+			type="button"
+			on:click={() => editor?.chain().focus().toggleBulletList().run()}
+			class:active={editor.isActive('bulletList')}>Lista</button
 		>
-		<button type="button" on:click={() => editor?.chain().focus().toggleOrderedList().run()}
-			>1.</button
+		<button
+			type="button"
+			on:click={() => editor?.chain().focus().toggleOrderedList().run()}
+			class:active={editor.isActive('orderedList')}>1.</button
 		>
-		<button type="button" on:click={() => editor?.chain().focus().toggleBlockquote().run()}
-			>Citazione</button
+		<button
+			type="button"
+			on:click={() => editor?.chain().focus().toggleBlockquote().run()}
+			class:active={editor.isActive('blockquote')}>Citazione</button
 		>
-		<button type="button" on:click={() => editor?.chain().focus().toggleCodeBlock().run()}
-			>Codice</button
+		<button
+			type="button"
+			on:click={() => editor?.chain().focus().toggleCodeBlock().run()}
+			class:active={editor.isActive('codeBlock')}>Codice</button
 		>
 		<button
 			type="button"
 			on:click={() => {
 				const url = promptForUrl('URL del link');
 				if (url) editor?.chain().focus().setLink({ href: url }).run();
-			}}>Link</button
+			}}
+			class:active={editor.isActive('link')}>Link</button
 		>
 		<button
 			type="button"
@@ -133,7 +151,7 @@
 	</div>
 {/if}
 
-<div class="editor" bind:this={editorElement} aria-label="Editor del contenuto"></div>
+<div class="editor prose" bind:this={editorElement} aria-label="Editor del contenuto"></div>
 
 <style>
 	.toolbar {

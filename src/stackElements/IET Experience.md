@@ -30,4 +30,3 @@
 - Migliorato la pulizia e la qualità pronta per la produzione del mio codice.
 - Contribuito alla gestione e modifica di una libreria personalizzata dell'azienda.
 - Gestito i form reattivi in Angular.
-

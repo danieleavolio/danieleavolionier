@@ -37,28 +37,26 @@
 	.share-buttons {
 		display: flex;
 		gap: 10px;
-        margin: 1em;
-        justify-content: center;
+		margin: 1em;
+		justify-content: center;
 	}
 
-    .share-buttons button {
-        padding: 10px;
-        border: none;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        text-shadow: none;
-        color: var(--automataWhite);
-    }
+	.share-buttons button {
+		padding: 10px;
+		border: none;
+		font-size: 1rem;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		text-shadow: none;
+		color: var(--automataWhite);
+	}
 
-    img {
-        width: 20px;
-        height: 20px;
-        margin-right: 5px;
-        box-shadow: none;
-        }
-
-
+	img {
+		width: 20px;
+		height: 20px;
+		margin-right: 5px;
+		box-shadow: none;
+	}
 
 	.twitter-share {
 		background-color: var(--automataBlackOpacity);
@@ -68,17 +66,16 @@
 		background-color: var(--automataRedOpacity);
 	}
 
-    .twitter-share:hover,
-    .copy-link:hover {
-        transform: scale(1.05);
-    }
+	.twitter-share:hover,
+	.copy-link:hover {
+		transform: scale(1.05);
+	}
 
-    .twitter-share:hover {
-        background-color: var(--automataBlackO);
-    }
+	.twitter-share:hover {
+		background-color: var(--automataBlackO);
+	}
 
-    .copy-link:hover {
-        background-color: var(--automataRed);
-    }
-
+	.copy-link:hover {
+		background-color: var(--automataRed);
+	}
 </style>

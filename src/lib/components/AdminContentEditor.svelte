@@ -30,6 +30,28 @@
 		};
 	}
 
+	const originalSlug = item.slug;
+	let slugManuallyEdited = Boolean(item.slug);
+
+	function slugify(text: string): string {
+		return text
+			.toLowerCase()
+			.normalize('NFD')
+			.replace(/[\u0300-\u036f]/g, '')
+			.replace(/[^a-z0-9]+/g, '-')
+			.replace(/^-+|-+$/g, '');
+	}
+
+	function handleTitleInput() {
+		if (!slugManuallyEdited) {
+			item.slug = slugify(item.title);
+		}
+	}
+
+	function handleSlugInput() {
+		slugManuallyEdited = true;
+	}
+
 	function syncReview() {
 		item.metadata = buildMetadata();
 	}
@@ -49,17 +71,25 @@
 </script>
 
 <form method="POST" action="?/save" use:enhance class="editor-form" on:submit={syncForm}>
-	<h1>{item.slug ? 'Modifica contenuto' : 'Nuovo contenuto'}</h1>
+	<h1>{originalSlug ? 'Modifica contenuto' : 'Nuovo contenuto'}</h1>
+	<input type="hidden" name="original_slug" value={originalSlug} />
 	<input type="hidden" name="content_html" value={item.contentHtml} />
 	<input type="hidden" name="content_json" value={JSON.stringify(item.contentJson ?? null)} />
 	<input type="hidden" name="metadata" value={JSON.stringify(item.metadata ?? {})} />
 	<input type="hidden" name="legacy_content" value={item.legacyContent ?? ''} />
 
 	<label for="title">Titolo</label>
-	<input id="title" name="title" bind:value={item.title} required />
+	<input id="title" name="title" bind:value={item.title} on:input={handleTitleInput} required />
 
 	<label for="slug">Slug</label>
-	<input id="slug" name="slug" bind:value={item.slug} pattern="[a-z0-9]+(?:-[a-z0-9]+)*" required />
+	<input
+		id="slug"
+		name="slug"
+		bind:value={item.slug}
+		on:input={handleSlugInput}
+		pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
+		required
+	/>
 
 	<label for="description">Descrizione</label>
 	<textarea id="description" name="description" bind:value={item.description} required></textarea>
@@ -70,8 +100,14 @@
 	<label for="categories">Categorie separate da virgola</label>
 	<input id="categories" name="categories" value={item.categories.join(', ')} />
 
-	<label for="image">Immagine di copertina (URL)</label>
-	<input id="image" name="image" type="url" bind:value={item.image} />
+	<label for="image">Immagine di copertina (URL o percorso)</label>
+	<input
+		id="image"
+		name="image"
+		type="text"
+		placeholder="https://... oppure /images/..."
+		bind:value={item.image}
+	/>
 
 	<label class="checkbox"
 		><input type="checkbox" name="published" value="true" bind:checked={item.published} /> Pubblicato</label
@@ -90,8 +126,14 @@
 			{#if review.isReview}
 				<label for="gameName">Nome gioco</label>
 				<input id="gameName" bind:value={review.gameName} on:input={syncReview} />
-				<label for="gameImage">Immagine gioco (URL)</label>
-				<input id="gameImage" type="url" bind:value={review.gameImage} on:input={syncReview} />
+				<label for="gameImage">Immagine gioco (URL o percorso)</label>
+				<input
+					id="gameImage"
+					type="text"
+					placeholder="https://... oppure /images/..."
+					bind:value={review.gameImage}
+					on:input={syncReview}
+				/>
 				<label for="ratingValue">Voto</label>
 				<input
 					id="ratingValue"

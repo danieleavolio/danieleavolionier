@@ -2,7 +2,7 @@
 	export let grade = 0;
 	export let pros: any[] = [];
 	export let cons: any[] = [];
-    export let title = '';
+	export let title = '';
 
 	$: gradeColor = grade <= 4 ? '#cd674d' : grade <= 7 ? '#ece7d5' : '#e1d8aa';
 </script>
@@ -30,18 +30,17 @@
 		</ul>
 	</div>
 	<div class="final-comment">
-        <h2 style="color: {gradeColor};"
-        >{title}</h2>
+		<h2 style="color: {gradeColor};">{title}</h2>
 		<slot />
 	</div>
 </div>
 
 <style>
-    h2{
-        font-weight: bold;
-        text-align: center;
-        margin: 1em;
-    }
+	h2 {
+		font-weight: bold;
+		text-align: center;
+		margin: 1em;
+	}
 
 	.container {
 		display: grid;
@@ -117,26 +116,25 @@
 		width: 100%;
 	}
 
-
-    @media (max-width: 900px) {
-        .container {
-            grid-template-columns: 1fr;
-        }
-        .grade {
-            grid-column: span 1;
-        }
-        .pros {
-            grid-column: span 1;
-        }
-        .cons {
-            grid-column: span 1;
-        }
-        .final-comment {
-            grid-column: span 1;
-        }
+	@media (max-width: 900px) {
+		.container {
+			grid-template-columns: 1fr;
+		}
+		.grade {
+			grid-column: span 1;
+		}
+		.pros {
+			grid-column: span 1;
+		}
+		.cons {
+			grid-column: span 1;
+		}
+		.final-comment {
+			grid-column: span 1;
+		}
 
 		.final-comment h2 {
 			word-break: break-word;
 		}
-    }
+	}
 </style>
