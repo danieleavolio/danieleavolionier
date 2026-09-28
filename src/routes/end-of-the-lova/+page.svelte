@@ -1,7 +1,9 @@
-<!-- src/routes/game/+page.svelte -->
 <script lang="ts">
 	import Seo from '$lib/components/SEO.svelte';
 	import { onMount, onDestroy } from 'svelte';
+	import type { PageData } from './$types';
+
+	export let data: PageData;
 
 	let canvas: HTMLCanvasElement;
 	let ctx: CanvasRenderingContext2D;
@@ -31,7 +33,7 @@
 	};
 
 	let shipProjectiles: any[] = [];
-	let possibleEnemies: any[] = [];
+	let possibleEnemies: string[] = data?.files ? [...data.files] : [];
 	let textEnemies: any[] = [];
 	let gameTime = 0;
 	let lastEnemySpawn = 0;
@@ -70,6 +72,9 @@
 	function restartGame() {
 		OST.pause();
 		OST.currentTime = 0;
+		if (data?.files && data.files.length > 0) {
+			possibleEnemies = [...data.files];
+		}
 		initGame();
 	}
 
@@ -361,9 +366,27 @@
 	}
 
 	onMount(async () => {
-		const response = await fetch('/api/files');
-		if (response.ok) {
-			possibleEnemies = await response.json();
+		if (possibleEnemies.length === 0) {
+			try {
+				const response = await fetch('/api/files');
+				if (response.ok) {
+					possibleEnemies = await response.json();
+				} else {
+					const fallback = await fetch('/files/files.json');
+					if (fallback.ok) {
+						possibleEnemies = await fallback.json();
+					}
+				}
+			} catch {
+				try {
+					const fallback = await fetch('/files/files.json');
+					if (fallback.ok) {
+						possibleEnemies = await fallback.json();
+					}
+				} catch (e) {
+					console.error('Failed to load files:', e);
+				}
+			}
 		}
 		canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
 		ctx = canvas.getContext('2d')!;

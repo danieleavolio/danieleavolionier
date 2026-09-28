@@ -1,12 +1,6 @@
-import { resolve } from 'node:path';
-import { readFileSync } from 'node:fs';
+import { json } from '@sveltejs/kit';
+import allFiles from '../../../../static/files/files.json';
 
 export async function GET() {
-	const filePath = resolve('static/files/files.json');
-	const raw = readFileSync(filePath, 'utf8');
-	const allFiles = JSON.parse(raw);
-
-	return new Response(JSON.stringify(allFiles), {
-		headers: { 'Content-Type': 'application/json' }
-	});
+	return json(allFiles);
 }
