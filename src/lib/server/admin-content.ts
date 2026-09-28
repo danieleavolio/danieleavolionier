@@ -28,7 +28,7 @@ function normalizeRow(row: Record<string, any>): EditableContent {
 		categories: Array.isArray(row.categories) ? row.categories : [],
 		image: row.image ?? '',
 		published: row.published !== false,
-		contentHtml: sanitizeContentHtml(row.content_html),
+		contentHtml: row.content_html ?? '',
 		contentJson: row.content_json ?? null,
 		legacyContent: row.legacy_content ?? row.content ?? null,
 		metadata
