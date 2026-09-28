@@ -12,6 +12,7 @@
 	<h1>Accedi</h1>
 	<form
 		method="POST"
+		action="?/login"
 		use:enhance={() => {
 			loading = true;
 			return async ({ update }) => {

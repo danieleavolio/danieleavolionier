@@ -5,10 +5,10 @@ export async function load({ locals }) {
 }
 
 export const actions = {
-	default: async ({ request, locals }) => {
+	login: async ({ request, locals }) => {
 		const form = await request.formData();
 		const email = form.get('email')?.toString().trim();
-		const password = form.get('password')?.toString()?.trim();
+		const password = form.get('password')?.toString();
 
 		if (!email || !password) return fail(400, { message: 'Inserisci email e password.' });
 
