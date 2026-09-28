@@ -5,7 +5,7 @@
 
 	export let data: PageData;
 
-	type GameState = 'prestart' | 'playing' | 'gameover' | 'victory';
+	type GameState = 'prestart' | 'playing' | 'dying' | 'gameover' | 'victory';
 	let gameState: GameState = 'prestart';
 
 	let canvas: HTMLCanvasElement;
@@ -21,6 +21,21 @@
 	let totalFilesCount = 0;
 	let remainingFilesCount = 0;
 	let soundEnabled = true;
+
+	// Checkpoint System (Salvataggio ogni 20 nemici sconfitti)
+	let defeatedEnemiesCount = 0;
+	let hasCheckpoint = false;
+	let checkpointData = {
+		score: 0,
+		combo: 1,
+		enemiesDefeated: 0,
+		filesPool: [] as string[]
+	};
+	let checkpointNoticeTimer = 0;
+
+	// Death & Defeat Screen Animation
+	let deathTimer = 0;
+	let defeatAnimProgress = 0;
 
 	const encouragingMessages = [
 		'Dall’Italia: "Non mollare Daniele, siamo con te!"',
@@ -289,32 +304,47 @@
 		startGame();
 	}
 
-	function startGame() {
+	function startGame(fromCheckpoint = false) {
 		if (!canvas || !ctx) return;
 
-		// Initialize enemy pool
-		const filePool =
-			data?.files && data.files.length > 0
-				? [...data.files]
-				: [
-						'Author.svelte',
-						'app.css',
-						'lib/types.ts',
-						'lib/utils.ts',
-						'posts/recensione-nier-automata.md',
-						'posts/outer-wilds.md',
-						'progetti/portfolio.md'
-					];
-		possibleEnemies = filePool;
-		totalFilesCount = filePool.length;
-		remainingFilesCount = filePool.length;
+		if (fromCheckpoint && hasCheckpoint && checkpointData.filesPool.length > 0) {
+			// Ripartenza dal Checkpoint salvato!
+			score = checkpointData.score;
+			combo = 1;
+			comboTimer = 0;
+			defeatedEnemiesCount = checkpointData.enemiesDefeated;
+			possibleEnemies = [...checkpointData.filesPool];
+			totalFilesCount = checkpointData.filesPool.length + checkpointData.enemiesDefeated;
+			remainingFilesCount = checkpointData.filesPool.length;
+		} else {
+			// Partita da zero
+			const filePool =
+				data?.files && data.files.length > 0
+					? [...data.files]
+					: [
+							'Author.svelte',
+							'app.css',
+							'lib/types.ts',
+							'lib/utils.ts',
+							'posts/recensione-nier-automata.md',
+							'posts/outer-wilds.md',
+							'progetti/portfolio.md'
+						];
+			possibleEnemies = [...filePool];
+			totalFilesCount = filePool.length;
+			remainingFilesCount = filePool.length;
+			score = 0;
+			combo = 1;
+			comboTimer = 0;
+			defeatedEnemiesCount = 0;
+		}
 
 		ship.x = canvas.width / 2;
 		ship.y = canvas.height - 90;
 		ship.targetX = ship.x;
 		ship.targetY = ship.y;
 		ship.lives = 3;
-		ship.invulnerableTimer = 0;
+		ship.invulnerableTimer = 90; // Scudo temporaneo al respawn
 		ship.tilt = 0;
 
 		shipProjectiles = [];
@@ -323,9 +353,8 @@
 		particles = [];
 		floatingMessages = [];
 
-		score = 0;
-		combo = 1;
-		comboTimer = 0;
+		deathTimer = 0;
+		defeatAnimProgress = 0;
 		gameTime = 0;
 		lastEnemySpawn = 0;
 		cameraShake = 0;
@@ -339,12 +368,12 @@
 		animFrameId = requestAnimationFrame(gameLoop);
 	}
 
-	function restartGame() {
-		if (OST) {
-			OST.currentTime = 0;
-			OST.play().catch((e) => console.log(e));
+	function restartGame(fromCheckpoint = true) {
+		// La canzone NON ricomincia da capo! Continua a suonare senza interruzione
+		if (OST && OST.paused) {
+			OST.play().catch((e) => console.log('Audio resume error:', e));
 		}
-		startGame();
+		startGame(fromCheckpoint);
 	}
 
 	function spawnEnemy() {
@@ -443,7 +472,7 @@
 			useMouseControl = false;
 		}
 		if (e.code === 'KeyR' && (gameState === 'gameover' || gameState === 'victory')) {
-			restartGame();
+			restartGame(hasCheckpoint);
 		}
 	}
 
@@ -727,8 +756,45 @@
 							score += 100 * combo;
 						}
 
+						defeatedEnemiesCount++;
 						comboTimer = 180;
 						combo = Math.min(10, combo + 1);
+
+						// Salvataggio progressi dopo 20 nemici sconfitti (e a ogni multiplo di 20)
+						if (
+							defeatedEnemiesCount === 20 ||
+							(defeatedEnemiesCount > 20 && defeatedEnemiesCount % 20 === 0)
+						) {
+							hasCheckpoint = true;
+							checkpointData = {
+								score,
+								combo: 1,
+								enemiesDefeated: defeatedEnemiesCount,
+								filesPool: [...possibleEnemies]
+							};
+							try {
+								localStorage.setItem('nier_lova_checkpoint', JSON.stringify(checkpointData));
+							} catch (e) {
+								console.warn('Storage save failed:', e);
+							}
+							checkpointNoticeTimer = 200;
+							playSound('victory');
+							spawnDamageText(
+								ship.x,
+								ship.y - 45,
+								`[ CHECKPOINT: ${defeatedEnemiesCount} FILE SALVATI ]`,
+								'#ffd700'
+							);
+							floatingMessages.push({
+								id: nextMessageId++,
+								text: `[ POD 042 ]: Punto di salvataggio fissato (${defeatedEnemiesCount} nemici eliminati).`,
+								x: canvas.width / 2 - 220,
+								y: 190,
+								vy: -0.35,
+								alpha: 1,
+								color: '#ffd700'
+							});
+						}
 					}
 				}
 			});
@@ -762,19 +828,53 @@
 		});
 
 		// 3. Enemy projectiles vs Player Ship
-		if (ship.invulnerableTimer === 0) {
+		if (ship.invulnerableTimer === 0 && gameState === 'playing') {
 			enemyProjectiles.forEach((ep) => {
 				const dist = Math.hypot(ship.x - ep.x, ship.y - ep.y);
 				if (dist < ep.radius + 12) {
 					ep.active = false;
 					ship.lives--;
-					ship.invulnerableTimer = 90; // ~1.5s invulnerability
 					combo = 1;
-					playSound('damage');
-					spawnExplosion(ship.x, ship.y, '#cd674d', 25);
 
 					if (ship.lives <= 0) {
-						gameState = 'gameover';
+						// Animazione spettacolare di esplosione in particelle alla morte!
+						gameState = 'dying';
+						deathTimer = 95; // ~1.6 secondi di esplosione prima della schermata di sconfitta
+						cameraShake = 24;
+						playSound('damage');
+						playSound('explosion');
+
+						// Esplosione massiccia della nave in schegge e anelli
+						spawnExplosion(ship.x, ship.y, '#ffffff', 40);
+						spawnExplosion(ship.x, ship.y, '#cd674d', 50);
+						for (let i = 0; i < 30; i++) {
+							particles.push({
+								x: ship.x,
+								y: ship.y,
+								vx: (Math.random() - 0.5) * 10,
+								vy: (Math.random() - 0.5) * 10,
+								radius: Math.random() * 4 + 1.5,
+								color: Math.random() > 0.4 ? '#ff4d4d' : '#ece7d5',
+								alpha: 1,
+								decay: 0.03,
+								type: 'spark'
+							});
+						}
+						particles.push({
+							x: ship.x,
+							y: ship.y,
+							vx: 0,
+							vy: 0,
+							radius: 14,
+							color: '#ff4d4d',
+							alpha: 1,
+							decay: 0.015,
+							type: 'ring'
+						});
+					} else {
+						ship.invulnerableTimer = 90; // ~1.5s invulnerability
+						playSound('damage');
+						spawnExplosion(ship.x, ship.y, '#cd674d', 25);
 					}
 				}
 			});
@@ -1110,6 +1210,22 @@
 			ctx.fillText(`COMBO x${combo}`, 20, 50);
 		}
 
+		// Defeated count & Checkpoint status in center
+		ctx.font = '12px "JetBrains Mono", monospace';
+		ctx.fillStyle = '#ece7d5';
+		ctx.textAlign = 'center';
+		ctx.fillText(`ELIMINATI: ${defeatedEnemiesCount}`, canvas.width / 2, 30);
+
+		if (hasCheckpoint) {
+			ctx.fillStyle = '#ffd700';
+			ctx.font = 'bold 11px "JetBrains Mono", monospace';
+			ctx.fillText(
+				`[ CHECKPOINT: ${checkpointData.enemiesDefeated} SALVATI ]`,
+				canvas.width / 2,
+				48
+			);
+		}
+
 		// Files Remaining
 		ctx.font = '12px "JetBrains Mono", monospace';
 		ctx.fillStyle = '#ece7d5';
@@ -1149,20 +1265,71 @@
 		ctx.restore();
 	}
 
+	function drawCheckpointBanner() {
+		ctx.save();
+		const alpha = Math.min(1, checkpointNoticeTimer / 30);
+		ctx.globalAlpha = alpha;
+		const w = 480;
+		const h = 42;
+		const x = canvas.width / 2 - w / 2;
+		const y = 75;
+
+		ctx.fillStyle = 'rgba(28, 27, 23, 0.94)';
+		ctx.strokeStyle = '#ffd700';
+		ctx.lineWidth = 2;
+		ctx.fillRect(x, y, w, h);
+		ctx.strokeRect(x, y, w, h);
+
+		ctx.fillStyle = '#ffd700';
+		ctx.fillRect(x, y, 6, h);
+		ctx.fillRect(x + w - 6, y, 6, h);
+
+		ctx.font = 'bold 13px "JetBrains Mono", monospace';
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'middle';
+		ctx.shadowBlur = 8;
+		ctx.shadowColor = '#ffd700';
+		ctx.fillText(
+			`[ CHECKPOINT: ${defeatedEnemiesCount} FILE SALVATI NEL LOG ]`,
+			canvas.width / 2,
+			y + h / 2
+		);
+		ctx.restore();
+	}
+
 	function gameLoop(timestamp: number) {
-		if (gameState !== 'playing') {
+		if (gameState !== 'playing' && gameState !== 'dying') {
 			drawOverlayScreen();
 			return;
 		}
 
 		gameTime = timestamp;
 
-		// Update logic
-		spawnEnemy();
-		updatePlayer();
-		updateEnemies();
-		updateProjectiles();
-		checkCollisions();
+		if (gameState === 'playing') {
+			spawnEnemy();
+			updatePlayer();
+			updateEnemies();
+			updateProjectiles();
+			checkCollisions();
+		} else if (gameState === 'dying') {
+			deathTimer--;
+			// Esplosioni secondarie e fumo mentre la nave si dissolve in particelle
+			if (deathTimer % 12 === 0) {
+				spawnExplosion(
+					ship.x + (Math.random() - 0.5) * 40,
+					ship.y + (Math.random() - 0.5) * 40,
+					Math.random() > 0.5 ? '#ff4d4d' : '#ffffff',
+					16
+				);
+			}
+			updateEnemies();
+			updateProjectiles();
+			if (deathTimer <= 0) {
+				gameState = 'gameover';
+				defeatAnimProgress = 0;
+			}
+		}
+
 		updateParticles();
 
 		// Screen Shake
@@ -1178,10 +1345,18 @@
 		// Render Pipeline
 		drawBackground();
 		drawProjectiles();
-		drawShip();
+		if (gameState === 'playing') {
+			drawShip();
+		}
 		drawEnemies();
 		drawParticles();
 		drawHUD();
+
+		// Mostra eventuale banner checkpoint attivo
+		if (checkpointNoticeTimer > 0) {
+			drawCheckpointBanner();
+			checkpointNoticeTimer--;
+		}
 
 		ctx.restore();
 
@@ -1194,26 +1369,60 @@
 		drawParticles();
 
 		if (gameState === 'gameover') {
+			defeatAnimProgress = Math.min(1, defeatAnimProgress + 0.025);
+
 			ctx.save();
-			ctx.fillStyle = 'rgba(46, 45, 39, 0.85)';
+			// Fading ambient darkness
+			ctx.fillStyle = `rgba(28, 27, 23, ${defeatAnimProgress * 0.88})`;
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-			ctx.textAlign = 'center';
-			ctx.font = 'bold 36px "JetBrains Mono", monospace';
-			ctx.fillStyle = '#cd674d';
-			ctx.shadowBlur = 15;
-			ctx.shadowColor = '#cd674d';
-			ctx.fillText('SEGNALE PERSO // GAME OVER', canvas.width / 2, canvas.height / 2 - 40);
+			// Glitch scanline wipe durante l'entrata
+			if (defeatAnimProgress < 1) {
+				ctx.fillStyle = 'rgba(205, 103, 77, 0.25)';
+				const wipeY = canvas.height * defeatAnimProgress;
+				ctx.fillRect(0, wipeY - 25, canvas.width, 50);
+			}
 
-			ctx.font = '16px "JetBrains Mono", monospace';
-			ctx.fillStyle = '#ece7d5';
-			ctx.shadowBlur = 0;
-			ctx.fillText(
-				'I dati non sono ancora stati cancellati. Vuoi rinunciare?',
-				canvas.width / 2,
-				canvas.height / 2 + 10
-			);
-			ctx.fillText(`Punteggio Finale: ${score}`, canvas.width / 2, canvas.height / 2 + 40);
+			if (defeatAnimProgress > 0.15) {
+				const scale = Math.min(1, defeatAnimProgress * 1.15);
+				ctx.save();
+				ctx.translate(canvas.width / 2, canvas.height / 2 - 25);
+				ctx.scale(scale, scale);
+
+				// Red critical header
+				ctx.font = 'bold 11px "JetBrains Mono", monospace';
+				ctx.fillStyle = '#ff4d4d';
+				ctx.textAlign = 'center';
+				ctx.fillText('[ ALLERTA CRITICA // SEGNALE DISCONNESSO ]', 0, -65);
+
+				// Jittering title
+				const jitter = defeatAnimProgress < 0.9 ? (Math.random() - 0.5) * 6 : 0;
+				ctx.font = 'bold 36px "JetBrains Mono", monospace';
+				ctx.fillStyle = '#cd674d';
+				ctx.shadowBlur = 18;
+				ctx.shadowColor = '#cd674d';
+				ctx.fillText('SEGNALE PERSO // GAME OVER', jitter, -20);
+
+				ctx.shadowBlur = 0;
+				ctx.font = '15px "JetBrains Mono", monospace';
+				ctx.fillStyle = '#ece7d5';
+				ctx.fillText('I dati di sistema sono sotto attacco. Vuoi rinunciare?', 0, 20);
+
+				ctx.font = 'bold 14px "JetBrains Mono", monospace';
+				ctx.fillStyle = '#e1d8aa';
+				ctx.fillText(`Punteggio Finale: ${score.toLocaleString()}`, 0, 50);
+
+				if (hasCheckpoint) {
+					ctx.fillStyle = '#ffd700';
+					ctx.font = 'bold 13px "JetBrains Mono", monospace';
+					ctx.fillText(
+						`[ CHECKPOINT DISPONIBILE: ${checkpointData.enemiesDefeated} NEMICI GIA SALVATI ]`,
+						0,
+						78
+					);
+				}
+				ctx.restore();
+			}
 			ctx.restore();
 		} else if (gameState === 'victory') {
 			ctx.save();
@@ -1237,6 +1446,11 @@
 			);
 			ctx.fillText(`Punteggio Finale: ${score}`, canvas.width / 2, canvas.height / 2 + 40);
 			ctx.restore();
+		}
+
+		// Keep drawing overlay screen while in gameover or victory so animation continues
+		if (gameState === 'gameover' || gameState === 'victory') {
+			animFrameId = requestAnimationFrame(drawOverlayScreen);
 		}
 	}
 
@@ -1295,6 +1509,20 @@
 
 		// Avvia immediatamente l'animazione di sfondo 3D per non mostrare mai schermo nero!
 		startAmbientLoop();
+
+		// Recupera eventuale checkpoint salvato (20+ nemici sconfitti)
+		try {
+			const saved = localStorage.getItem('nier_lova_checkpoint');
+			if (saved) {
+				const parsed = JSON.parse(saved);
+				if (parsed && parsed.enemiesDefeated >= 20) {
+					checkpointData = parsed;
+					hasCheckpoint = true;
+				}
+			}
+		} catch (e) {
+			console.warn('Could not read saved checkpoint:', e);
+		}
 
 		window.addEventListener('keydown', handleKeyDown);
 		window.addEventListener('keyup', handleKeyUp);
@@ -1390,11 +1618,31 @@
 			</div>
 		{/if}
 
-		<!-- Game Over & Victory interactive button overlay -->
-		{#if gameState === 'gameover' || gameState === 'victory'}
-			<div class="endgame-controls">
-				<button class="btn-restart" on:click={restartGame}>
-					<span class="bracket">[</span> RIGUADAGNA IL FUTURO // RESTART
+		<!-- Game Over & Victory interactive button overlay con animazione di entrata -->
+		{#if gameState === 'gameover'}
+			<div class="endgame-controls animated-defeat-entry">
+				{#if hasCheckpoint}
+					<button class="btn-restart btn-checkpoint" on:click={() => restartGame(true)}>
+						<span class="bracket">[</span> ↺ RIPARTI DAL CHECKPOINT ({checkpointData.enemiesDefeated}
+						SALVATI)
+						<span class="bracket">]</span>
+					</button>
+					<button class="btn-restart btn-secondary" on:click={() => restartGame(false)}>
+						<span class="bracket">[</span> ⟲ RICOMINCIA DA ZERO <span class="bracket">]</span>
+					</button>
+				{:else}
+					<button class="btn-restart" on:click={() => restartGame(false)}>
+						<span class="bracket">[</span> RIGUADAGNA IL FUTURO // RESTART
+						<span class="bracket">]</span>
+					</button>
+				{/if}
+			</div>
+		{/if}
+
+		{#if gameState === 'victory'}
+			<div class="endgame-controls animated-defeat-entry">
+				<button class="btn-restart" on:click={() => restartGame(false)}>
+					<span class="bracket">[</span> MISSIONE COMPIUTA // GIOCA ANCORA
 					<span class="bracket">]</span>
 				</button>
 			</div>
@@ -1629,11 +1877,60 @@
 
 	.endgame-controls {
 		position: absolute;
-		bottom: 15%;
+		bottom: 12%;
 		left: 0;
 		right: 0;
 		display: flex;
-		justify-content: center;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.75rem;
 		z-index: 100;
+	}
+
+	.animated-defeat-entry {
+		animation: defeatSlideUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+	}
+
+	@keyframes defeatSlideUp {
+		0% {
+			opacity: 0;
+			transform: translateY(28px) scale(0.95);
+		}
+		100% {
+			opacity: 1;
+			transform: translateY(0) scale(1);
+		}
+	}
+
+	.btn-checkpoint {
+		background: #ffd700;
+		color: #1c1b17;
+		border: 1px solid #ffd700;
+		box-shadow: 0 0 14px rgba(255, 215, 0, 0.35);
+	}
+
+	.btn-checkpoint:hover {
+		background: #ffffff;
+		border-color: #ffffff;
+		color: #1c1b17;
+		box-shadow: 0 0 22px rgba(255, 215, 0, 0.7);
+		transform: translateY(-2px);
+	}
+
+	.btn-secondary {
+		font-size: 0.8rem;
+		padding: 0.5rem 1.1rem;
+		background: rgba(28, 27, 23, 0.7);
+		color: var(--automataColor);
+		border: 1px solid var(--automataColor);
+		opacity: 0.85;
+	}
+
+	.btn-secondary:hover {
+		opacity: 1;
+		background: var(--automataBg);
+		color: var(--automataColor);
+		border-color: var(--automataColor);
+		transform: translateY(-1px);
 	}
 </style>
