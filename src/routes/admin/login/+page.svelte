@@ -1,5 +1,8 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
+
 	export let form;
+	let loading = false;
 </script>
 
 <svelte:head><title>Admin login | Daniele Avolio</title></svelte:head>
@@ -7,12 +10,21 @@
 <section class="login-card">
 	<p class="eyebrow">DANIELE AVOLIO · ADMIN</p>
 	<h1>Accedi</h1>
-	<form method="POST">
+	<form
+		method="POST"
+		use:enhance={() => {
+			loading = true;
+			return async ({ update }) => {
+				loading = false;
+				await update();
+			};
+		}}
+	>
 		<label for="email">Email</label>
 		<input id="email" name="email" type="email" autocomplete="email" required />
 		<label for="password">Password</label>
 		<input id="password" name="password" type="password" autocomplete="current-password" required />
-		<button type="submit">Entra</button>
+		<button type="submit" disabled={loading}>{loading ? 'Accesso in corso…' : 'Entra'}</button>
 	</form>
 	{#if form?.message}<p class="error">{form.message}</p>{/if}
 </section>

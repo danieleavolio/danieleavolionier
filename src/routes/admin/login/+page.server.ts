@@ -8,12 +8,12 @@ export const actions = {
 	default: async ({ request, locals }) => {
 		const form = await request.formData();
 		const email = form.get('email')?.toString().trim();
-		const password = form.get('password')?.toString();
+		const password = form.get('password')?.toString()?.trim();
 
 		if (!email || !password) return fail(400, { message: 'Inserisci email e password.' });
 
 		const { error } = await locals.supabase.auth.signInWithPassword({ email, password });
-		if (error) return fail(401, { message: 'Credenziali non valide.' });
+		if (error) return fail(401, { message: error.message || 'Credenziali non valide.' });
 
 		throw redirect(303, '/admin/posts');
 	},
