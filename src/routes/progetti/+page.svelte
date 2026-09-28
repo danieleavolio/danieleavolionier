@@ -78,8 +78,8 @@
 </script>
 
 <Seo
-	title={config.title}
-	description="La pagina che contiene tutti i miei progetti: lavori completati, esperimenti tecnici e prototipi in corso."
+	title="Progetti & Portfolio Software"
+	description="Raccolta dei progetti software, web app, esperimenti AI e videogiochi realizzati da Daniele Avolio."
 	image="https://i.imgur.com/juSgfgF.png"
 	{faqItems}
 />

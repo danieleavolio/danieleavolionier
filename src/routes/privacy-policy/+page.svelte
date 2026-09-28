@@ -1,13 +1,11 @@
-<svelte:options immutable={true} />
+<script lang="ts">
+	import Seo from '$lib/components/SEO.svelte';
+</script>
 
-<svelte:head>
-	<title>Privacy Policy | Astra</title>
-	<meta
-		name="description"
-		content="Informativa sulla privacy dell'app Android Astra. Nessuna raccolta dati personale e dati salvati esclusivamente sul dispositivo."
-	/>
-	<meta name="robots" content="index, follow" />
-</svelte:head>
+<Seo
+	title="Privacy Policy | Astra"
+	description="Informativa sulla privacy dell'app Android Astra. Nessuna raccolta dati personale e dati salvati esclusivamente sul dispositivo."
+/>
 
 <article class="privacy-page">
 	<header class="privacy-header">

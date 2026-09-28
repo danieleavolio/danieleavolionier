@@ -13,7 +13,7 @@
 
 <Seo
 	title="Now | Daniele Avolio"
-	description="Cosa sto facendo, studiando e costruendo in questo periodo."
+	description="Cosa sto facendo, studiando e costruendo in questo periodo. Pagina Now personale di Daniele Avolio."
 	image="https://i.imgur.com/juSgfgF.png"
 />
 

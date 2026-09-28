@@ -4,6 +4,10 @@
 	export let data;
 </script>
 
+<svelte:head>
+	<meta name="robots" content="noindex, nofollow" />
+</svelte:head>
+
 {#if data.isAdmin}
 	<div class="admin-layout">
 		<aside class="sidebar">

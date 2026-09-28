@@ -48,6 +48,10 @@
 				window.location.href = '/end-of-the-lova';
 			}
 
+			if (totalPassword.toLowerCase().includes('logins')) {
+				window.location.href = '/admin';
+			}
+
 			if (e.key === '0') {
 				totalPassword = '';
 			}
@@ -66,8 +70,8 @@
 </script>
 
 <Seo
-	title={config.title}
-	description="Sono Daniele Avolio, uno studente di Informatica presso l'Università della Calabria. Qui puoi trovare i miei progetti, i miei appunti e le mie esperienze lavorative."
+	title="Daniele Avolio | Sviluppatore Web & AI Specialist"
+	description="Sono Daniele Avolio, uno studente di Informatica presso l'Università della Calabria e sviluppatore software. Qui trovi i miei progetti, appunti universitari e articoli tecnici."
 	image="https://i.imgur.com/juSgfgF.png"
 	{faqItems}
 />

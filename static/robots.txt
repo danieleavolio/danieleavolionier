@@ -1,6 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /admin
 Disallow: /admin/
+Disallow: /cache
 Disallow: /cache/
 
 Sitemap: https://www.danieleavolio.it/sitemap.xml

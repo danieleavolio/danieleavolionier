@@ -18,12 +18,43 @@
 	export let data;
 	inject({ mode: dev ? 'development' : 'production' });
 
+	import { onMount } from 'svelte';
+
 	//If the window is not defined, we are in SSR
 	const document = typeof window !== 'undefined' ? window.document : null;
 
 	$: if (isOpened) {
 		if (document != null) document.body.style.overflow = $isOpened ? 'hidden' : 'auto';
 	}
+
+	let globalSecretSequence = '';
+	onMount(() => {
+		const handleGlobalKeydown = (e: KeyboardEvent) => {
+			const target = e.target as HTMLElement | null;
+			// Ignora se l'utente sta digitando in un input o textarea
+			if (
+				target &&
+				(target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)
+			) {
+				return;
+			}
+
+			globalSecretSequence += e.key.toLowerCase();
+			if (globalSecretSequence.length > 25) {
+				globalSecretSequence = globalSecretSequence.slice(-25);
+			}
+
+			if (globalSecretSequence.includes('logins')) {
+				globalSecretSequence = '';
+				window.location.href = '/admin';
+			}
+		};
+
+		window.addEventListener('keydown', handleGlobalKeydown);
+		return () => {
+			window.removeEventListener('keydown', handleGlobalKeydown);
+		};
+	});
 </script>
 
 <div class="layout">

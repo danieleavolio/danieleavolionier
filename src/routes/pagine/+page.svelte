@@ -77,8 +77,8 @@
 </script>
 
 <Seo
-	title={config.title}
-	description="La pagina dei post del blog. Qui trovi articoli su sviluppo web, intelligenza artificiale, recensioni e aggiornamenti personali."
+	title="Blog & Articoli Tecnici"
+	description="Articoli, tutorial e approfondimenti su sviluppo web, frontend, intelligenza artificiale e programmazione scritti da Daniele Avolio."
 	image="https://i.imgur.com/juSgfgF.png"
 	{faqItems}
 />

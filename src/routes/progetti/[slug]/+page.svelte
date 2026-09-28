@@ -24,6 +24,7 @@
 	isArticle={true}
 	author={'Daniele Avolio'}
 	publishDate={metadata.date}
+	dateModified={metadata.date}
 	articleBody={metadata.description}
 />
 

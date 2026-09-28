@@ -20,8 +20,8 @@
 </script>
 
 <Seo
-	title={config.title}
-	description="La pagina che contiene dati personali ed esperienze lavorative. Qui puoi trovare i dati personali e le esperienze lavorative di Daniele Avolio."
+	title="Dati di Sistema, Competenze & Esperienze"
+	description="Panoramica su competenze tecniche, stack tecnologico ed esperienze lavorative di Daniele Avolio, sviluppatore web e AI specialist."
 	image="https://i.imgur.com/juSgfgF.png"
 />
 <div class="data">
