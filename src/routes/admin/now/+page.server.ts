@@ -15,7 +15,12 @@ const empty = {
 
 export async function load({ locals }) {
 	await requireAdmin(locals);
-	return { items: await listNowItems(locals.supabase, true), empty };
+	try {
+		return { items: await listNowItems(locals.supabase, true), empty };
+	} catch (cause) {
+		console.error('Error listing admin now items:', cause);
+		return { items: [], empty };
+	}
 }
 
 export const actions = {

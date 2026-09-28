@@ -51,3 +51,10 @@ export const handle: Handle = async ({ event, resolve }) => {
 		}
 	});
 };
+
+export const handleError: import('@sveltejs/kit').HandleServerError = ({ error, event }) => {
+	console.error('Unhandled server error on', event.url.pathname, error);
+	return {
+		message: error instanceof Error ? error.message : 'Si è verificato un errore imprevisto.'
+	};
+};

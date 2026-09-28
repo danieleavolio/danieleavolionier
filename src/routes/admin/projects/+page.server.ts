@@ -9,14 +9,22 @@ import {
 
 export async function load({ locals }) {
 	await requireAdmin(locals);
-	const items = await listAdminContent(locals.supabase, 'projects');
-	return {
-		items: items.map((item) => ({
-			...item,
-			metadata: { ...item.metadata, contentType: 'projects' }
-		})),
-		empty: { ...emptyContent(), metadata: { contentType: 'projects' } }
-	};
+	try {
+		const items = await listAdminContent(locals.supabase, 'projects');
+		return {
+			items: items.map((item) => ({
+				...item,
+				metadata: { ...item.metadata, contentType: 'projects' }
+			})),
+			empty: { ...emptyContent(), metadata: { contentType: 'projects' } }
+		};
+	} catch (cause) {
+		console.error('Error listing admin projects:', cause);
+		return {
+			items: [],
+			empty: { ...emptyContent(), metadata: { contentType: 'projects' } }
+		};
+	}
 }
 
 export const actions = {
