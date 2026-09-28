@@ -45,7 +45,7 @@
 			totalPassword += e.key;
 
 			if (totalPassword.includes('endofthelova')) {
-				goto('/end-of-the-lova');
+				window.location.href = '/end-of-the-lova';
 			}
 
 			if (e.key === '0') {

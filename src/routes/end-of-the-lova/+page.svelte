@@ -73,6 +73,9 @@
 		shootDelay: number;
 		hitFlash: number;
 		floatOffset: number;
+		type: 'standard' | 'heavy' | 'goliath';
+		label: string;
+		speedX: number;
 	}
 
 	interface Particle {
@@ -345,36 +348,85 @@
 	}
 
 	function spawnEnemy() {
-		if (gameTime - lastEnemySpawn < 2500 || textEnemies.length >= 4) return;
+		// Spawn rate accelerato: intervallo ridotto a 800ms e fino a 8 nemici contemporaneamente
+		if (gameTime - lastEnemySpawn < 800 || textEnemies.length >= 8) return;
 		if (possibleEnemies.length === 0) return;
 
-		const idx = Math.floor(Math.random() * possibleEnemies.length);
-		const fileName = possibleEnemies.splice(idx, 1)[0];
-		remainingFilesCount = possibleEnemies.length;
+		// Possibilità di spawn a ondata (2 nemici) se l'arena è poco popolata
+		const spawnCount =
+			textEnemies.length <= 2 && possibleEnemies.length >= 2 && Math.random() < 0.45 ? 2 : 1;
 
-		// Calculate size based on name length
-		ctx.font = 'bold 14px "JetBrains Mono", monospace';
-		const textWidth = Math.max(120, ctx.measureText(fileName).width + 30);
+		for (let s = 0; s < spawnCount; s++) {
+			if (possibleEnemies.length === 0) break;
+			const idx = Math.floor(Math.random() * possibleEnemies.length);
+			const fileName = possibleEnemies.splice(idx, 1)[0];
+			remainingFilesCount = possibleEnemies.length;
 
-		const padding = 60;
-		const spawnX = Math.random() * (canvas.width - textWidth - padding * 2) + padding;
-		const targetY = Math.random() * 160 + 50;
+			// Selezione tier nemico
+			const roll = Math.random();
+			let type: 'standard' | 'heavy' | 'goliath' = 'standard';
+			let health = 6;
+			let maxHealth = 6;
+			let height = 34;
+			let shootDelay = Math.random() * 800 + 1500;
+			let label = '[ FILE ]';
 
-		textEnemies.push({
-			id: nextEnemyId++,
-			x: spawnX,
-			y: -40,
-			targetY,
-			width: textWidth,
-			height: 34,
-			text: fileName,
-			health: 6,
-			maxHealth: 6,
-			lastShot: gameTime + Math.random() * 1000,
-			shootDelay: Math.random() * 1200 + 1400,
-			hitFlash: 0,
-			floatOffset: Math.random() * Math.PI * 2
-		});
+			if (roll < 0.14 && (score >= 300 || totalFilesCount - remainingFilesCount > 6)) {
+				type = 'goliath';
+				health = 32;
+				maxHealth = 32;
+				height = 56;
+				shootDelay = 1800;
+				label = '[ GOLIATH CLASS // CORE ]';
+			} else if (roll < 0.42) {
+				type = 'heavy';
+				health = 16;
+				maxHealth = 16;
+				height = 46;
+				shootDelay = 1600;
+				label = '[ HEAVY FORTRESS ]';
+			}
+
+			// Dimensionamento dinamico basato sul testo e sul tier
+			ctx.font =
+				type === 'goliath'
+					? 'bold 15px "JetBrains Mono", monospace'
+					: type === 'heavy'
+						? 'bold 14px "JetBrains Mono", monospace'
+						: '13px "JetBrains Mono", monospace';
+			const textWidth = Math.max(
+				type === 'goliath' ? 240 : type === 'heavy' ? 180 : 120,
+				ctx.measureText(fileName).width + (type === 'goliath' ? 50 : 35)
+			);
+
+			const padding = 50;
+			const spawnX = Math.random() * (canvas.width - textWidth - padding * 2) + padding;
+			const targetY =
+				type === 'goliath'
+					? Math.random() * 70 + 45
+					: type === 'heavy'
+						? Math.random() * 110 + 50
+						: Math.random() * 170 + 55;
+
+			textEnemies.push({
+				id: nextEnemyId++,
+				x: spawnX,
+				y: -60,
+				targetY,
+				width: textWidth,
+				height,
+				text: fileName,
+				health,
+				maxHealth,
+				lastShot: gameTime + Math.random() * 800 + 500,
+				shootDelay,
+				hitFlash: 0,
+				floatOffset: Math.random() * Math.PI * 2,
+				type,
+				label,
+				speedX: (Math.random() - 0.5) * (type === 'goliath' ? 0.7 : type === 'heavy' ? 1.1 : 1.6)
+			});
+		}
 
 		lastEnemySpawn = gameTime;
 
@@ -508,10 +560,22 @@
 	function updateEnemies() {
 		textEnemies.forEach((enemy) => {
 			if (enemy.y < enemy.targetY) {
-				enemy.y += 2.5;
+				enemy.y += enemy.type === 'goliath' ? 1.8 : enemy.type === 'heavy' ? 2.2 : 2.8;
 			} else {
-				// Gentle floating oscillation
-				enemy.y = enemy.targetY + Math.sin(gameTime * 0.003 + enemy.floatOffset) * 6;
+				// Gentle floating oscillation + subtle horizontal patrol
+				enemy.y =
+					enemy.targetY +
+					Math.sin(gameTime * 0.003 + enemy.floatOffset) * (enemy.type === 'goliath' ? 4 : 7);
+				enemy.x += enemy.speedX;
+
+				// Inverti direzione ai bordi dell'arena
+				if (enemy.x <= 15) {
+					enemy.x = 15;
+					enemy.speedX = Math.abs(enemy.speedX);
+				} else if (enemy.x + enemy.width >= canvas.width - 15) {
+					enemy.x = canvas.width - enemy.width - 15;
+					enemy.speedX = -Math.abs(enemy.speedX);
+				}
 			}
 
 			if (enemy.hitFlash > 0) enemy.hitFlash--;
@@ -519,42 +583,64 @@
 			// Enemy firing bullets
 			if (gameTime - enemy.lastShot >= enemy.shootDelay && enemy.y >= enemy.targetY - 10) {
 				enemy.lastShot = gameTime;
-				const angleToPlayer = Math.atan2(ship.y - enemy.y, ship.x - enemy.x);
-				const bulletSpeed = 3.2;
+				const angleToPlayer = Math.atan2(ship.y - enemy.y, ship.x - (enemy.x + enemy.width / 2));
 
-				// Aimed orb + side orbs
-				enemyProjectiles.push({
-					x: enemy.x + enemy.width / 2,
-					y: enemy.y + enemy.height,
-					vx: Math.cos(angleToPlayer) * bulletSpeed,
-					vy: Math.sin(angleToPlayer) * bulletSpeed,
-					radius: 8,
-					color: '#cd674d',
-					active: true,
-					isPlayer: false
-				});
-
-				if (Math.random() < 0.4) {
+				if (enemy.type === 'goliath') {
+					// Goliath: sventagliata a 5 vie di globi pesanti
+					const bulletSpeed = 2.9;
+					[-0.45, -0.22, 0, 0.22, 0.45].forEach((offset) => {
+						enemyProjectiles.push({
+							x: enemy.x + enemy.width / 2,
+							y: enemy.y + enemy.height,
+							vx: Math.cos(angleToPlayer + offset) * bulletSpeed,
+							vy: Math.sin(angleToPlayer + offset) * bulletSpeed,
+							radius: 9,
+							color: '#ff4d4d',
+							active: true,
+							isPlayer: false
+						});
+					});
+				} else if (enemy.type === 'heavy') {
+					// Heavy: raffica a 3 vie
+					const bulletSpeed = 3.2;
+					[-0.28, 0, 0.28].forEach((offset) => {
+						enemyProjectiles.push({
+							x: enemy.x + enemy.width / 2,
+							y: enemy.y + enemy.height,
+							vx: Math.cos(angleToPlayer + offset) * bulletSpeed,
+							vy: Math.sin(angleToPlayer + offset) * bulletSpeed,
+							radius: 8,
+							color: '#cd674d',
+							active: true,
+							isPlayer: false
+						});
+					});
+				} else {
+					// Standard: proiettile singolo mirato con chance di doppio
+					const bulletSpeed = 3.3;
 					enemyProjectiles.push({
 						x: enemy.x + enemy.width / 2,
 						y: enemy.y + enemy.height,
-						vx: Math.cos(angleToPlayer + 0.35) * bulletSpeed,
-						vy: Math.sin(angleToPlayer + 0.35) * bulletSpeed,
+						vx: Math.cos(angleToPlayer) * bulletSpeed,
+						vy: Math.sin(angleToPlayer) * bulletSpeed,
 						radius: 7,
 						color: '#cd674d',
 						active: true,
 						isPlayer: false
 					});
-					enemyProjectiles.push({
-						x: enemy.x + enemy.width / 2,
-						y: enemy.y + enemy.height,
-						vx: Math.cos(angleToPlayer - 0.35) * bulletSpeed,
-						vy: Math.sin(angleToPlayer - 0.35) * bulletSpeed,
-						radius: 7,
-						color: '#cd674d',
-						active: true,
-						isPlayer: false
-					});
+
+					if (Math.random() < 0.35) {
+						enemyProjectiles.push({
+							x: enemy.x + enemy.width / 2,
+							y: enemy.y + enemy.height,
+							vx: Math.cos(angleToPlayer + 0.32) * bulletSpeed,
+							vy: Math.sin(angleToPlayer + 0.32) * bulletSpeed,
+							radius: 6,
+							color: '#cd674d',
+							active: true,
+							isPlayer: false
+						});
+					}
 				}
 			}
 		});
@@ -611,12 +697,36 @@
 					}
 
 					if (enemy.health <= 0) {
-						// Destroy enemy
+						// Destroy enemy with tiered feedback
 						playSound('explosion');
-						spawnExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#cd674d', 40);
-						spawnDamageText(enemy.x + enemy.width / 2, enemy.y, `+${100 * combo}`, '#e1d8aa');
+						if (enemy.type === 'goliath') {
+							cameraShake = 16;
+							spawnExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#ff4d4d', 70);
+							spawnDamageText(
+								enemy.x + enemy.width / 2,
+								enemy.y,
+								`+${800 * combo} [GOLIATH SALVAGED]`,
+								'#ffd700'
+							);
+							score += 800 * combo;
+							spawnEncouragingMessage();
+						} else if (enemy.type === 'heavy') {
+							cameraShake = 9;
+							spawnExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#cd674d', 50);
+							spawnDamageText(
+								enemy.x + enemy.width / 2,
+								enemy.y,
+								`+${350 * combo} [HEAVY FORTRESS]`,
+								'#cd674d'
+							);
+							score += 350 * combo;
+						} else {
+							cameraShake = 4;
+							spawnExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#cd674d', 32);
+							spawnDamageText(enemy.x + enemy.width / 2, enemy.y, `+${100 * combo}`, '#e1d8aa');
+							score += 100 * combo;
+						}
 
-						score += 100 * combo;
 						comboTimer = 180;
 						combo = Math.min(10, combo + 1);
 					}
@@ -863,37 +973,85 @@
 			ctx.save();
 			ctx.translate(enemy.x, enemy.y);
 
-			// Holographic glass card
-			ctx.fillStyle = enemy.hitFlash > 0 ? 'rgba(236, 231, 213, 0.9)' : 'rgba(61, 59, 52, 0.85)';
-			ctx.strokeStyle = enemy.hitFlash > 0 ? '#cd674d' : '#4d493e';
-			ctx.lineWidth = 1.5;
+			if (enemy.type === 'goliath') {
+				// Goliath: aura minacciosa e armatura pesante
+				ctx.shadowBlur = enemy.hitFlash > 0 ? 20 : 12;
+				ctx.shadowColor = enemy.hitFlash > 0 ? '#ffffff' : '#ff4d4d';
+				ctx.fillStyle = enemy.hitFlash > 0 ? 'rgba(255, 230, 230, 0.95)' : 'rgba(40, 20, 20, 0.9)';
+				ctx.strokeStyle = enemy.hitFlash > 0 ? '#ffffff' : '#ff4d4d';
+				ctx.lineWidth = 2.5;
+			} else if (enemy.type === 'heavy') {
+				// Heavy Fortress: telaio rinforzato arancio/bronzo NieR
+				ctx.shadowBlur = enemy.hitFlash > 0 ? 16 : 8;
+				ctx.shadowColor = enemy.hitFlash > 0 ? '#ffffff' : '#cd674d';
+				ctx.fillStyle = enemy.hitFlash > 0 ? 'rgba(240, 235, 220, 0.95)' : 'rgba(50, 42, 35, 0.88)';
+				ctx.strokeStyle = enemy.hitFlash > 0 ? '#ffffff' : '#cd674d';
+				ctx.lineWidth = 2;
+			} else {
+				// Standard: elegante scheda olografica in vetro scuro
+				ctx.shadowBlur = 0;
+				ctx.fillStyle = enemy.hitFlash > 0 ? 'rgba(236, 231, 213, 0.9)' : 'rgba(44, 42, 35, 0.85)';
+				ctx.strokeStyle = enemy.hitFlash > 0 ? '#cd674d' : '#4d493e';
+				ctx.lineWidth = 1.5;
+			}
 
-			// NieR corner notched box
+			// Rettangolo monolite con angoli sagomati
 			ctx.beginPath();
 			ctx.rect(0, 0, enemy.width, enemy.height);
 			ctx.fill();
 			ctx.stroke();
 
-			// Corner accents
-			ctx.fillStyle = '#cd674d';
-			ctx.fillRect(0, 0, 4, 4);
-			ctx.fillRect(enemy.width - 4, 0, 4, 4);
-			ctx.fillRect(0, enemy.height - 4, 4, 4);
-			ctx.fillRect(enemy.width - 4, enemy.height - 4, 4, 4);
+			// Accenti spigoli NieR
+			const cornerColor = enemy.type === 'goliath' ? '#ff4d4d' : '#cd674d';
+			const cornerSize = enemy.type === 'goliath' ? 6 : 4;
+			ctx.fillStyle = cornerColor;
+			ctx.fillRect(0, 0, cornerSize, cornerSize);
+			ctx.fillRect(enemy.width - cornerSize, 0, cornerSize, cornerSize);
+			ctx.fillRect(0, enemy.height - cornerSize, cornerSize, cornerSize);
+			ctx.fillRect(enemy.width - cornerSize, enemy.height - cornerSize, cornerSize, cornerSize);
 
-			// Health bar on top
-			const hpPercent = enemy.health / enemy.maxHealth;
-			ctx.fillStyle = 'rgba(77, 73, 62, 0.5)';
-			ctx.fillRect(2, -8, enemy.width - 4, 4);
-			ctx.fillStyle = hpPercent > 0.4 ? '#e1d8aa' : '#cd674d';
-			ctx.fillRect(2, -8, (enemy.width - 4) * hpPercent, 4);
+			// Badge identificativo superiore per Goliath e Heavy
+			if (enemy.type !== 'standard') {
+				ctx.font = 'bold 9px "JetBrains Mono", monospace';
+				ctx.fillStyle = enemy.type === 'goliath' ? '#ff4d4d' : '#e1d8aa';
+				ctx.textAlign = 'left';
+				ctx.textBaseline = 'top';
+				ctx.fillText(enemy.label, 4, 3);
 
-			// Filename text
-			ctx.font = '12px "JetBrains Mono", monospace';
-			ctx.fillStyle = enemy.hitFlash > 0 ? '#3d3b34' : '#ece7d5';
+				// Contatore numerico HP in tempo reale
+				ctx.textAlign = 'right';
+				ctx.fillText(`${enemy.health}/${enemy.maxHealth} HP`, enemy.width - 4, 3);
+			}
+
+			// Barra della salute dinamica sopra il monolite
+			const barHeight = enemy.type === 'goliath' ? 6 : enemy.type === 'heavy' ? 5 : 4;
+			const barY = -(barHeight + 4);
+			const hpPercent = Math.max(0, enemy.health / enemy.maxHealth);
+
+			ctx.fillStyle = 'rgba(20, 20, 18, 0.7)';
+			ctx.fillRect(1, barY, enemy.width - 2, barHeight);
+
+			if (enemy.type === 'goliath') {
+				ctx.fillStyle = hpPercent > 0.4 ? '#ffd700' : '#ff4d4d';
+			} else if (enemy.type === 'heavy') {
+				ctx.fillStyle = hpPercent > 0.4 ? '#e1d8aa' : '#cd674d';
+			} else {
+				ctx.fillStyle = hpPercent > 0.4 ? '#e1d8aa' : '#cd674d';
+			}
+			ctx.fillRect(1, barY, (enemy.width - 2) * hpPercent, barHeight);
+
+			// Testo del nome file all'interno della scheda
+			const textY = enemy.type !== 'standard' ? enemy.height / 2 + 6 : enemy.height / 2 + 1;
+			ctx.font =
+				enemy.type === 'goliath'
+					? 'bold 13px "JetBrains Mono", monospace'
+					: enemy.type === 'heavy'
+						? 'bold 12px "JetBrains Mono", monospace'
+						: '12px "JetBrains Mono", monospace';
+			ctx.fillStyle = enemy.hitFlash > 0 ? '#1c1b17' : '#ece7d5';
 			ctx.textAlign = 'center';
 			ctx.textBaseline = 'middle';
-			ctx.fillText(enemy.text, enemy.width / 2, enemy.height / 2 + 1);
+			ctx.fillText(enemy.text, enemy.width / 2, textY);
 
 			ctx.restore();
 		});
@@ -1082,8 +1240,50 @@
 		}
 	}
 
+	function startAmbientLoop() {
+		if (typeof cancelAnimationFrame !== 'undefined' && animFrameId) {
+			cancelAnimationFrame(animFrameId);
+		}
+		function ambientFrame() {
+			if (gameState === 'prestart') {
+				if (ctx && canvas) {
+					drawBackground();
+					drawParticles();
+				}
+				animFrameId = requestAnimationFrame(ambientFrame);
+			}
+		}
+		animFrameId = requestAnimationFrame(ambientFrame);
+	}
+
 	onMount(() => {
-		canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
+		// Fix brusco: se siamo atterrati via SPA router senza refresh e lo stato è anomalo,
+		// forziamo una volta un hard reload per garantire sincronizzazione grafica e audio
+		if (typeof window !== 'undefined') {
+			try {
+				const isHardLoaded = sessionStorage.getItem('lova_hard_loaded_v2');
+				if (!isHardLoaded) {
+					sessionStorage.setItem('lova_hard_loaded_v2', '1');
+					const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+					if (nav && nav.type !== 'reload' && nav.type !== 'navigate') {
+						window.location.replace('/end-of-the-lova');
+						return;
+					}
+				}
+			} catch (e) {
+				console.warn('Navigation check failed:', e);
+			}
+		}
+
+		if (!canvas && typeof document !== 'undefined') {
+			canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
+		}
+		if (!canvas) {
+			// Metodo brusco di sicurezza: se il canvas non è reperibile nel DOM, ricarica
+			if (typeof window !== 'undefined') window.location.reload();
+			return;
+		}
+
 		ctx = canvas.getContext('2d')!;
 		canvas.width = 900;
 		canvas.height = 650;
@@ -1093,8 +1293,8 @@
 		OST.volume = 0.75;
 		OST.loop = true;
 
-		// Pre-render ambient background
-		drawBackground();
+		// Avvia immediatamente l'animazione di sfondo 3D per non mostrare mai schermo nero!
+		startAmbientLoop();
 
 		window.addEventListener('keydown', handleKeyDown);
 		window.addEventListener('keyup', handleKeyUp);
@@ -1102,6 +1302,7 @@
 
 	onDestroy(() => {
 		if (typeof window !== 'undefined') {
+			sessionStorage.removeItem('lova_hard_loaded_v2');
 			window.removeEventListener('keydown', handleKeyDown);
 			window.removeEventListener('keyup', handleKeyUp);
 			if (typeof cancelAnimationFrame !== 'undefined' && animFrameId) {
@@ -1127,6 +1328,13 @@
 	<div class="terminal-header">
 		<span class="system-tag">[ SYSTEM: POD 042 // HACKING PROTOCOL ]</span>
 		<div class="status-indicators">
+			<button
+				class="btn-terminal-reload"
+				on:click={() => window.location.reload()}
+				title="Ricarica interfaccia di combattimento"
+			>
+				[ ↻ RICARICA ]
+			</button>
 			<span class="indicator-dot"></span>
 			<span>OST: Weight of the World</span>
 		</div>
@@ -1134,7 +1342,10 @@
 
 	<div class="canvas-container">
 		<canvas
+			bind:this={canvas}
 			id="gameCanvas"
+			width="900"
+			height="650"
 			on:mousemove={handleMouseMove}
 			on:mousedown={handleMouseDown}
 			on:mouseup={handleMouseUp}
@@ -1244,10 +1455,31 @@
 		}
 	}
 
+	.btn-terminal-reload {
+		font-family: var(--font-mono);
+		font-size: 0.72rem;
+		background: transparent;
+		color: var(--automataColor);
+		border: 1px solid var(--automataColor);
+		padding: 0.15rem 0.45rem;
+		cursor: pointer;
+		margin-right: 0.5rem;
+		letter-spacing: 0.05rem;
+		transition: all 0.2s ease-in-out;
+	}
+
+	.btn-terminal-reload:hover {
+		background: var(--automataRed);
+		border-color: var(--automataRed);
+		color: var(--automataWhite);
+	}
+
 	.canvas-container {
 		position: relative;
 		width: 100%;
 		max-width: 900px;
+		aspect-ratio: 900 / 650;
+		min-height: 480px;
 		box-shadow: 6px 6px 0 rgba(77, 73, 62, 0.4);
 		border: 1px solid var(--automataColor);
 		overflow: hidden;
@@ -1257,7 +1489,8 @@
 	canvas {
 		display: block;
 		width: 100%;
-		height: auto;
+		height: 100%;
+		aspect-ratio: 900 / 650;
 		background-color: #1c1b17;
 		cursor: crosshair;
 	}
