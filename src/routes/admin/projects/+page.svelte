@@ -1,12 +1,15 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import AdminContentEditor from '$lib/components/AdminContentEditor.svelte';
+	import ConfirmModal from '$lib/components/ConfirmModal.svelte';
 	import type { EditableContent } from '$lib/server/admin-content';
 
 	export let data;
 	export let form;
 
 	let selected: EditableContent = data.empty;
+	let itemToDelete: EditableContent | null = null;
+	let deleteForm: HTMLFormElement;
 
 	function newItem() {
 		selected = { ...data.empty, metadata: { contentType: 'projects' } };
@@ -14,6 +17,17 @@
 
 	function edit(item: EditableContent) {
 		selected = { ...item, categories: [...item.categories], metadata: { ...item.metadata } };
+	}
+
+	function promptDelete(item: EditableContent) {
+		itemToDelete = item;
+	}
+
+	function handleConfirmDelete() {
+		if (deleteForm) {
+			deleteForm.requestSubmit();
+		}
+		itemToDelete = null;
 	}
 </script>
 
@@ -30,19 +44,12 @@
 				<li class:active={selected.slug === item.slug}>
 					<button type="button" class="select-item" on:click={() => edit(item)}>{item.title}</button
 					>
-					<form
-						method="POST"
-						action="?/remove"
-						use:enhance
-						on:submit={(event) => {
-							if (!confirm(`Sei sicuro di voler eliminare "${item.title}"?`)) {
-								event.preventDefault();
-							}
-						}}
+					<button
+						type="button"
+						class="delete"
+						aria-label={`Elimina ${item.title}`}
+						on:click={() => promptDelete(item)}>×</button
 					>
-						<input type="hidden" name="slug" value={item.slug} />
-						<button type="submit" class="delete" aria-label={`Elimina ${item.title}`}>×</button>
-					</form>
 				</li>
 			{/each}
 		</ul>
@@ -53,6 +60,18 @@
 		{/key}
 	</section>
 </div>
+
+<form bind:this={deleteForm} method="POST" action="?/remove" use:enhance>
+	<input type="hidden" name="slug" value={itemToDelete?.slug ?? ''} />
+</form>
+
+<ConfirmModal
+	open={Boolean(itemToDelete)}
+	title="Elimina Progetto"
+	itemName={itemToDelete?.title ?? ''}
+	on:confirm={handleConfirmDelete}
+	on:cancel={() => (itemToDelete = null)}
+/>
 
 <style>
 	.cms-layout {
