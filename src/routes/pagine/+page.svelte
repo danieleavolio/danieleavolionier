@@ -2,7 +2,7 @@
 	import CategoriesFilter from '$lib/components/CategoriesFilter.svelte';
 	import * as config from '$lib/config';
 	import type { Element, FaqItem } from '$lib/types';
-	import { formatDate } from '$lib/utils';
+	import { formatDate, calculateReadingTime } from '$lib/utils';
 	import { slide } from 'svelte/transition';
 	import { BoxSelect } from 'lucide-svelte';
 	import Seo from '$lib/components/SEO.svelte';
@@ -88,7 +88,9 @@
 		{#each postToShow as post}
 			<li transition:slide class="post">
 				<a href={`/pagine/${post.slug}`} class="title">{post.title}</a>
-				<p class="date">{formatDate(post.date)}</p>
+				<p class="date">
+					{formatDate(post.date)} · {calculateReadingTime(post.contentHtml || post.description)} min lettura
+				</p>
 				<p class="description">{post.description}</p>
 				<div class="tags">
 					{#each getCategories(post) as category}

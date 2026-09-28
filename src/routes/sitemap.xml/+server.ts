@@ -37,7 +37,8 @@ export async function GET({ locals }) {
 		{ loc: `${siteURL}/data`, changefreq: 'monthly', priority: '0.7' },
 		{ loc: `${siteURL}/now`, changefreq: 'weekly', priority: '0.7' },
 		{ loc: `${siteURL}/end-of-the-lova`, changefreq: 'monthly', priority: '0.6' },
-		{ loc: `${siteURL}/privacy-policy`, changefreq: 'yearly', priority: '0.3' }
+		{ loc: `${siteURL}/privacy-policy`, changefreq: 'yearly', priority: '0.3' },
+		{ loc: `${siteURL}/rss.xml`, changefreq: 'daily', priority: '0.7' }
 	];
 
 	// Blog posts

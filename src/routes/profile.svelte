@@ -19,7 +19,7 @@
 <div bind:this={pagedata} class="page-data">
 	<div class="top-header">
 		<Square />
-		<p>Daniele Avolio: Big Data Engineer</p>
+		<p>Daniele Avolio - Data Engineer @ AgileLab</p>
 	</div>
 	<div class="outer-box">
 		<div class="inner-box">
@@ -27,17 +27,24 @@
 			<div class="main-features">
 				<p></p>
 				<p class="content">
-					Ciao, sono <b>Daniele Avolio</b>, laureato magistrale in
-					<b>Informatica e Intelligenza Artificiale</b>
-					presso l'<Link href="https://www.unical.it/">
+					Ciao, sono <b>Daniele Avolio</b>, <b><code>Data Engineer</code></b> presso
+					<Link href="https://agilelab.it/" target="_blank"><i>Agile Lab</i></Link> e laureato magistrale
+					in
+					<b>Informatica e Intelligenza Artificiale</b> presso l'<Link
+						href="https://www.unical.it/"
+					>
 						<b>Università della Calabria</b>
-					</Link>. Sono stato <b>Frontend Developer</b> e <b>Data Engineer</b>, con esperienza su
+					</Link>. Lavoro su pipeline dati scalabili ed ecosistemi Big Data, con forte
+					specializzazione su
+					<b><code>Apache Spark</code></b>, <b><code>Databricks</code></b>,
+					<b><code>Google Cloud Platform (GCP)</code></b>
+					e <b><code>Apache Airflow</code></b>. Ho inoltre solida esperienza nel
+					<b>web development</b>
+					(tra cui
 					<Link href="https://kit.svelte.dev/"><b><code>SvelteKit</code></b></Link> e
-					<Link href="https://angular.dev/"><b><code>Angular</code></b></Link>. Attualmente lavoro
-					come <b><code>Data Engineer</code></b> presso
-					<Link href="https://agilelab.it/" target="_blank"><i>Agile Lab</i></Link>. Appassionato di
-					<b>videogiochi</b>
-					e <b>cultura pop giapponese</b>.
+					<Link href="https://angular.dev/"><b><code>Angular</code></b></Link>), e sono un grande
+					appassionato di
+					<b>videogiochi</b> e <b>cultura pop giapponese</b>.
 				</p>
 				<div class="socials">
 					<a target="_blank" class="title" href="https://www.linkedin.com/in/danieleavolio/"

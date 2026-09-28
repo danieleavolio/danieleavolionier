@@ -47,10 +47,12 @@ SIGNATURE: 'AGL_D-170'
 <summary><b>Frameworks & Runtime</b></summary>
 
 ```ini
-Witboost=QUEUED
-Spark=LOCKED
-Scala=OFFLINE
-Cloud=UNDEFINED
+Witboost=ACTIVE
+Spark=ONLINE
+Databricks=ONLINE
+GCP=ONLINE
+Airflow=ONLINE
+Scala_Python=ACTIVE
 ```
 
 </details>

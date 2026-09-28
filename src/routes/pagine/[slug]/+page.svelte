@@ -3,7 +3,7 @@
 	import Seo from '$lib/components/SEO.svelte';
 	import type { Element } from '$lib/types';
 	import * as config from '$lib/config';
-	import { formatDate } from '$lib/utils';
+	import { formatDate, calculateReadingTime } from '$lib/utils';
 	import Tag from '$lib/components/Tag.svelte';
 	import ShareComponent from '$lib/components/ShareComponent.svelte';
 	import RichContent from '$lib/components/RichContent.svelte';
@@ -49,7 +49,11 @@
 	<hgroup class="review-banner">
 		<h1>{data.meta.title}</h1>
 		<h3>{data.meta.description}</h3>
-		<p>Data: {formatDate(data.meta.date)}</p>
+		<p>
+			Data: {formatDate(data.meta.date)} · {calculateReadingTime(
+				data.contentHtml || metadata.description
+			)} min di lettura
+		</p>
 		{#if metadata.gameImage}
 			<img class="banner-image" src={seoImage} alt={metadata.title} />
 		{/if}

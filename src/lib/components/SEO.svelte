@@ -30,7 +30,7 @@
 
 	// Titolo completo e univoco con branding
 	$: fullTitle = !title
-		? 'Daniele Avolio | Sviluppatore Web & AI Specialist'
+		? 'Daniele Avolio - Data Engineer @ AgileLab'
 		: title.includes('Daniele Avolio')
 			? title
 			: `${title} | Daniele Avolio`;
@@ -94,10 +94,19 @@
 		'@type': 'Person',
 		'@id': `${siteBaseUrl}/#person`,
 		name: 'Daniele Avolio',
-		jobTitle: 'Software Developer & AI Specialist',
+		jobTitle: 'Data Engineer',
+		worksFor: {
+			'@type': 'Organization',
+			name: 'AgileLab',
+			url: 'https://agilelab.it/'
+		},
 		url: siteBaseUrl,
 		image: fallbackImage,
-		sameAs: ['https://github.com/danieleavolio', 'https://www.linkedin.com/in/daniele-avolio/'],
+		sameAs: [
+			'https://github.com/danieleavolio',
+			'https://www.linkedin.com/in/danieleavolio/',
+			'https://twitter.com/avolio_daniele'
+		],
 		alumniOf: {
 			'@type': 'EducationalOrganization',
 			name: 'Università della Calabria (Unical)'

@@ -1,34 +1,75 @@
 import FlexSearch from 'flexsearch';
 import type { Element } from '$lib/types';
+import { notes } from '$lib/notes_files_desc';
 
-let postsIndex: FlexSearch.Index;
-let posts: Element[];
-
-export function createIndex(data: { posts: Element[]; progetti: Element[] }) {
-	postsIndex = new FlexSearch.Index({ tokenize: 'forward' });
-
-	const merged = data.posts.concat(data.progetti);
-	merged.forEach((post, i) => {
-		const item = `${post.title} ${post.description}`;
-		postsIndex.add(i, item);
-	});
-
-	posts = merged;
+export interface SearchEntry {
+	slug: string;
+	title: string;
+	description: string;
+	type: 'post' | 'progetto' | 'appunto';
+	isExternal?: boolean;
 }
 
-export function searchPostsIndex(searchTerm: string) {
-	if (!searchTerm.trim()) return [];
+export interface SearchResult {
+	slug: string;
+	title: string;
+	content: string[];
+	type: 'post' | 'progetto' | 'appunto';
+	isExternal?: boolean;
+}
+
+let searchIndex: FlexSearch.Index;
+let allEntries: SearchEntry[] = [];
+
+export function createIndex(data: { posts: Element[]; progetti: Element[] }) {
+	searchIndex = new FlexSearch.Index({ tokenize: 'forward' });
+
+	const postEntries: SearchEntry[] = (data.posts || []).map((p) => ({
+		slug: p.slug.startsWith('pagine/') ? p.slug : `pagine/${p.slug}`,
+		title: p.title,
+		description: p.description || '',
+		type: 'post'
+	}));
+
+	const projectEntries: SearchEntry[] = (data.progetti || []).map((pr) => ({
+		slug: pr.slug.startsWith('progetti/') ? pr.slug : `progetti/${pr.slug}`,
+		title: pr.title,
+		description: pr.description || '',
+		type: 'progetto'
+	}));
+
+	const noteEntries: SearchEntry[] = (notes || []).map((n) => ({
+		slug: n.downloadLink,
+		title: n.title,
+		description: n.description || '',
+		type: 'appunto',
+		isExternal: n.downloadLink.startsWith('http')
+	}));
+
+	allEntries = [...postEntries, ...projectEntries, ...noteEntries];
+
+	allEntries.forEach((entry, i) => {
+		const item = `${entry.title} ${entry.description}`;
+		searchIndex.add(i, item);
+	});
+}
+
+export function searchPostsIndex(searchTerm: string): SearchResult[] {
+	if (!searchIndex || !searchTerm.trim()) return [];
 
 	const match = escapeRegex(searchTerm);
-	const results = postsIndex.search(match);
+	const results = searchIndex.search(match);
 
 	return results
-		.map((index) => posts[index as number])
-		.map(({ slug, title, description }) => {
+		.map((index) => allEntries[index as number])
+		.filter(Boolean)
+		.map((entry) => {
 			return {
-				slug,
-				title: replaceTextWithMarker(title, match),
-				content: getMatches(description, match, 3)
+				slug: entry.slug,
+				title: replaceTextWithMarker(entry.title, match),
+				content: getMatches(entry.description, match, 2),
+				type: entry.type,
+				isExternal: entry.isExternal
 			};
 		});
 }

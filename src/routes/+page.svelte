@@ -70,8 +70,8 @@
 </script>
 
 <Seo
-	title="Daniele Avolio | Sviluppatore Web & AI Specialist"
-	description="Sono Daniele Avolio, uno studente di Informatica presso l'Università della Calabria e sviluppatore software. Qui trovi i miei progetti, appunti universitari e articoli tecnici."
+	title="Daniele Avolio - Data Engineer @ AgileLab"
+	description="Daniele Avolio - Data Engineer @ AgileLab. Laureato magistrale in Informatica e AI all'Unical. Specializzato in Apache Spark, Databricks, GCP, Airflow e sviluppo web."
 	image="https://i.imgur.com/juSgfgF.png"
 	{faqItems}
 />
