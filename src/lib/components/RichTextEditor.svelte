@@ -166,9 +166,23 @@
 
 	.toolbar button {
 		margin: 0;
-		padding: 0.3rem 0.55rem;
+		padding: 0.35rem 0.65rem;
+		font-family: var(--font-mono);
 		font-size: 0.8rem;
+		font-weight: 600;
+		border-radius: 0;
+		border: 1px solid var(--automataColor);
+		background: var(--automataBg);
+		color: var(--automataColor);
+		cursor: pointer;
+		box-shadow: none;
 		letter-spacing: normal;
+		transition: all 0.15s ease-in-out;
+	}
+
+	.toolbar button:hover {
+		background: var(--automataBgRGBA);
+		color: var(--automataColor);
 	}
 
 	.toolbar button.active {

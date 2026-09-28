@@ -174,6 +174,7 @@
 		border: 1px solid var(--automataColor);
 		background: var(--automataBg);
 		color: var(--automataColor);
+		border-radius: 0;
 	}
 
 	textarea {
@@ -196,8 +197,35 @@
 		border: 1px solid var(--automataColor);
 	}
 
+	button[type='submit'] {
+		margin-top: 1.25rem;
+		padding: 0.85rem 1.5rem;
+		font-family: var(--font-mono);
+		font-size: 0.95rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.25rem;
+		background: var(--automataBgRGBA);
+		color: var(--automataColor);
+		border: 1px solid var(--automataColor);
+		border-radius: 0;
+		box-shadow: none;
+		cursor: pointer;
+		transition: all 0.2s ease-in-out;
+	}
+
+	button[type='submit']:hover {
+		background: var(--automataColor);
+		color: var(--automataBg);
+	}
+
+	button[type='submit']:active {
+		transform: translateY(1px);
+	}
+
 	.message {
 		padding: 0.75rem;
 		background: var(--automataBgRGBA);
+		border: 1px solid var(--automataColor);
 	}
 </style>

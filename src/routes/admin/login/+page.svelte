@@ -59,10 +59,34 @@
 		border: 1px solid var(--automataColor);
 		background: var(--automataBg);
 		color: var(--automataColor);
+		border-radius: 0;
 	}
 
 	button {
-		margin-top: 1rem;
+		margin-top: 1.25rem;
+		padding: 0.8rem 1.5rem;
+		font-family: var(--font-mono);
+		font-size: 0.95rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.25rem;
+		background: var(--automataBgRGBA);
+		color: var(--automataColor);
+		border: 1px solid var(--automataColor);
+		border-radius: 0;
+		box-shadow: none;
+		cursor: pointer;
+		transition: all 0.2s ease-in-out;
+	}
+
+	button:hover:not(:disabled) {
+		background: var(--automataColor);
+		color: var(--automataBg);
+	}
+
+	button:disabled {
+		opacity: 0.6;
+		cursor: not-allowed;
 	}
 
 	.error {
