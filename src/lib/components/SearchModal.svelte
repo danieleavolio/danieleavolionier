@@ -115,7 +115,6 @@
 		aria-label="Cerca nel sito"
 	>
 		<span class="material-symbols-outlined"> search </span>
-		<kbd class="kbd-shortcut">{isMac ? '⌘K' : 'Ctrl+K'}</kbd>
 	</button>
 </div>
 
@@ -200,29 +199,18 @@
 	button {
 		background-color: var(--automataBlackO);
 		color: var(--automataWhite);
-		border: 1px solid var(--border, rgba(255, 255, 255, 0.15));
-		padding: 0.35em 0.65em;
+		border: none;
+		padding: 0.5em;
 		cursor: pointer;
-		border-radius: 4px;
-		display: inline-flex;
+		border-radius: 100%;
+		display: flex;
 		align-items: center;
-		gap: 0.45em;
-		transition: all 0.2s ease;
+		justify-content: center;
+		transition: background-color 0.2s ease;
 	}
 
 	button:hover {
 		background-color: var(--automataBlackOpacity);
-		border-color: var(--automataWhite);
-	}
-
-	.kbd-shortcut {
-		font-family: inherit;
-		font-size: 0.72rem;
-		background: rgba(255, 255, 255, 0.1);
-		padding: 0.15em 0.4em;
-		border-radius: 3px;
-		border: 1px solid rgba(255, 255, 255, 0.2);
-		letter-spacing: 0.05em;
 	}
 
 	.input-wrapper {

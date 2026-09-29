@@ -29,11 +29,12 @@
 	$: canonicalUrl = `${siteBaseUrl}${rawPath === '/' ? '' : rawPath}`;
 
 	// Titolo completo e univoco con branding
-	$: fullTitle = !title
-		? 'Daniele Avolio - Data Engineer @ AgileLab'
-		: title.includes('Daniele Avolio')
-			? title
-			: `${title} | Daniele Avolio`;
+	$: fullTitle =
+		!title || title === 'Daniele Avolio' || rawPath === '/'
+			? 'Daniele Avolio - Data Engineer @ AgileLab'
+			: title.includes('Daniele Avolio')
+				? title
+				: `${title} | Daniele Avolio`;
 
 	$: safeDescription = (isReview ? reviewBody : description || '').trim();
 	$: seoImageInput = (isReview ? gameImage : image) || fallbackImage;
