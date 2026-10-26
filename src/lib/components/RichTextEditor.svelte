@@ -7,6 +7,7 @@
 	import Underline from '@tiptap/extension-underline';
 	import Placeholder from '@tiptap/extension-placeholder';
 	import { createRichExtensions } from '$lib/editor/extensions';
+	import { findImageFiles, uploadImage } from '$lib/media';
 	import type { RichTextDocument } from '$lib/types';
 
 	export let html = '';
@@ -16,6 +17,7 @@
 	const dispatch = createEventDispatcher<{ change: { html: string; json: RichTextDocument } }>();
 	let editorElement: HTMLDivElement;
 	let editor: Editor | null = null;
+	let pendingUploads = 0;
 
 	function emitChange() {
 		if (!editor) return;
@@ -23,6 +25,52 @@
 		json = editor.getJSON() as RichTextDocument;
 		dispatch('change', { html, json });
 	}
+
+	/**
+	 * Uploads every image file dropped or pasted into the editor to the
+	 * `post-images` Supabase bucket and inserts the returned public URLs as
+	 * each upload completes. Returns true when the editor must not fall back
+	 * to the default ProseMirror handling.
+	 */
+	async function uploadAndInsertFiles(files: File[]): Promise<boolean> {
+		if (!editor || files.length === 0) return false;
+		pendingUploads += files.length;
+		let applied = false;
+		try {
+			for (const file of files) {
+				const { url } = await uploadImage(file);
+				applied = true;
+				editor?.chain().focus().setImage({ src: url, alt: file.name }).run();
+				emitChange();
+			}
+		} catch (cause) {
+			console.error('Image upload failed:', cause);
+			setTimeout(() => {
+				alert(cause instanceof Error ? cause.message : 'Caricamento non riuscito.');
+			}, 0);
+		} finally {
+			pendingUploads -= files.length;
+		}
+		return applied;
+	}
+
+	const mediaEditorProps = {
+		handleDrop: (_view: unknown, event: DragEvent, _slice: unknown, moved: boolean) => {
+			if (moved) return false;
+			const files = findImageFiles(event.dataTransfer);
+			if (files.length === 0) return false;
+			event.preventDefault();
+			void uploadAndInsertFiles(files);
+			return true;
+		},
+		handlePaste: (_view: unknown, event: ClipboardEvent) => {
+			const files = findImageFiles(event.clipboardData);
+			if (files.length === 0) return false;
+			event.preventDefault();
+			void uploadAndInsertFiles(files);
+			return true;
+		}
+	};
 
 	function promptForUrl(message: string): string | null {
 		const value = window.prompt(message, 'https://');
@@ -71,6 +119,7 @@
 				...createRichExtensions()
 			],
 			content: json ?? html ?? '',
+			editorProps: mediaEditorProps,
 			onUpdate: emitChange
 		});
 	});
@@ -151,6 +200,10 @@
 	</div>
 {/if}
 
+{#if pendingUploads > 0}
+	<p class="upload-status">Caricamento immagini ({pendingUploads}) in corso…</p>
+{/if}
+
 <div class="editor prose" bind:this={editorElement} aria-label="Editor del contenuto"></div>
 
 <style>
@@ -188,6 +241,14 @@
 	.toolbar button.active {
 		background: var(--automataColor);
 		color: var(--automataBg);
+	}
+
+	.upload-status {
+		margin: 0.5rem 0 0;
+		padding: 0.45rem 0.75rem;
+		font-size: 0.9rem;
+		background: var(--automataBgRGBA);
+		border: 1px solid var(--automataColor);
 	}
 
 	.editor {
