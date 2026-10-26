@@ -1,5 +1,6 @@
 import type { Element, NowItem } from '$lib/types';
 import { convertGradingTags } from '$lib/rich-grading';
+import { repairPlainMarkdownHtml } from '$lib/server/markdown-repair';
 
 export type PublicContentTable = 'posts' | 'projects';
 
@@ -13,7 +14,7 @@ function toElement(row: Record<string, any>, contentType: PublicContentTable): E
 		categories: Array.isArray(row.categories) ? row.categories : [],
 		published: row.published !== false,
 		image: row.image ?? undefined,
-		contentHtml: convertGradingTags(row.content_html ?? '', metadata),
+		contentHtml: convertGradingTags(repairPlainMarkdownHtml(row.content_html ?? ''), metadata),
 		contentJson: row.content_json ?? null,
 		legacyContent: row.legacy_content ?? row.content ?? null,
 		metadata: { ...metadata, contentType },

@@ -6,6 +6,7 @@ import {
 	storedPostImagePaths
 } from '$lib/server/media-cleanup';
 import { convertGradingTags } from '$lib/rich-grading';
+import { repairPlainMarkdownHtml } from '$lib/server/markdown-repair';
 import type { RichTextDocument } from '$lib/types';
 
 export type ContentTable = 'posts' | 'projects';
@@ -34,7 +35,7 @@ function normalizeRow(row: Record<string, any>): EditableContent {
 		categories: Array.isArray(row.categories) ? row.categories : [],
 		image: row.image ?? '',
 		published: row.published !== false,
-		contentHtml: row.content_html ?? '',
+		contentHtml: repairPlainMarkdownHtml(row.content_html ?? ''),
 		contentJson: row.content_json ?? null,
 		legacyContent: row.legacy_content ?? row.content ?? null,
 		metadata
@@ -94,7 +95,10 @@ export async function saveContent(
 
 	const metadata = parseJson(form.get('metadata')) ?? {};
 	const contentHtml = sanitizeContentHtml(
-		convertGradingTags(form.get('content_html')?.toString() ?? '', metadata)
+		convertGradingTags(
+			repairPlainMarkdownHtml(form.get('content_html')?.toString() ?? ''),
+			metadata
+		)
 	);
 	const stripped = contentHtml.replace(/<p><\/p>/g, '').trim();
 	if (!contentHtml || !stripped) throw error(400, 'Il contenuto non può essere vuoto.');

@@ -1,6 +1,7 @@
 import { marked } from 'marked';
 import { sanitizeContentHtml } from '$lib/server/sanitize';
 import { convertGradingTags } from '$lib/rich-grading';
+import { repairPlainMarkdownHtml } from '$lib/server/markdown-repair';
 import type { Element, NowItem } from '$lib/types';
 
 export type ContentTable = 'posts' | 'projects';
@@ -51,7 +52,9 @@ function toElement(row: Record<string, any>, contentType?: ContentTable): Elemen
 		categories: Array.isArray(row.categories) ? row.categories : [],
 		published: row.published !== false,
 		image: row.image ?? undefined,
-		contentHtml: sanitizeContentHtml(row.content_html) || markdownToHtml(row.content, metadata),
+		contentHtml:
+			sanitizeContentHtml(repairPlainMarkdownHtml(row.content_html)) ||
+			markdownToHtml(row.content, metadata),
 		contentJson: row.content_json ?? null,
 		legacyContent: row.legacy_content ?? row.content ?? null,
 		metadata: normalizedMetadata,
