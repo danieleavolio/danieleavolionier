@@ -1,5 +1,6 @@
 import { marked } from 'marked';
 import { sanitizeContentHtml } from '$lib/server/sanitize';
+import { convertGradingTags } from '$lib/rich-grading';
 import type { Element, NowItem } from '$lib/types';
 
 export type ContentTable = 'posts' | 'projects';
@@ -24,14 +25,7 @@ function replaceLegacyBlocks(source: string, variables: Record<string, unknown> 
 			: '';
 	});
 
-	html = html.replace(/<Grading\b[\s\S]*?\/>/gi, (match) => {
-		const gradeExpression = match.match(/grade=\{([^}]+)\}/i)?.[1]?.trim() ?? '';
-		const title = match.match(/title="([^"]+)"/i)?.[1] ?? '';
-		const value = variables[gradeExpression];
-		const normalizedGrade = String(value ?? gradeExpression).replace(/[^0-9.]/g, '');
-		const titleAttribute = title ? ` data-title="${title.replace(/"/g, '&quot;')}"` : '';
-		return `<div data-rich-block="grading" data-grade="${normalizedGrade}" data-max="10"${titleAttribute} class="rich-grading">${title ? `<strong>${title}</strong> ` : ''}Valutazione: ${normalizedGrade}/10</div>`;
-	});
+	html = convertGradingTags(html, variables);
 
 	return html;
 }

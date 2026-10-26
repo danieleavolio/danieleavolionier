@@ -1,4 +1,5 @@
 import type { Element, NowItem } from '$lib/types';
+import { convertGradingTags } from '$lib/rich-grading';
 
 export type PublicContentTable = 'posts' | 'projects';
 
@@ -12,7 +13,7 @@ function toElement(row: Record<string, any>, contentType: PublicContentTable): E
 		categories: Array.isArray(row.categories) ? row.categories : [],
 		published: row.published !== false,
 		image: row.image ?? undefined,
-		contentHtml: row.content_html ?? '',
+		contentHtml: convertGradingTags(row.content_html ?? '', metadata),
 		contentJson: row.content_json ?? null,
 		legacyContent: row.legacy_content ?? row.content ?? null,
 		metadata: { ...metadata, contentType },

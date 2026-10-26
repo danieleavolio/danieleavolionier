@@ -43,7 +43,16 @@ const ALLOWED_TAGS = new Set([
 const ALLOWED_ATTRS: Record<string, Set<string>> = {
 	a: new Set(['href', 'target', 'rel']),
 	code: new Set(['class']),
-	div: new Set(['class', 'data-rich-block', 'data-images', 'data-grade', 'data-max', 'data-title']),
+	div: new Set([
+		'class',
+		'data-rich-block',
+		'data-images',
+		'data-grade',
+		'data-max',
+		'data-title',
+		'data-pros',
+		'data-cons'
+	]),
 	figcaption: new Set(['class']),
 	iframe: new Set([
 		'src',

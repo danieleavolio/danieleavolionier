@@ -5,6 +5,7 @@ import {
 	referencedPostImagePaths,
 	storedPostImagePaths
 } from '$lib/server/media-cleanup';
+import { convertGradingTags } from '$lib/rich-grading';
 import type { RichTextDocument } from '$lib/types';
 
 export type ContentTable = 'posts' | 'projects';
@@ -91,7 +92,10 @@ export async function saveContent(
 		throw error(400, 'Lo slug può contenere solo lettere minuscole, numeri e trattini.');
 	}
 
-	const contentHtml = sanitizeContentHtml(form.get('content_html')?.toString() ?? '');
+	const metadata = parseJson(form.get('metadata')) ?? {};
+	const contentHtml = sanitizeContentHtml(
+		convertGradingTags(form.get('content_html')?.toString() ?? '', metadata)
+	);
 	const stripped = contentHtml.replace(/<p><\/p>/g, '').trim();
 	if (!contentHtml || !stripped) throw error(400, 'Il contenuto non può essere vuoto.');
 
@@ -99,7 +103,6 @@ export async function saveContent(
 		.split(',')
 		.map((category) => category.trim())
 		.filter(Boolean);
-	const metadata = parseJson(form.get('metadata')) ?? {};
 	const contentJson = parseJson(form.get('content_json')) as RichTextDocument | null;
 	const date = form.get('date')?.toString() || new Date().toISOString().slice(0, 10);
 	const originalSlug = form.get('original_slug')?.toString().trim();
