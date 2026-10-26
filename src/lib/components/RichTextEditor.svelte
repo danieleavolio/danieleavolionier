@@ -54,6 +54,21 @@
 		return applied;
 	}
 
+	const MARKDOWN_PATTERN =
+		/(^|\n)\s{0,3}(#{1,6}\s|```|~~~|[-*+]\s|\d+\.\s|>\s)|\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*|__[^_]+__/;
+
+	function looksLikeMarkdown(text: string): boolean {
+		return text.length > 1 && MARKDOWN_PATTERN.test(text);
+	}
+
+	async function insertMarkdown(source: string): Promise<void> {
+		if (!editor) return;
+		const { marked } = await import('marked');
+		const rendered = marked.parse(source, { async: false }) as string;
+		editor.chain().focus().insertContent(rendered).run();
+		emitChange();
+	}
+
 	const mediaEditorProps = {
 		handleDrop: (_view: unknown, event: DragEvent, _slice: unknown, moved: boolean) => {
 			if (moved) return false;
@@ -65,9 +80,21 @@
 		},
 		handlePaste: (_view: unknown, event: ClipboardEvent) => {
 			const files = findImageFiles(event.clipboardData);
-			if (files.length === 0) return false;
+			if (files.length > 0) {
+				event.preventDefault();
+				void uploadAndInsertFiles(files);
+				return true;
+			}
+
+			// Pasted markdown arrives as plain text: convert it so headings,
+			// lists, code fences and diagrams become real rich blocks instead of
+			// literal `##` and backtick text.
+			const transfer = event.clipboardData;
+			if (!transfer || transfer.getData('text/html')) return false;
+			const text = transfer.getData('text/plain');
+			if (!looksLikeMarkdown(text)) return false;
 			event.preventDefault();
-			void uploadAndInsertFiles(files);
+			void insertMarkdown(text);
 			return true;
 		}
 	};

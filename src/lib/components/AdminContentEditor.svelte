@@ -226,9 +226,12 @@
 		overflow-y: auto;
 		padding: 1.25rem 1rem 3rem;
 	}
-	.zen-frame.active :global(.preview-pane),
 	.zen-frame.active form {
-		max-width: 46rem;
+		max-width: min(72rem, 94vw);
+		margin: 0 auto;
+	}
+	.zen-frame.active :global(.preview-pane) {
+		max-width: min(60rem, 92vw);
 		margin: 0 auto;
 	}
 	.zen-frame.active :global(.editor),
