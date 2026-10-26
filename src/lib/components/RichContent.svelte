@@ -135,11 +135,13 @@
 		margin: 1rem 0;
 		background: var(--automataBg);
 		border: 1px solid var(--automataColor);
-		border-radius: 8px;
+		border-radius: 0;
+		overflow-x: auto;
 	}
 	.rich-content :global(.rich-mermaid svg) {
 		max-width: 100%;
 		height: auto;
+		font-family: var(--font-mono);
 	}
 
 	.rich-content :global(.rich-grading) {
