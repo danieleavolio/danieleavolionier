@@ -41,6 +41,10 @@
 		{/each}
 	</div>
 
+	{#if metadata.image}
+		<img class="cover-image" src={metadata.image} alt={metadata.title} />
+	{/if}
+
 	<RichContent html={data.contentHtml} />
 
 	<Author
@@ -52,6 +56,16 @@
 </article>
 
 <style>
+	.cover-image {
+		display: block;
+		width: 100%;
+		height: auto;
+		margin: 0 auto var(--size-7);
+		border-radius: 10px;
+		border: 2px solid var(--automataBlackO);
+		object-fit: cover;
+	}
+
 	article {
 		max-inline-size: 120ch;
 		margin-inline: auto;

@@ -65,6 +65,10 @@
 		{/each}
 	</div>
 
+	{#if metadata.image && !metadata.isReview}
+		<img class="cover-image" src={metadata.image} alt={metadata.title} />
+	{/if}
+
 	<RichContent html={data.contentHtml} />
 
 	<ShareComponent postTitle={metadata.title} postUrl={$page.url.href} />
@@ -148,5 +152,15 @@
 	.review-banner p {
 		position: relative;
 		z-index: 1;
+	}
+
+	.cover-image {
+		display: block;
+		width: 100%;
+		height: auto;
+		margin: 0 auto var(--size-7);
+		border-radius: 10px;
+		border: 2px solid var(--automataBlackO);
+		object-fit: cover;
 	}
 </style>
