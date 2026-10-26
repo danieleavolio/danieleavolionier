@@ -24,18 +24,55 @@ const NIER_THEME_CSS = `
 	}
 	.cluster rect { fill: #1d1d1a !important; stroke: #8f8b7d !important; }
 	.edges .edgePath .path, .flowchart-link, .relation, .messageLine0, .messageLine1 {
-		stroke: #3c3b34 !important;
+		stroke: #4a4740 !important;
 		stroke-width: 1.2px !important;
 	}
-	.marker, .arrowheadPath, marker path { fill: #3c3b34 !important; stroke: #3c3b34 !important; }
-	.edgeLabel rect, .labelBkg { fill: #d3d0c4 !important; opacity: 1 !important; }
-	.edgeLabel .label, .edgeLabel span, .edgeLabel p {
+	.marker, .arrowheadPath, marker path { fill: #4a4740 !important; stroke: #4a4740 !important; }
+	.edgeLabel rect, .labelBkg {
+		fill: #d3d0c4 !important;
+		background-color: #d3d0c4 !important;
+		stroke: none !important;
+		opacity: 1 !important;
+		filter: none !important;
+	}
+	/*
+	 * Diagram labels are HTML inside foreignObject, so the article typography
+	 * (.prose p) leaks in: it forces a larger font and justified text that
+	 * mermaid never measured, which wraps labels and clips the second line.
+	 * Labels keep the size mermaid sized them with.
+	 */
+	foreignObject p, foreignObject span, foreignObject div {
+		margin: 0 !important;
+		padding: 0 !important;
+		font-size: inherit !important;
+		line-height: 1.5 !important;
+		text-align: center !important;
+		text-justify: none !important;
+		hyphens: none !important;
+		border: 0 !important;
+		box-shadow: none !important;
+	}
+	/*
+	 * Edge labels: mermaid nests a block <p> inside an inline <span>, which
+	 * makes the label box several lines tall, and the article font would be
+	 * used. Both are normalized here; the plate itself is fitted to the text
+	 * after rendering (the label is measured detached, with other metrics).
+	 */
+	.edgeLabel span, .edgeLabel p {
+		display: block !important;
+		white-space: nowrap !important;
 		font-family: 'JetBrains Mono', ui-monospace, monospace !important;
-		font-size: 12px !important;
 		color: #22221d !important;
 		fill: #22221d !important;
 	}
-	.edgeLabel foreignObject div { color: #22221d !important; }
+	.edgeLabel p {
+		padding: 1px 4px !important;
+	}
+	.edgeLabel foreignObject div {
+		font-family: 'JetBrains Mono', ui-monospace, monospace !important;
+		color: #22221d !important;
+		fill: #22221d !important;
+	}
 `;
 
 /**
@@ -61,6 +98,42 @@ function flattenGeometry(holder: HTMLElement): void {
 	});
 	holder.querySelectorAll<SVGElement>('.node, .cluster, .label-container').forEach((node) => {
 		node.style.filter = 'none';
+	});
+}
+
+/**
+ * Mermaid sizes edge-label plates while the label is still detached, using
+ * metrics of the default font; the rendered label then uses the diagram font
+ * and often does not fit, wrapping and being clipped by the foreignObject.
+ * After mounting, the real text is measured and the label box resized to it.
+ */
+function fitEdgeLabelPlates(holder: HTMLElement): void {
+	holder.querySelectorAll<SVGGElement>('g.edgeLabel').forEach((label) => {
+		const box = label.querySelector('foreignObject');
+		const content = box?.querySelector('div');
+		if (!box || !content) return;
+
+		const text = content.querySelector('p') ?? content;
+		const bounds = text.getBoundingClientRect();
+		if (!bounds.width || !bounds.height) return;
+
+		const width = Math.ceil(bounds.width) + 2;
+		const height = Math.ceil(bounds.height) + 2;
+
+		// The inner group is offset by half the old size to center the label;
+		// resizing the box without moving that offset would shift the label.
+		const inner = label.querySelector('g.label');
+		if (inner && inner !== label) {
+			inner.setAttribute('transform', `translate(${-width / 2}, ${-height / 2})`);
+		}
+
+		for (const element of [box, label.querySelector('rect')]) {
+			if (!element) continue;
+			element.setAttribute('x', '0');
+			element.setAttribute('y', '0');
+			element.setAttribute('width', String(width));
+			element.setAttribute('height', String(height));
+		}
 	});
 }
 
@@ -101,6 +174,10 @@ export async function renderMermaidBlocks(container: HTMLElement): Promise<void>
 		flowchart: { curve: 'stepBefore', padding: 12, nodeSpacing: 38, rankSpacing: 48 }
 	});
 
+	// Plates are measured against the real font, so the webfont must be ready
+	// before the first render.
+	await document.fonts?.ready;
+
 	let index = 0;
 	for (const code of candidates) {
 		const source = (code.textContent ?? '').trim();
@@ -109,8 +186,9 @@ export async function renderMermaidBlocks(container: HTMLElement): Promise<void>
 		try {
 			const { svg } = await mermaid.render(`rich-mermaid-${Date.now()}-${index++}`, source);
 			holder.innerHTML = svg;
-			flattenGeometry(holder);
 			code.parentElement?.replaceWith(holder);
+			flattenGeometry(holder);
+			fitEdgeLabelPlates(holder);
 		} catch (cause) {
 			console.error('Mermaid rendering failed:', cause);
 		}
