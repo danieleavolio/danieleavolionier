@@ -1,5 +1,10 @@
 import { error } from '@sveltejs/kit';
 import { sanitizeContentHtml } from '$lib/server/sanitize';
+import {
+	deletePostImages,
+	referencedPostImagePaths,
+	storedPostImagePaths
+} from '$lib/server/media-cleanup';
 import type { RichTextDocument } from '$lib/types';
 
 export type ContentTable = 'posts' | 'projects';
@@ -99,18 +104,36 @@ export async function saveContent(
 	const date = form.get('date')?.toString() || new Date().toISOString().slice(0, 10);
 	const originalSlug = form.get('original_slug')?.toString().trim();
 
+	// Images uploaded to the post-images bucket are owned by this content item.
+	// On save, every bucket image the item no longer references is deleted, so
+	// replaced or unused images never pile up.
+	const image = form.get('image')?.toString().trim() || '';
+	const lookupSlug = originalSlug || slug;
+	const { data: existingRow } = await supabase
+		.from(table)
+		.select('metadata')
+		.eq('slug', lookupSlug)
+		.maybeSingle();
+	const storedImages = storedPostImagePaths(existingRow?.metadata);
+	const referencedImages = referencedPostImagePaths({
+		contentHtml,
+		image,
+		metadata
+	});
+	const nextMetadata = { ...metadata, storageImages: [...referencedImages] };
+
 	const { error: saveError } = await supabase.from(table).upsert({
 		slug,
 		title,
 		description,
 		date,
 		categories,
-		image: form.get('image')?.toString().trim() || null,
+		image,
 		published: form.get('published') === 'true',
 		content_html: contentHtml,
 		content_json: contentJson,
 		legacy_content: form.get('legacy_content')?.toString() || null,
-		metadata
+		metadata: nextMetadata
 	});
 
 	if (saveError) throw saveError;
@@ -118,6 +141,8 @@ export async function saveContent(
 	if (originalSlug && originalSlug !== slug) {
 		await supabase.from(table).delete().eq('slug', originalSlug);
 	}
+
+	await deletePostImages(storedImages.filter((path) => !referencedImages.has(path)));
 }
 
 export async function removeContent(
@@ -126,6 +151,15 @@ export async function removeContent(
 	slug: string
 ): Promise<void> {
 	if (!slug) throw error(400, 'Slug mancante.');
+
+	const { data: existingRow } = await supabase
+		.from(table)
+		.select('metadata')
+		.eq('slug', slug)
+		.maybeSingle();
+
 	const { error: removeError } = await supabase.from(table).delete().eq('slug', slug);
 	if (removeError) throw removeError;
+
+	await deletePostImages(storedPostImagePaths(existingRow?.metadata));
 }
