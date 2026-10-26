@@ -262,6 +262,8 @@
 		min-height: 25rem;
 		outline: none;
 		line-height: 1.7;
+		caret-color: var(--automataColor);
+		color: var(--automataColor);
 	}
 
 	.editor :global(.ProseMirror p.is-editor-empty:first-child::before) {

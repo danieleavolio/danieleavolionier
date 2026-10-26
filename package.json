@@ -55,6 +55,7 @@
 		"i": "^0.3.7",
 		"lucide-svelte": "^0.577.0",
 		"marked": "^18.0.11",
+		"mermaid": "^12.2.0",
 		"open-props": "^1.5.11",
 		"rehype-slug": "^5.1.0",
 		"remark-toc": "^8.0.1",

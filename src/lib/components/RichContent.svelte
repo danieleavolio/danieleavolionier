@@ -1,8 +1,17 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import { renderMermaidBlocks } from '$lib/mermaid';
+
 	export let html = '';
+
+	let container: HTMLElement;
+
+	onMount(() => {
+		void renderMermaidBlocks(container);
+	});
 </script>
 
-<div class="rich-content prose">
+<div class="rich-content prose" bind:this={container}>
 	{@html html}
 </div>
 
@@ -117,6 +126,20 @@
 	}
 	.rich-content :global(.rich-grading ul) {
 		margin: 0.5rem 0 0;
+	}
+
+	.rich-content :global(.rich-mermaid) {
+		display: flex;
+		justify-content: center;
+		padding: 1rem;
+		margin: 1rem 0;
+		background: var(--automataBg);
+		border: 1px solid var(--automataColor);
+		border-radius: 8px;
+	}
+	.rich-content :global(.rich-mermaid svg) {
+		max-width: 100%;
+		height: auto;
 	}
 
 	.rich-content :global(.rich-grading) {
