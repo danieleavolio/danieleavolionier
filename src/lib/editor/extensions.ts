@@ -1,9 +1,11 @@
 import { Node, mergeAttributes } from '@tiptap/core';
 import { gradingRange, parseArrayLiteral } from '$lib/rich-grading';
 
-function nodeToElement(node: any): HTMLElement {
-	if (node?.element instanceof HTMLElement) return node.element as HTMLElement;
-	return node as HTMLElement;
+function nodeToElement(node: unknown): HTMLElement {
+	if (node instanceof HTMLElement) return node;
+	if (node && typeof node === 'object' && 'element' in node && node.element instanceof HTMLElement)
+		return node.element;
+	throw new TypeError('Expected an HTML element for a rich content block');
 }
 
 function readDataArray(element: HTMLElement, attribute: string): string[] {

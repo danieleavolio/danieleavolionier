@@ -42,7 +42,7 @@
 			<button type="button" on:click={create}>Nuovo</button>
 		</div>
 		<ul>
-			{#each data.items as item}
+			{#each data.items as item (item.id)}
 				<li class:active={selected.id === item.id}>
 					<button type="button" class="select-item" on:click={() => edit(item)}>{item.title}</button
 					>

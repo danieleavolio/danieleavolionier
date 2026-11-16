@@ -20,7 +20,7 @@
 
 	{#if categories.length}
 		<div class="tags">
-			{#each categories as category}
+			{#each categories as category, index (index)}
 				<span class="tag">{category}</span>
 			{/each}
 		</div>

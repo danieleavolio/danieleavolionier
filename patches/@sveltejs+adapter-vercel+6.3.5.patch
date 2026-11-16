@@ -1,0 +1,52 @@
+diff --git a/node_modules/@sveltejs/adapter-vercel/index.js b/node_modules/@sveltejs/adapter-vercel/index.js
+index 086bb69..4b267ea 100644
+--- a/node_modules/@sveltejs/adapter-vercel/index.js
++++ b/node_modules/@sveltejs/adapter-vercel/index.js
+@@ -28,6 +28,16 @@ import { VERSION } from '@sveltejs/kit';
+ const name = '@sveltejs/adapter-vercel';
+ const INTERNAL = '![-]'; // this name is guaranteed not to conflict with user routes
+ 
++// Windows directory junctions do not require Developer Mode/admin symlink privileges.
++// Linux/Vercel keeps the adapter's original relative symlinks.
++function link_function(target, link) {
++	if (process.platform === 'win32') {
++		fs.symlinkSync(path.resolve(path.dirname(link), target), link, 'junction');
++	} else {
++		fs.symlinkSync(target, link);
++	}
++}
++
+ const [kit_major, kit_minor] = VERSION.split('.');
+ 
+ // https://vercel.com/docs/functions/edge-functions/edge-runtime#compatible-node.js-modules
+@@ -403,7 +413,7 @@ const plugin = function (defaults = {}) {
+ 
+ 				const relative = path.relative(path.dirname(remote_symlink_path), target);
+ 
+-				fs.symlinkSync(relative, remote_symlink_path);
++				link_function(relative, remote_symlink_path);
+ 
+ 				static_config.routes.push({
+ 					src: `/${app_path}/remote/.+`,
+@@ -429,8 +439,8 @@ const plugin = function (defaults = {}) {
+ 
+ 					// create a symlink to the actual function, but use the
+ 					// route name so that we can derive the correct URL
+-					fs.symlinkSync(relative, `${base}.func`);
+-					fs.symlinkSync(`../${relative}`, `${base}/__data.json.func`);
++					link_function(relative, `${base}.func`);
++					link_function(`../${relative}`, `${base}/__data.json.func`);
+ 
+ 					const pathname = get_pathname(route);
+ 					const json = JSON.stringify(
+@@ -480,8 +490,8 @@ const plugin = function (defaults = {}) {
+ 					const relative_for_data = path.relative(path.dirname(data_symlink_path), target); // This is path.relative(base_dir, target)
+ 
+ 					// Create symlinks
+-					fs.symlinkSync(relative_for_main, main_symlink_path); // Creates functions/index.func -> ![-].func
+-					fs.symlinkSync(relative_for_data, data_symlink_path); // Creates functions/index/__data.json.func -> ../![-].func
++					link_function(relative_for_main, main_symlink_path); // Creates functions/index.func -> ![-].func
++					link_function(relative_for_data, data_symlink_path); // Creates functions/index/__data.json.func -> ../![-].func
+ 
+ 					// Add route to the config
+ 					static_config.routes.push({

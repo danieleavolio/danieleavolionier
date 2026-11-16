@@ -141,7 +141,7 @@ function parseFrontmatter(source) {
 			currentList = key;
 		} else if (raw.trim().startsWith('[')) {
 			values[key] = raw
-				.replace(/[\[\]]/g, '')
+				.replace(/[\u005b\u005d]/g, '')
 				.split(',')
 				.map(parseValue)
 				.filter(Boolean);

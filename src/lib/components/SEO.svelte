@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import type { FaqItem } from '$lib/types';
+	import { serializeJsonLd } from '$lib/seo';
 
 	export let title = '';
 	export let description = '';
@@ -18,11 +18,10 @@
 	export let updateDate = '';
 	export let dateModified = '';
 	export let noindex = false;
-	export let faqItems: FaqItem[] = [];
 
 	const siteName = 'Daniele Avolio';
 	const siteBaseUrl = 'https://www.danieleavolio.it';
-	const fallbackImage = 'https://i.imgur.com/juSgfgF.png';
+	const fallbackImage = `${siteBaseUrl}/images/avatar-640.webp`;
 
 	// Normalizzazione rigorosa del percorso e del Canonical URL (rimuove parametri query e trailing slashes)
 	$: rawPath = ($page.url.pathname || '/').replace(/\/+$/, '') || '/';
@@ -36,12 +35,14 @@
 				? title
 				: `${title} | Daniele Avolio`;
 
-	$: safeDescription = (isReview ? reviewBody : description || '').trim();
+	$: safeDescription = ((isReview ? reviewBody || description : description) || '').trim();
 	$: seoImageInput = (isReview ? gameImage : image) || fallbackImage;
 	$: seoImage = seoImageInput.startsWith('http')
 		? seoImageInput
 		: new URL(seoImageInput, siteBaseUrl).href;
-	$: robotsContent = noindex ? 'noindex,nofollow' : 'index,follow,max-image-preview:large';
+	$: robotsContent = noindex
+		? 'noindex,nofollow'
+		: 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1';
 
 	// Schema.org Breadcrumbs per la navigazione avanzata nei risultati di ricerca Google
 	$: breadcrumbSchema = (() => {
@@ -194,31 +195,15 @@
 						author: personSchema
 					};
 
-	$: faqSchema = faqItems.length
-		? {
-				'@context': 'https://schema.org',
-				'@type': 'FAQPage',
-				mainEntity: faqItems.map((item) => ({
-					'@type': 'Question',
-					name: item.question,
-					acceptedAnswer: {
-						'@type': 'Answer',
-						text: item.answer
-					}
-				}))
-			}
-		: null;
-
-	$: schemaGraph = [
-		primarySchema,
-		...(breadcrumbSchema ? [breadcrumbSchema] : []),
-		...(faqSchema ? [faqSchema] : [])
-	];
+	$: schemaGraph = [primarySchema, ...(breadcrumbSchema ? [breadcrumbSchema] : [])];
+	// FAQ data is not emitted: these answers are not displayed on the page.
 
 	$: finalSchema = {
 		'@context': 'https://schema.org',
 		'@graph': schemaGraph
 	};
+	$: jsonLdMarkup =
+		`<script type="application/ld+json">${serializeJsonLd(finalSchema)}` + '</scr' + 'ipt>';
 </script>
 
 <svelte:head>
@@ -242,7 +227,6 @@
 	<meta name="twitter:image" content={seoImage} />
 	<meta name="twitter:image:alt" content={fullTitle} />
 
-	<script type="application/ld+json">
-		{JSON.stringify(finalSchema)}
-	</script>
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -- serializeJsonLd escapes HTML script terminators; covered by unit tests. -->
+	{@html jsonLdMarkup}
 </svelte:head>

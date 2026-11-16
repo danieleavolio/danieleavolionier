@@ -6,13 +6,20 @@
 	import Link from '$lib/components/Link.svelte';
 
 	onMount(() => {
-		pagedata.addEventListener('mousemove', (e) => {
-			let rect = pagedata.getBoundingClientRect();
-			const left = e.clientX - rect.left;
-			const top = e.clientY - rect.top;
-			pagedata.style.setProperty('--left', `${left}px`);
-			pagedata.style.setProperty('--top', `${top}px`);
-		});
+		let frame = 0;
+		const handleMousemove = (e: MouseEvent) => {
+			cancelAnimationFrame(frame);
+			frame = requestAnimationFrame(() => {
+				const rect = pagedata.getBoundingClientRect();
+				pagedata.style.setProperty('--left', `${e.clientX - rect.left}px`);
+				pagedata.style.setProperty('--top', `${e.clientY - rect.top}px`);
+			});
+		};
+		pagedata.addEventListener('mousemove', handleMousemove);
+		return () => {
+			pagedata.removeEventListener('mousemove', handleMousemove);
+			cancelAnimationFrame(frame);
+		};
 	});
 </script>
 
@@ -23,7 +30,16 @@
 	</div>
 	<div class="outer-box">
 		<div class="inner-box">
-			<img alt="Daniele Avolio Avatar" src="images/avatar.png" />
+			<img
+				alt="Daniele Avolio Avatar"
+				src="/images/avatar-640.webp"
+				srcset="/images/avatar-320.webp 320w, /images/avatar-640.webp 640w"
+				sizes="320px"
+				width="640"
+				height="640"
+				fetchpriority="high"
+				decoding="async"
+			/>
 			<div class="main-features">
 				<p></p>
 				<p class="content">

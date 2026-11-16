@@ -8,7 +8,7 @@
 	export let activeFilters: string[] = [];
 	export let isShowing = false;
 	let filters: HTMLElement;
-	const dispatch = createEventDispatcher();
+	const dispatch = createEventDispatcher<{ filter: string[] }>();
 
 	export const openForce = () => {
 		isShowing = true;
@@ -33,27 +33,26 @@
 	export const clearFilters = () => {
 		activeFilters = [];
 
-		let items = document.querySelectorAll('.filter-item');
-		items.forEach((item: any) => {
-			item.firstChild?.style.setProperty('opacity', '0');
+		const items = filters.querySelectorAll<HTMLElement>('.filter-item');
+		items.forEach((item) => {
+			item.querySelector<HTMLElement>('.backdrop')?.style.setProperty('opacity', '0');
 			item.style.setProperty('color', 'var(--automataColor)');
 		});
 		dispatch('filter', activeFilters);
 	};
 	export const setActive = (i: number) => {
-		let target: any = document.getElementById(`-${i}`);
-		// console.log(target?.textContent);
-
-		let filter = target?.textContent;
-		if (activeFilters.includes(filter!)) {
+		const target = document.getElementById(`-${i}`);
+		const filter = categories[i];
+		if (!target || !filter) return;
+		if (activeFilters.includes(filter)) {
 			activeFilters = activeFilters.filter((item) => item !== filter);
 			// target the first child and set the style
-			target?.firstChild?.style.setProperty('opacity', '0');
+			target.querySelector<HTMLElement>('.backdrop')?.style.setProperty('opacity', '0');
 			target.style.setProperty('color', 'var(--automataColor)');
 		} else {
-			activeFilters = [...activeFilters, filter!];
+			activeFilters = [...activeFilters, filter];
 			// target the first child and set the style
-			target?.firstChild?.style.setProperty('opacity', '1');
+			target.querySelector<HTMLElement>('.backdrop')?.style.setProperty('opacity', '1');
 			target.style.setProperty('color', 'var(--automataBg)');
 		}
 
@@ -73,8 +72,7 @@
 		{/if}
 	</div>
 	<div bind:this={filters} class="filters">
-		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-		{#each categories as category, i}
+		{#each categories as category, i (category)}
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<div on:click={() => setActive(i)}>

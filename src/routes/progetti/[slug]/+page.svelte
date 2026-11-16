@@ -2,7 +2,6 @@
 	import { formatDate } from '$lib/utils';
 	import Author from '$lib/components/Author.svelte';
 	import Seo from '$lib/components/SEO.svelte';
-	import type { Element } from '$lib/types';
 	import * as config from '$lib/config';
 	import Tag from '$lib/components/Tag.svelte';
 	import RichContent from '$lib/components/RichContent.svelte';
@@ -11,7 +10,7 @@
 	export let data: PageData;
 
 	const siteUrl = config.url.replace(/\/$/, '');
-	let metadata: Element = data.meta;
+	$: metadata = data.meta;
 	$: metadataCategories = Array.isArray(metadata.categories) ? metadata.categories : [];
 	$: fallbackOg = `${siteUrl}/og/progetti/${data.slug}.svg`;
 	$: seoImage = metadata.image || fallbackOg;
@@ -22,9 +21,9 @@
 	description={metadata.description}
 	image={seoImage}
 	isArticle={true}
-	author={'Daniele Avolio'}
+	author="Daniele Avolio"
 	publishDate={metadata.date}
-	dateModified={metadata.date}
+	dateModified={metadata.updatedAt || metadata.date}
 	articleBody={metadata.description}
 />
 
@@ -36,7 +35,7 @@
 	</hgroup>
 
 	<div class="tags">
-		{#each metadataCategories as category}
+		{#each metadataCategories as category, index (index)}
 			<Tag {category} from="progetti" />
 		{/each}
 	</div>

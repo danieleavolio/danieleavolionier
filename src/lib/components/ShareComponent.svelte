@@ -10,14 +10,6 @@
 		window.open(twitterUrl, '_blank', 'width=500,height=400');
 	}
 
-	// Funzione per aprire una finestra popup di condivisione su Reddit
-	function shareOnReddit() {
-		const redditUrl = `https://www.reddit.com/submit?url=${encodeURIComponent(
-			postUrl
-		)}&title=${encodeURIComponent(postTitle)}`;
-		window.open(redditUrl, '_blank', 'width=500,height=400');
-	}
-
 	// Funzione per copiare il link del post negli appunti
 	function copyLink() {
 		navigator.clipboard.writeText(postUrl);
@@ -27,7 +19,7 @@
 <!-- HTML per i pulsanti di condivisione -->
 <div class="share-buttons">
 	<button on:click={shareOnTwitter} class="twitter-share">
-		<img src={`https://simpleicons.org/icons/x.svg`} alt="twitter" />Condividi su X</button
+		<img src="https://simpleicons.org/icons/x.svg" alt="twitter" />Condividi su X</button
 	>
 	<button on:click={copyLink} class="copy-link"> Copia il link</button>
 </div>

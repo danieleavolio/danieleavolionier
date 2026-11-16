@@ -46,6 +46,36 @@ npm run build
 npm run preview
 ```
 
+La build completa funziona anche su Windows senza privilegi symlink: `npm ci`
+applica una patch mirata all'adapter che usa junction solo su Windows, senza
+cambiare i symlink Linux/Vercel. `npm run build:preview` resta disponibile per
+compilare gli stessi bundle senza il confezionamento Vercel.
+
+## Performance, SEO e test
+
+Le pagine pubbliche aggiornabili usano ISR Vercel con scadenza di 300 secondi;
+Data, Appunti e Privacy sono prerenderizzate. L'admin e gli upload restano privati
+e senza cache condivisa. Le modifiche ai contenuti possono essere visibili dopo
+la successiva rigenerazione, non necessariamente subito dopo il salvataggio.
+
+```bash
+npm run lint
+npm run check
+npm test
+npm run build
+npx playwright install chromium
+npm run test:e2e
+```
+
+I test browser usano letture pubbliche del CMS, senza salvare o eliminare contenuti.
+Per rigenerare le immagini ottimizzate e le risorse grafiche locali:
+
+```bash
+npm run assets:optimize
+```
+
+Misure, limiti noti e verifiche prima/dopo il deploy: [Performance e SEO](docs/performance-and-seo.md).
+
 ## Nuovi contenuti
 
 Crea bozza post:

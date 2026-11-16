@@ -8,6 +8,8 @@ import {
 import { convertGradingTags } from '$lib/rich-grading';
 import { repairPlainMarkdownHtml } from '$lib/server/markdown-repair';
 import type { RichTextDocument } from '$lib/types';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { ContentRow } from './content-row';
 
 export type ContentTable = 'posts' | 'projects';
 
@@ -25,7 +27,7 @@ export type EditableContent = {
 	metadata: Record<string, unknown>;
 };
 
-function normalizeRow(row: Record<string, any>): EditableContent {
+function normalizeRow(row: ContentRow): EditableContent {
 	const metadata = row.metadata && typeof row.metadata === 'object' ? row.metadata : {};
 	return {
 		slug: row.slug ?? '',
@@ -43,7 +45,7 @@ function normalizeRow(row: Record<string, any>): EditableContent {
 }
 
 export async function listAdminContent(
-	supabase: any,
+	supabase: SupabaseClient,
 	table: ContentTable
 ): Promise<EditableContent[]> {
 	const { data, error: queryError } = await supabase
@@ -80,7 +82,7 @@ function parseJson(value: FormDataEntryValue | null): Record<string, unknown> | 
 }
 
 export async function saveContent(
-	supabase: any,
+	supabase: SupabaseClient,
 	table: ContentTable,
 	form: FormData
 ): Promise<void> {
@@ -153,7 +155,7 @@ export async function saveContent(
 }
 
 export async function removeContent(
-	supabase: any,
+	supabase: SupabaseClient,
 	table: ContentTable,
 	slug: string
 ): Promise<void> {

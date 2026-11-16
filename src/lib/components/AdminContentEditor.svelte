@@ -53,10 +53,6 @@
 		slugManuallyEdited = true;
 	}
 
-	function syncReview() {
-		item.metadata = buildMetadata();
-	}
-
 	let mode: 'edit' | 'preview' = 'edit';
 	let zen = false;
 
@@ -153,20 +149,24 @@
 					<label class="checkbox"
 						><input
 							type="checkbox"
-							bind:checked={review.isReview}
+							checked={review.isReview}
 							on:change={(event) => updateReview('isReview', event.currentTarget.checked)}
 						/> È una recensione</label
 					>
 					{#if review.isReview}
 						<label for="gameName">Nome gioco</label>
-						<input id="gameName" bind:value={review.gameName} on:input={syncReview} />
+						<input
+							id="gameName"
+							value={review.gameName}
+							on:input={(event) => updateReview('gameName', event.currentTarget.value)}
+						/>
 						<label for="gameImage">Immagine gioco (URL o percorso)</label>
 						<input
 							id="gameImage"
 							type="text"
 							placeholder="https://... oppure /images/..."
-							bind:value={review.gameImage}
-							on:input={syncReview}
+							value={review.gameImage}
+							on:input={(event) => updateReview('gameImage', event.currentTarget.value)}
 						/>
 						<label for="ratingValue">Voto</label>
 						<input
@@ -175,11 +175,15 @@
 							min="0"
 							max="10"
 							step="0.1"
-							bind:value={review.ratingValue}
-							on:input={syncReview}
+							value={review.ratingValue}
+							on:input={(event) => updateReview('ratingValue', event.currentTarget.value)}
 						/>
 						<label for="developer">Sviluppatore</label>
-						<input id="developer" bind:value={review.developer} on:input={syncReview} />
+						<input
+							id="developer"
+							value={review.developer}
+							on:input={(event) => updateReview('developer', event.currentTarget.value)}
+						/>
 					{/if}
 				</fieldset>
 			{/if}

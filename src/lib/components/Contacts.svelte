@@ -25,7 +25,7 @@
 
 <div class="contacts">
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	{#each contacts as contact}
+	{#each contacts as contact (contact.url)}
 		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 		<img
 			src={`https://simpleicons.org/icons/${contact.icon}.svg`}

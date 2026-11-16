@@ -3,6 +3,8 @@ import { sanitizeContentHtml } from '$lib/server/sanitize';
 import { convertGradingTags } from '$lib/rich-grading';
 import { repairPlainMarkdownHtml } from '$lib/server/markdown-repair';
 import type { Element, NowItem } from '$lib/types';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { ContentRow } from './content-row';
 
 export type ContentTable = 'posts' | 'projects';
 
@@ -41,7 +43,7 @@ export function markdownToHtml(
 	return sanitizeContentHtml(rendered);
 }
 
-function toElement(row: Record<string, any>, contentType?: ContentTable): Element {
+function toElement(row: ContentRow, contentType?: ContentTable): Element {
 	const metadata = row.metadata && typeof row.metadata === 'object' ? row.metadata : {};
 	const normalizedMetadata = { ...metadata, ...(contentType ? { contentType } : {}) };
 	return {
@@ -71,7 +73,7 @@ function toElement(row: Record<string, any>, contentType?: ContentTable): Elemen
 }
 
 export async function listPublishedContent(
-	supabase: any,
+	supabase: SupabaseClient,
 	table: ContentTable,
 	includeDrafts = false
 ): Promise<Element[]> {
@@ -79,23 +81,26 @@ export async function listPublishedContent(
 	if (!includeDrafts) query = query.eq('published', true);
 	const { data, error } = await query;
 	if (error) throw error;
-	return (data ?? []).map((row: Record<string, any>) => toElement(row, table));
+	return (data ?? []).map((row: ContentRow) => toElement(row, table));
 }
 
 export async function getContentBySlug(
-	supabase: any,
+	supabase: SupabaseClient,
 	table: ContentTable,
 	slug: string,
 	includeDrafts = false
 ): Promise<Element | null> {
-	let query = supabase.from(table).select('*').eq('slug', slug).maybeSingle();
+	let query = supabase.from(table).select('*').eq('slug', slug);
 	if (!includeDrafts) query = query.eq('published', true);
-	const { data, error } = await query;
+	const { data, error } = await query.maybeSingle<ContentRow>();
 	if (error) throw error;
 	return data ? toElement(data, table) : null;
 }
 
-export async function listNowItems(supabase: any, includeDrafts = false): Promise<NowItem[]> {
+export async function listNowItems(
+	supabase: SupabaseClient,
+	includeDrafts = false
+): Promise<NowItem[]> {
 	let query = supabase.from('now_items').select('*').order('position', { ascending: true });
 	if (!includeDrafts) query = query.eq('published', true);
 	const { data, error } = await query;
@@ -103,7 +108,7 @@ export async function listNowItems(supabase: any, includeDrafts = false): Promis
 	return (data ?? []) as NowItem[];
 }
 
-export async function searchContent(supabase: any): Promise<Element[]> {
+export async function searchContent(supabase: SupabaseClient): Promise<Element[]> {
 	const [posts, projects] = await Promise.all([
 		listPublishedContent(supabase, 'posts'),
 		listPublishedContent(supabase, 'projects')

@@ -21,7 +21,6 @@
 <svelte:window on:keydown={handleKeyDown} />
 
 {#if open}
-	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<div
 		class="modal-backdrop"
 		transition:fade={{ duration: 150 }}

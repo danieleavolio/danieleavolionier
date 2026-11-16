@@ -10,6 +10,8 @@ export type Element = {
 	date: string;
 	categories: string[];
 	published: boolean;
+	updatedAt?: string;
+	readingTime?: number;
 	image?: string;
 	contentHtml?: string;
 	contentJson?: RichTextDocument | null;

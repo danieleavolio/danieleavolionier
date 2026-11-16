@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
 
-	export let showModal: any; // boolean
+	export let showModal = false;
 	export let isSearch = false; // boolean
 
-	export let dialog: any = 0; // HTMLDialogElement
+	export let dialog: HTMLDialogElement | undefined = undefined;
 
 	$: if (dialog && showModal) {
 		dialog.showModal();
@@ -13,15 +13,15 @@
 
 	const close = () => {
 		showModal = false;
-		dialog.close();
+		dialog?.close();
 	};
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <dialog
 	bind:this={dialog}
 	on:close={close}
-	on:click|self={() => dialog.close()}
+	on:click|self={() => dialog?.close()}
 	transition:fade
 	class:search={isSearch}
 >
@@ -30,9 +30,9 @@
 		<slot name="header" />
 		<slot class="internal" />
 		<!-- svelte-ignore a11y-autofocus -->
-		<!-- svelte-ignore a11y-invalid-attribute -->
-		<!-- svelte-ignore a11y-missing-attribute -->
-		<a autofocus on:click={() => dialog.close()}>CHIUDI</a>
+		<button type="button" class="nier-button" autofocus on:click={() => dialog?.close()}
+			>CHIUDI</button
+		>
 	</div>
 </dialog>
 
@@ -87,7 +87,7 @@
 			opacity: 1;
 		}
 	}
-	a {
+	.nier-button {
 		display: block;
 		margin: auto;
 	}

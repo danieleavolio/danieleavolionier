@@ -1,11 +1,9 @@
 <script lang="ts">
-	import * as config from '$lib/config';
 	import { Square } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
-	import type { Element, FaqItem } from '$lib/types';
+	import type { Element } from '$lib/types';
 	import Profile from './profile.svelte';
-	import { goto } from '$app/navigation';
 	import Seo from '$lib/components/SEO.svelte';
 	import { formatDate } from '$lib/utils';
 
@@ -13,19 +11,6 @@
 
 	let items_container: HTMLElement;
 	let totalPassword = '';
-
-	const faqItems: FaqItem[] = [
-		{
-			question: 'Che contenuti trovo su danieleavolio.it?',
-			answer:
-				'Trovi articoli tecnici su sviluppo web e AI, una raccolta di progetti personali e appunti universitari gratuiti.'
-		},
-		{
-			question: 'Con quale frequenza vengono pubblicati nuovi contenuti?',
-			answer:
-				'I contenuti vengono aggiornati in base ai nuovi progetti e alle nuove esperienze professionali.'
-		}
-	];
 
 	$: posts = Array.isArray(data.posts) ? data.posts : [];
 	$: projects = Array.isArray(data.progetti) ? data.progetti : [];
@@ -73,9 +58,9 @@
 	title="Daniele Avolio - Data Engineer @ AgileLab"
 	description="Daniele Avolio - Data Engineer @ AgileLab. Laureato magistrale in Informatica e AI all'Unical. Specializzato in Apache Spark, Databricks, GCP, Airflow e sviluppo web."
 	image="https://i.imgur.com/juSgfgF.png"
-	{faqItems}
 />
 
+<h1 class="sr-only">Daniele Avolio - Data Engineer @ AgileLab</h1>
 <div class="separator">
 	<section class="section-1">
 		<li class="post">
@@ -94,7 +79,7 @@
 	<article class="latest-panel">
 		<h2>Ultimi articoli</h2>
 		<ul>
-			{#each latestPosts as post}
+			{#each latestPosts as post (post.slug)}
 				<li>
 					<a href={`/pagine/${post.slug}`}>{post.title}</a>
 					<p>{formatDate(post.date)}</p>
@@ -109,7 +94,7 @@
 	<article class="latest-panel">
 		<h2>Ultimi progetti</h2>
 		<ul>
-			{#each latestProjects as project}
+			{#each latestProjects as project (project.slug)}
 				<li>
 					<a href={`/progetti/${project.slug}`}>{project.title}</a>
 					<p>{formatDate(project.date)}</p>

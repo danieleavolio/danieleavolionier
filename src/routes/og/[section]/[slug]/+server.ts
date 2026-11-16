@@ -5,7 +5,7 @@ export const prerender = false;
 
 export async function GET({ params, locals }) {
 	const section = params.section;
-	const slug = params.slug;
+	const slug = params.slug.replace(/\.svg$/, '');
 
 	if (!['pagine', 'progetti'].includes(section) || !/^[a-zA-Z0-9-]+$/.test(slug)) {
 		throw error(404, 'Not found');
@@ -14,7 +14,8 @@ export async function GET({ params, locals }) {
 	const item = await getContentBySlug(
 		locals.supabase,
 		section === 'pagine' ? 'posts' : 'projects',
-		slug
+		slug,
+		{ metadataOnly: true }
 	);
 	if (!item) {
 		throw error(404, 'Not found');

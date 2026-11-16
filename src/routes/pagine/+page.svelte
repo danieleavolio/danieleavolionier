@@ -1,7 +1,6 @@
 <script lang="ts">
 	import CategoriesFilter from '$lib/components/CategoriesFilter.svelte';
-	import * as config from '$lib/config';
-	import type { Element, FaqItem } from '$lib/types';
+	import type { Element } from '$lib/types';
 	import { formatDate, calculateReadingTime } from '$lib/utils';
 	import { slide } from 'svelte/transition';
 	import { BoxSelect } from 'lucide-svelte';
@@ -13,20 +12,8 @@
 
 	export let data: PageData;
 
-	const faqItems: FaqItem[] = [
-		{
-			question: 'Come cerco articoli per argomento?',
-			answer:
-				'Puoi usare il filtro categorie per restringere i post su temi come SvelteKit, programmazione, recensioni e AI.'
-		},
-		{
-			question: 'I post sono ordinati per data?',
-			answer: 'Si, i contenuti vengono mostrati dal piu recente al piu vecchio.'
-		}
-	];
-
 	let activeFilters: string[] = [];
-	let CatFilter: any;
+	let CatFilter: CategoriesFilter;
 	let categories: string[] = [];
 	const allPosts: Element[] = Array.isArray(data.posts) ? data.posts : [];
 	let postToShow: Element[] = allPosts;
@@ -80,20 +67,20 @@
 	title="Blog & Articoli Tecnici"
 	description="Articoli, tutorial e approfondimenti su sviluppo web, frontend, intelligenza artificiale e programmazione scritti da Daniele Avolio."
 	image="https://i.imgur.com/juSgfgF.png"
-	{faqItems}
 />
 
+<h1 class="sr-only">Blog e articoli tecnici</h1>
 <section>
 	<ul class="posts">
-		{#each postToShow as post}
+		{#each postToShow as post (post.slug)}
 			<li transition:slide class="post">
 				<a href={`/pagine/${post.slug}`} class="title">{post.title}</a>
 				<p class="date">
-					{formatDate(post.date)} · {calculateReadingTime(post.contentHtml || post.description)} min lettura
+					{formatDate(post.date)} · {post.readingTime ?? calculateReadingTime(post.description)} min lettura
 				</p>
 				<p class="description">{post.description}</p>
 				<div class="tags">
-					{#each getCategories(post) as category}
+					{#each getCategories(post) as category, index (index)}
 						<Tag from="pagine" {category} isActive={activeFilters.includes(category)} />
 					{/each}
 				</div>

@@ -7,11 +7,23 @@
 	let container: HTMLElement;
 
 	onMount(() => {
-		void renderMermaidBlocks(container);
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (!entry.isIntersecting) continue;
+					observer.unobserve(entry.target);
+					void renderMermaidBlocks(entry.target as HTMLElement);
+				}
+			},
+			{ rootMargin: '400px' }
+		);
+		container.querySelectorAll('pre').forEach((block) => observer.observe(block));
+		return () => observer.disconnect();
 	});
 </script>
 
 <div class="rich-content prose" bind:this={container}>
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -- CMS HTML is sanitized on save; rendering preserves authored rich blocks. -->
 	{@html html}
 </div>
 

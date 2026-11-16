@@ -4,7 +4,16 @@
 
 	import 'open-props/buttons';
 	import 'open-props/normalize';
-	import 'open-props/style';
+	// Same tokens as the full stylesheet, without unused gradient/palette catalogs.
+	import 'open-props/fonts';
+	import 'open-props/sizes';
+	import 'open-props/easings';
+	import 'open-props/zindex';
+	import 'open-props/shadows';
+	import 'open-props/aspects';
+	import 'open-props/colors';
+	import 'open-props/animations';
+	import 'open-props/borders';
 
 	import '../app.css';
 
@@ -16,7 +25,6 @@
 	import { inject } from '@vercel/analytics';
 
 	export let data;
-	inject({ mode: dev ? 'development' : 'production' });
 
 	import { onMount } from 'svelte';
 
@@ -29,6 +37,10 @@
 
 	let globalSecretSequence = '';
 	onMount(() => {
+		// The Vercel analytics endpoint does not exist in local production previews.
+		if (!dev && !['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname)) {
+			inject({ mode: 'production' });
+		}
 		const handleGlobalKeydown = (e: KeyboardEvent) => {
 			const target = e.target as HTMLElement | null;
 			// Ignora se l'utente sta digitando in un input o textarea

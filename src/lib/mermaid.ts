@@ -2,6 +2,7 @@ const MERMAID_SOURCE_PATTERN =
 	/^\s*(?:flowchart|graph|sequenceDiagram|classDiagram|stateDiagram(-v2)?|erDiagram|journey|gantt|pie|mindmap|timeline|gitGraph|quadrantChart|block-beta)\b/;
 
 const MERMAID_LABEL_PATTERN = /\bmermaid\b/i;
+let diagramSequence = 0;
 
 /**
  * NieR:Automata-styled theme: flat dark plates with the beige page palette,
@@ -178,13 +179,15 @@ export async function renderMermaidBlocks(container: HTMLElement): Promise<void>
 	// before the first render.
 	await document.fonts?.ready;
 
-	let index = 0;
 	for (const code of candidates) {
 		const source = (code.textContent ?? '').trim();
 		const holder = document.createElement('div');
 		holder.className = 'rich-mermaid';
 		try {
-			const { svg } = await mermaid.render(`rich-mermaid-${Date.now()}-${index++}`, source);
+			const { svg } = await mermaid.render(
+				`rich-mermaid-${Date.now()}-${diagramSequence++}`,
+				source
+			);
 			holder.innerHTML = svg;
 			code.parentElement?.replaceWith(holder);
 			flattenGeometry(holder);

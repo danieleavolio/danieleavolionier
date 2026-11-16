@@ -1,17 +1,7 @@
 <script>
-	import { Square } from 'lucide-svelte';
-
 	export let title = '';
 	export let description = '';
 	export let downloadLink = '';
-
-	// console.log(title);
-	// console.log(description);
-	// console.log(downloadLink);
-
-	const download = () => {
-		console.log('Download');
-	};
 </script>
 
 <div class="note-holder">

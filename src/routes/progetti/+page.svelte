@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { formatDate } from '$lib/utils';
-	import * as config from '$lib/config';
 	import CategoriesFilter from '$lib/components/CategoriesFilter.svelte';
-	import type { Element, FaqItem } from '$lib/types';
+	import type { Element } from '$lib/types';
 	import { BoxSelect } from 'lucide-svelte';
 	import { slide } from 'svelte/transition';
 	import Seo from '$lib/components/SEO.svelte';
@@ -13,20 +12,8 @@
 
 	export let data: PageData;
 
-	const faqItems: FaqItem[] = [
-		{
-			question: 'Che tipo di progetti trovo in questa pagina?',
-			answer:
-				'Trovi progetti web, data e software engineering con descrizione tecnica e tecnologie usate.'
-		},
-		{
-			question: 'Posso filtrare i progetti per tecnologia?',
-			answer: 'Si, puoi filtrare i progetti per categoria usando il pannello filtri laterale.'
-		}
-	];
-
 	let activeFilters: string[] = [];
-	let CatFilter: any;
+	let CatFilter: CategoriesFilter;
 	let categories: string[] = [];
 	const allProjects: Element[] = Array.isArray(data.progetti) ? data.progetti : [];
 	let projectToShow: Element[] = allProjects;
@@ -81,18 +68,18 @@
 	title="Progetti & Portfolio Software"
 	description="Raccolta dei progetti software, web app, esperimenti AI e videogiochi realizzati da Daniele Avolio."
 	image="https://i.imgur.com/juSgfgF.png"
-	{faqItems}
 />
 
+<h1 class="sr-only">Progetti e portfolio software</h1>
 <section>
 	<ul class="posts">
-		{#each projectToShow as progetto}
+		{#each projectToShow as progetto (progetto.slug)}
 			<li transition:slide class="post">
 				<a href={`/progetti/${progetto.slug}`} class="title">{progetto.title}</a>
 				<p class="date">{formatDate(progetto.date)}</p>
 				<p class="description">{progetto.description}</p>
 				<div class="tags">
-					{#each getCategories(progetto) as category}
+					{#each getCategories(progetto) as category, index (index)}
 						<Tag {category} from="progetti" isActive={activeFilters.includes(category)} />
 					{/each}
 				</div>

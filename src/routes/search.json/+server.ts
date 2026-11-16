@@ -1,13 +1,24 @@
 import { json } from '@sveltejs/kit';
-import { searchContent } from '$lib/server/public-content';
+import { listPublishedContent } from '$lib/server/public-content';
+
+export const config = { isr: { expiration: 300 } };
 
 export async function GET({ locals }) {
-	const content = await searchContent(locals.supabase);
-	const posts = content.filter((item) => item.slug && item.metadata?.contentType === 'posts');
-	const progetti = content.filter((item) => item.slug && item.metadata?.contentType === 'projects');
+	const [posts, progetti] = await Promise.all([
+		listPublishedContent(locals.supabase, 'posts'),
+		listPublishedContent(locals.supabase, 'projects')
+	]);
 
 	return json({
-		posts: posts.map((post) => ({ ...post, slug: `pagine/${post.slug}` })),
-		progetti: progetti.map((project) => ({ ...project, slug: `progetti/${project.slug}` }))
+		posts: posts.map(({ slug, title, description }) => ({
+			slug: `pagine/${slug}`,
+			title,
+			description
+		})),
+		progetti: progetti.map(({ slug, title, description }) => ({
+			slug: `progetti/${slug}`,
+			title,
+			description
+		}))
 	});
 }

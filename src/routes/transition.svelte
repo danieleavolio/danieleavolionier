@@ -1,22 +1,9 @@
 <script lang="ts">
-	import { cubicOut } from 'svelte/easing';
-	import { fade } from 'svelte/transition';
-
 	export let url: string;
-
-	const inTransition = {
-		duration: 320,
-		easing: cubicOut
-	};
-
-	const outTransition = {
-		duration: 180,
-		easing: cubicOut
-	};
 </script>
 
 {#key url}
-	<div class="transition" in:fade={inTransition} out:fade={outTransition}>
+	<div class="transition">
 		<slot />
 	</div>
 {/key}
@@ -26,8 +13,7 @@
 		position: relative;
 		height: 100%;
 		isolation: isolate;
-		will-change: opacity, filter, transform;
-		animation: glitch-enter 320ms steps(7, end);
+		animation: glitch-enter 140ms steps(7, end);
 	}
 
 	.transition::before,
@@ -48,7 +34,7 @@
 		background-size:
 			34px 34px,
 			34px 34px;
-		animation: pixel-overlay 320ms steps(8, end);
+		animation: pixel-overlay 140ms steps(8, end);
 	}
 
 	.transition::after {
@@ -61,7 +47,7 @@
 				transparent 4px 8px
 			),
 			linear-gradient(90deg, rgba(205, 103, 77, 0.22), rgba(77, 73, 62, 0.18));
-		animation: scan-flicker 320ms steps(10, end);
+		animation: scan-flicker 140ms steps(10, end);
 	}
 
 	@keyframes glitch-enter {
@@ -116,6 +102,14 @@
 		100% {
 			opacity: 0;
 			transform: none;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.transition,
+		.transition::before,
+		.transition::after {
+			animation: none;
 		}
 	}
 </style>

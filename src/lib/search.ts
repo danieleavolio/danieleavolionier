@@ -21,7 +21,9 @@ export interface SearchResult {
 let searchIndex: FlexSearch.Index;
 let allEntries: SearchEntry[] = [];
 
-export function createIndex(data: { posts: Element[]; progetti: Element[] }) {
+type SearchSource = Pick<Element, 'slug' | 'title' | 'description'>;
+
+export function createIndex(data: { posts: SearchSource[]; progetti: SearchSource[] }) {
 	searchIndex = new FlexSearch.Index({ tokenize: 'forward' });
 
 	const postEntries: SearchEntry[] = (data.posts || []).map((p) => ({

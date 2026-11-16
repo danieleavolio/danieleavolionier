@@ -1,39 +1,49 @@
 <script lang="ts">
-	import { createIndex, searchPostsIndex, type SearchResult } from '$lib/search';
+	import type { SearchResult } from '$lib/search';
 	import { onMount, tick } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import Modal from './Modal.svelte';
 	import { goto } from '$app/navigation';
 
-	let search: 'loading' | 'ready' = 'loading';
+	let search: 'loading' | 'ready' | 'error' = 'loading';
 	let searchTerm = '';
 	let results: SearchResult[] = [];
 	let showModal = false;
 	let dialog: HTMLDialogElement;
 	let searchInput: HTMLInputElement;
 	let selectedIndex = 0;
-	let isMac = false;
+	let searchApi: typeof import('$lib/search') | undefined;
+	let loadPromise: Promise<void> | undefined;
+
+	function loadSearch(): Promise<void> {
+		if (loadPromise) return loadPromise;
+		search = 'loading';
+		loadPromise = (async () => {
+			const [api, posts] = await Promise.all([
+				import('$lib/search'),
+				fetch('/search.json').then((response) => {
+					if (!response.ok) throw new Error(`Search returned ${response.status}`);
+					return response.json();
+				})
+			]);
+			api.createIndex(posts);
+			searchApi = api;
+			search = 'ready';
+		})().catch((error) => {
+			console.error('Failed to load search data:', error);
+			search = 'error';
+			loadPromise = undefined;
+		});
+		return loadPromise;
+	}
 
 	onMount(() => {
-		if (typeof navigator !== 'undefined') {
-			isMac = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform || navigator.userAgent);
-		}
-
-		fetch('/search.json')
-			.then((res) => res.json())
-			.then((posts) => {
-				createIndex(posts);
-				search = 'ready';
-			})
-			.catch((err) => {
-				console.error('Failed to load search data:', err);
-			});
-
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
 				e.preventDefault();
 				showModal = !showModal;
 				if (showModal) {
+					void loadSearch();
 					tick().then(() => searchInput?.focus());
 				}
 				return;
@@ -68,8 +78,8 @@
 		};
 	});
 
-	$: if (search === 'ready') {
-		results = searchPostsIndex(searchTerm);
+	$: if (search === 'ready' && searchApi) {
+		results = searchApi.searchPostsIndex(searchTerm);
 		selectedIndex = 0;
 	}
 
@@ -105,9 +115,12 @@
 
 <div class="search-icon">
 	<button
+		on:pointerenter={() => void loadSearch()}
+		on:focus={() => void loadSearch()}
 		on:click={() => {
 			showModal = !showModal;
 			if (showModal) {
+				void loadSearch();
 				tick().then(() => searchInput?.focus());
 			}
 		}}
@@ -138,7 +151,6 @@
 					<ul>
 						{#each results as result, i (result.slug)}
 							<!-- svelte-ignore a11y-click-events-have-key-events -->
-							<!-- svelte-ignore a11y-no-static-element-interactions -->
 							<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 							<li
 								on:click={() => selectResult(result)}
@@ -151,10 +163,12 @@
 										[{formatType(result.type)}]
 									</span>
 									<h3>
+										<!-- eslint-disable-next-line svelte/no-at-html-tags -- Search highlights escape input with escapeHtml before adding mark tags. -->
 										{@html result.title}
 									</h3>
 								</div>
 								{#if result.content && result.content.length > 0}
+									<!-- eslint-disable-next-line svelte/no-at-html-tags -- Search snippets use the same escaped highlighting helper. -->
 									<p>{@html result.content.join(' ')}</p>
 								{/if}
 							</li>
@@ -175,6 +189,13 @@
 				<span><kbd>ESC</kbd> Chiudi</span>
 			</div>
 		</div>
+	{:else if search === 'error'}
+		<div class="search" role="status">
+			<p>Ricerca temporaneamente non disponibile.</p>
+			<button on:click={() => void loadSearch()}>Riprova</button>
+		</div>
+	{:else}
+		<p class="search" role="status">Caricamento ricerca…</p>
 	{/if}
 </Modal>
 

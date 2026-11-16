@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Author from '$lib/components/Author.svelte';
 	import Seo from '$lib/components/SEO.svelte';
-	import type { Element } from '$lib/types';
 	import * as config from '$lib/config';
 	import { formatDate, calculateReadingTime } from '$lib/utils';
 	import Tag from '$lib/components/Tag.svelte';
@@ -13,7 +12,7 @@
 	export let data: PageData;
 
 	const siteUrl = config.url.replace(/\/$/, '');
-	let metadata: Element = data.meta;
+	$: metadata = data.meta;
 	$: metadataCategories = Array.isArray(metadata.categories) ? metadata.categories : [];
 	$: fallbackOg = `${siteUrl}/og/pagine/${data.slug}.svg`;
 	$: seoImage = metadata.image || fallbackOg;
@@ -30,7 +29,7 @@
 		ratingValue={metadata.ratingValue}
 		reviewBody={metadata.reviewBody}
 		developer={metadata.developer}
-		author={'Daniele Avolio'}
+		author="Daniele Avolio"
 		publishDate={metadata.date}
 	/>
 {:else}
@@ -39,10 +38,10 @@
 		description={metadata.description}
 		image={seoImage}
 		isArticle={true}
-		author={'Daniele Avolio'}
+		author="Daniele Avolio"
 		articleBody={metadata.description}
 		publishDate={metadata.date}
-		dateModified={metadata.date}
+		dateModified={metadata.updatedAt || metadata.date}
 	/>
 {/if}
 <article>
@@ -60,7 +59,7 @@
 	</hgroup>
 
 	<div class="tags">
-		{#each metadataCategories as category}
+		{#each metadataCategories as category, index (index)}
 			<Tag {category} from="pagine" />
 		{/each}
 	</div>

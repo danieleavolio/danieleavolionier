@@ -2,7 +2,6 @@
 	import NotesHolder from '$lib/components/NotesHolder.svelte';
 	import { notes } from '$lib/notes_files_desc';
 	import Highlit from '$lib/components/Highlit.svelte';
-	import * as config from '$lib/config';
 	import Seo from '$lib/components/SEO.svelte';
 </script>
 
@@ -37,7 +36,7 @@
 	</div>
 
 	<div class="notes">
-		{#each notes as note}
+		{#each notes as note, index (index)}
 			<NotesHolder
 				title={note.title}
 				description={note.description}

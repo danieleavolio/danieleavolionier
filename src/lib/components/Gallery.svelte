@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Modal from './Modal.svelte';
 
-	export let images: string | any[] = [];
+	export let images: string | string[] = [];
 	let currentIndex = 0;
 	let imageClicked = false;
 

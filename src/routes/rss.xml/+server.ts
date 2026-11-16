@@ -1,33 +1,26 @@
-import { listPublishedContent } from '$lib/server/public-content';
+import { listContentMetadata } from '$lib/server/public-content';
+import { escapeXml } from '$lib/seo';
 
 const siteURL = 'https://www.danieleavolio.it';
-
-function escapeXml(unsafe = ''): string {
-	return unsafe
-		.replace(/&/g, '&amp;')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;')
-		.replace(/"/g, '&quot;')
-		.replace(/'/g, '&apos;');
-}
+export const config = { isr: { expiration: 300 } };
 
 export async function GET({ locals }) {
 	const [posts, projects] = await Promise.all([
-		listPublishedContent(locals.supabase, 'posts').catch(() => []),
-		listPublishedContent(locals.supabase, 'projects').catch(() => [])
+		listContentMetadata(locals.supabase, 'posts'),
+		listContentMetadata(locals.supabase, 'projects')
 	]);
 
 	const allItems = [
 		...posts.map((p) => ({
 			title: p.title,
-			link: `${siteURL}/pagine/${p.slug}`,
+			link: `${siteURL}/pagine/${encodeURIComponent(p.slug)}`,
 			description: p.description,
 			date: p.date,
 			category: 'Blog'
 		})),
 		...projects.map((pr) => ({
 			title: pr.title,
-			link: `${siteURL}/progetti/${pr.slug}`,
+			link: `${siteURL}/progetti/${encodeURIComponent(pr.slug)}`,
 			description: pr.description,
 			date: pr.date,
 			category: 'Progetto'
@@ -38,7 +31,7 @@ export async function GET({ locals }) {
 
 	const itemsXml = allItems
 		.map((item) => {
-			let pubDateStr = '';
+			let pubDateStr: string;
 			try {
 				pubDateStr = new Date(item.date).toUTCString();
 			} catch {
@@ -72,8 +65,7 @@ export async function GET({ locals }) {
 
 	return new Response(rss.trim(), {
 		headers: {
-			'Content-Type': 'application/xml; charset=utf-8',
-			'Cache-Control': 'max-age=0, s-maxage=3600'
+			'Content-Type': 'application/xml; charset=utf-8'
 		}
 	});
 }

@@ -29,11 +29,11 @@
 	{#if items.length === 0}
 		<p class="empty">Nessun aggiornamento pubblicato al momento.</p>
 	{:else}
-		{#each Object.entries(grouped) as [category, categoryItems]}
+		{#each Object.entries(grouped) as [category, categoryItems] (category)}
 			<section aria-labelledby={category}>
 				<h2 id={category}>{category}</h2>
 				<div class="items">
-					{#each categoryItems as item}
+					{#each categoryItems as item (item.id)}
 						<article
 							class:completed={item.status === 'completed'}
 							class:paused={item.status === 'paused'}

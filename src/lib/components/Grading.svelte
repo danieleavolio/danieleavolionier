@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let grade = 0;
-	export let pros: any[] = [];
-	export let cons: any[] = [];
+	export let pros: string[] = [];
+	export let cons: string[] = [];
 	export let title = '';
 
 	$: gradeColor = grade <= 4 ? '#cd674d' : grade <= 7 ? '#ece7d5' : '#e1d8aa';
@@ -16,7 +16,7 @@
 	<div class="pros">
 		<h3>Pros</h3>
 		<ul>
-			{#each pros as pro}
+			{#each pros as pro, index (index)}
 				<li>{pro}</li>
 			{/each}
 		</ul>
@@ -24,7 +24,7 @@
 	<div class="cons">
 		<h3>Cons</h3>
 		<ul>
-			{#each cons as con}
+			{#each cons as con, index (index)}
 				<li>{con}</li>
 			{/each}
 		</ul>

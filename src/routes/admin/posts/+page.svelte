@@ -40,7 +40,7 @@
 			<button type="button" on:click={newItem}>Nuovo</button>
 		</div>
 		<ul>
-			{#each data.items as item}
+			{#each data.items as item (item.slug)}
 				<li class:active={selected.slug === item.slug}>
 					<button type="button" class="select-item" on:click={() => edit(item)}>{item.title}</button
 					>

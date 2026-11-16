@@ -1,14 +1,14 @@
 <script lang="ts">
 	import Modal from '$lib/components/Modal.svelte';
 	import Seo from '$lib/components/SEO.svelte';
-	import * as config from '$lib/config';
+	import type { ComponentType } from 'svelte';
 	import type { stackElement } from '$lib/types';
 	import stackElements from '$lib/stackElements.json';
 
 	let showModal = false;
 
 	let selectedItem = 'None';
-	let selectedModalContent: any;
+	let selectedModalContent: { default: ComponentType } | undefined;
 
 	const handleModalClick = async (e: stackElement) => {
 		const content = await import(`../../stackElements/${e.slug}.md`);
@@ -24,6 +24,7 @@
 	description="Panoramica su competenze tecniche, stack tecnologico ed esperienze lavorative di Daniele Avolio, sviluppatore web e AI specialist."
 	image="https://i.imgur.com/juSgfgF.png"
 />
+<h1 class="sr-only">Competenze ed esperienze di Daniele Avolio</h1>
 <div class="data">
 	<Modal bind:showModal>
 		<p class="title" slot="header">
@@ -38,7 +39,7 @@
 	<p class="title">Daniele Avolio: DATI</p>
 	<div class="stack">
 		<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-		{#each stackElements as element}
+		{#each stackElements as element (element.slug)}
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<p class="stack-element stack-{element.color}" on:click={() => handleModalClick(element)}>
 				{element.title}

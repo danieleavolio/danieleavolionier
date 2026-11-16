@@ -163,7 +163,9 @@
 	// Web Audio Synthesizer (SFX)
 	function initAudio() {
 		try {
-			const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+			const AudioContextClass =
+				window.AudioContext ||
+				(window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
 			if (AudioContextClass && !audioCtx) {
 				audioCtx = new AudioContextClass();
 			}

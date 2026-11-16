@@ -1,8 +1,25 @@
 import { createServerClient } from '@supabase/ssr';
 import type { Handle } from '@sveltejs/kit';
+import { error as httpError } from '@sveltejs/kit';
 import { supabaseAnonKey, supabaseUrl } from '$lib/supabaseConfig';
+import { publicSupabase } from '$lib/server/public-supabase';
 
 export const handle: Handle = async ({ event, resolve }) => {
+	const pathname = event.url.pathname;
+	const needsAuth =
+		pathname === '/admin' || pathname.startsWith('/admin/') || pathname === '/api/media';
+	if (!needsAuth) {
+		event.locals.supabase = publicSupabase;
+		event.locals.user = null;
+		event.locals.isAdmin = false;
+		event.locals.getSession = async () => null;
+		const response = await resolve(event);
+		if (pathname === '/end-of-the-lova') response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+		return response;
+	}
+
+	// Authenticated pages and uploads must never use shared caches.
+	event.setHeaders({ 'Cache-Control': 'private, no-store', 'X-Robots-Tag': 'noindex, nofollow' });
 	event.locals.supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
 		cookies: {
 			getAll: () => event.cookies.getAll(),
@@ -43,6 +60,22 @@ export const handle: Handle = async ({ event, resolve }) => {
 	} catch {
 		event.locals.user = null;
 		event.locals.isAdmin = false;
+	}
+
+	// /admin is client-rendered, so its layout loader alone cannot guard the
+	// initial HTML request. Enforce the same boundary before resolving it.
+	if ((pathname === '/admin' || pathname.startsWith('/admin/')) && pathname !== '/admin/login') {
+		if (!event.locals.user && !event.isDataRequest)
+			return new Response(null, {
+				status: 303,
+				headers: {
+					Location: '/admin/login',
+					'Cache-Control': 'private, no-store',
+					'X-Robots-Tag': 'noindex, nofollow'
+				}
+			});
+		if (event.locals.user && !event.locals.isAdmin)
+			throw httpError(403, 'Accesso amministratore richiesto');
 	}
 
 	return resolve(event, {

@@ -44,7 +44,7 @@ export function parseArrayLiteral(raw: string | null | undefined): string[] {
 		const parsed = JSON.parse(raw);
 		return Array.isArray(parsed) ? parsed.map((item) => String(item)) : [];
 	} catch {
-		return [...raw.matchAll(/[\"']((?:[^\"\\]|\\.)*)[\"']/g)].map((match) => match[1]);
+		return [...raw.matchAll(/["']((?:[^"\\]|\\.)*)["']/g)].map((match) => match[1]);
 	}
 }
 
