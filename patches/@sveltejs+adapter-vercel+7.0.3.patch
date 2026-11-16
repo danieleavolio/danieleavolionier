@@ -1,13 +1,13 @@
 diff --git a/node_modules/@sveltejs/adapter-vercel/index.js b/node_modules/@sveltejs/adapter-vercel/index.js
-index 086bb69..4b267ea 100644
+index d7a8854..93f28d4 100644
 --- a/node_modules/@sveltejs/adapter-vercel/index.js
 +++ b/node_modules/@sveltejs/adapter-vercel/index.js
-@@ -28,6 +28,16 @@ import { VERSION } from '@sveltejs/kit';
- const name = '@sveltejs/adapter-vercel';
+@@ -8,6 +8,16 @@ import { escape_src, parse_isr_expiration, pattern_to_src, resolve_runtime } fro
+ 
  const INTERNAL = '![-]'; // this name is guaranteed not to conflict with user routes
  
-+// Windows directory junctions do not require Developer Mode/admin symlink privileges.
-+// Linux/Vercel keeps the adapter's original relative symlinks.
++// Directory junctions avoid requiring symlink privileges on Windows.
++// Production/Linux keeps the adapter's original relative symlinks.
 +function link_function(target, link) {
 +	if (process.platform === 'win32') {
 +		fs.symlinkSync(path.resolve(path.dirname(link), target), link, 'junction');
@@ -16,10 +16,10 @@ index 086bb69..4b267ea 100644
 +	}
 +}
 +
- const [kit_major, kit_minor] = VERSION.split('.');
- 
- // https://vercel.com/docs/functions/edge-functions/edge-runtime#compatible-node.js-modules
-@@ -403,7 +413,7 @@ const plugin = function (defaults = {}) {
+ /** @type {typeof import('./index.js').default} **/
+ const plugin = function (defaults = {}) {
+ 	// @ts-ignore TODO remove this in a future version
+@@ -218,7 +228,7 @@ const plugin = function (defaults = {}) {
  
  				const relative = path.relative(path.dirname(remote_symlink_path), target);
  
@@ -28,18 +28,19 @@ index 086bb69..4b267ea 100644
  
  				static_config.routes.push({
  					src: `/${app_path}/remote/.+`,
-@@ -429,8 +439,8 @@ const plugin = function (defaults = {}) {
+@@ -251,9 +261,9 @@ const plugin = function (defaults = {}) {
  
  					// create a symlink to the actual function, but use the
  					// route name so that we can derive the correct URL
 -					fs.symlinkSync(relative, `${base}.func`);
--					fs.symlinkSync(`../${relative}`, `${base}/__data.json.func`);
 +					link_function(relative, `${base}.func`);
-+					link_function(`../${relative}`, `${base}/__data.json.func`);
+ 					if (has_page) {
+-						fs.symlinkSync(`../${relative}`, `${base}/__data.json.func`);
++						link_function(`../${relative}`, `${base}/__data.json.func`);
+ 					}
  
- 					const pathname = get_pathname(route);
  					const json = JSON.stringify(
-@@ -480,8 +490,8 @@ const plugin = function (defaults = {}) {
+@@ -313,8 +323,8 @@ const plugin = function (defaults = {}) {
  					const relative_for_data = path.relative(path.dirname(data_symlink_path), target); // This is path.relative(base_dir, target)
  
  					// Create symlinks

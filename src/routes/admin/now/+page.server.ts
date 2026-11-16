@@ -1,6 +1,6 @@
 import { fail } from '@sveltejs/kit';
-import { requireAdmin } from '$lib/server/auth';
-import { listNowItems } from '$lib/server/public-content';
+import { requireAdmin } from '#lib/server/auth.ts';
+import { listNowItems } from '#lib/server/public-content.ts';
 
 const empty = {
 	id: '',

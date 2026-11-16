@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
+	import type { LayoutProps } from './$types';
 
-	export let data;
+	let { data, children }: LayoutProps = $props();
 </script>
 
-<svelte:head>
-	<meta name="robots" content="noindex, nofollow" />
-</svelte:head>
+<svelte:head><meta name="robots" content="noindex, nofollow" /></svelte:head>
 
 {#if data.isAdmin}
 	<div class="admin-layout">
@@ -16,19 +15,18 @@
 				<nav aria-label="Amministrazione">
 					<ul>
 						<li>
-							<a href="/admin/posts" class:active={$page.url.pathname.startsWith('/admin/posts')}
+							<a href="/admin/posts" class:active={page.url.pathname.startsWith('/admin/posts')}
 								>Posts</a
 							>
 						</li>
 						<li>
 							<a
 								href="/admin/projects"
-								class:active={$page.url.pathname.startsWith('/admin/projects')}>Projects</a
+								class:active={page.url.pathname.startsWith('/admin/projects')}>Projects</a
 							>
 						</li>
 						<li>
-							<a href="/admin/now" class:active={$page.url.pathname.startsWith('/admin/now')}>Now</a
-							>
+							<a href="/admin/now" class:active={page.url.pathname.startsWith('/admin/now')}>Now</a>
 						</li>
 					</ul>
 				</nav>
@@ -40,10 +38,10 @@
 				</form>
 			</div>
 		</aside>
-		<main class="main-content"><slot /></main>
+		<main class="main-content">{@render children?.()}</main>
 	</div>
 {:else}
-	<main class="login-shell"><slot /></main>
+	<main class="login-shell">{@render children?.()}</main>
 {/if}
 
 <style>

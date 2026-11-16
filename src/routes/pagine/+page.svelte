@@ -1,13 +1,13 @@
 <script lang="ts">
-	import CategoriesFilter from '$lib/components/CategoriesFilter.svelte';
-	import type { Element } from '$lib/types';
-	import { formatDate, calculateReadingTime } from '$lib/utils';
+	import CategoriesFilter from '#lib/components/CategoriesFilter.svelte';
+	import type { Element } from '#lib/types.ts';
+	import { formatDate, calculateReadingTime } from '#lib/utils.ts';
 	import { slide } from 'svelte/transition';
 	import { BoxSelect } from 'lucide-svelte';
-	import Seo from '$lib/components/SEO.svelte';
-	import Tag from '$lib/components/Tag.svelte';
+	import Seo from '#lib/components/SEO.svelte';
+	import Tag from '#lib/components/Tag.svelte';
 	import { onMount, tick } from 'svelte';
-	import { categoryStore } from '$lib/stores/categoryStore.js';
+	import { categoryStore } from '#lib/stores/categoryStore.js';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -113,7 +113,12 @@
 	}
 	.post {
 		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		overflow-wrap: anywhere;
 		gap: 2rem;
+	}
+	.posts {
+		min-width: 0;
 	}
 
 	.post:not(:last-child) {

@@ -212,6 +212,8 @@ html {
 
 article {
 	line-height: 2.3rem;
+	min-width: 0;
+	overflow-wrap: anywhere;
 }
 
 img {

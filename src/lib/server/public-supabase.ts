@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { supabaseAnonKey, supabaseUrl } from '$lib/supabaseConfig';
+import { supabaseAnonKey, supabaseUrl } from '#lib/supabaseConfig.ts';
 
 // Never attach visitor cookies to cacheable reads (including visits by an admin).
 // This client has only the anonymous role; published-only filters and RLS both apply.

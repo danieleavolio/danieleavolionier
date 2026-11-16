@@ -24,6 +24,9 @@
 	}
 
 	.note-holder {
+		box-sizing: border-box;
+		min-width: 0;
+		overflow-wrap: anywhere;
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;

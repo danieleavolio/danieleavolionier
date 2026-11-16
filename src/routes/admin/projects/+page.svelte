@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import AdminContentEditor from '$lib/components/AdminContentEditor.svelte';
-	import ConfirmModal from '$lib/components/ConfirmModal.svelte';
-	import type { EditableContent } from '$lib/server/admin-content';
+	import AdminContentEditor from '#lib/components/AdminContentEditor.svelte';
+	import ConfirmModal from '#lib/components/ConfirmModal.svelte';
+	import type { EditableContent } from '#lib/server/admin-content.ts';
 
 	export let data;
 	export let form;

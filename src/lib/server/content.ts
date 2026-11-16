@@ -1,8 +1,8 @@
 import { marked } from 'marked';
-import { sanitizeContentHtml } from '$lib/server/sanitize';
-import { convertGradingTags } from '$lib/rich-grading';
-import { repairPlainMarkdownHtml } from '$lib/server/markdown-repair';
-import type { Element, NowItem } from '$lib/types';
+import { sanitizeContentHtml } from '#lib/server/sanitize.ts';
+import { convertGradingTags } from '#lib/rich-grading.ts';
+import { repairPlainMarkdownHtml } from '#lib/server/markdown-repair.ts';
+import type { Element, NowItem } from '#lib/types.ts';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { ContentRow } from './content-row';
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { categoryStore } from '$lib/stores/categoryStore';
-	import { projectsCategoryStore } from '$lib/stores/categoryStore';
+	import { categoryStore } from '#lib/stores/categoryStore.ts';
+	import { projectsCategoryStore } from '#lib/stores/categoryStore.ts';
 
 	export let category: string;
 	export let from: string;

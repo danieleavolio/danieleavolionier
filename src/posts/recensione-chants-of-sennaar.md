@@ -21,8 +21,8 @@ developer: RUNDISC
 ---
 
 <script>
-    import Gallery from '$lib/components/Gallery.svelte';
-    import Grading from '$lib/components/Grading.svelte';
+    import Gallery from '#lib/components/Gallery.svelte';
+    import Grading from '#lib/components/Grading.svelte';
 
     let gallery1 = [
         "https://i.kinja-img.com/image/upload/c_fit,q_60,w_1600/5e1791fd132e47b48e19d06d2f6a1b6f.jpg",

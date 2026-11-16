@@ -1,9 +1,9 @@
 <script lang="ts">
-	import Modal from '$lib/components/Modal.svelte';
-	import Seo from '$lib/components/SEO.svelte';
+	import Modal from '#lib/components/Modal.svelte';
+	import Seo from '#lib/components/SEO.svelte';
 	import type { ComponentType } from 'svelte';
-	import type { stackElement } from '$lib/types';
-	import stackElements from '$lib/stackElements.json';
+	import type { stackElement } from '#lib/types.ts';
+	import stackElements from '#lib/stackElements.json';
 
 	let showModal = false;
 

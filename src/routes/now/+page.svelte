@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Seo from '$lib/components/SEO.svelte';
-	import type { NowItem } from '$lib/types';
+	import Seo from '#lib/components/SEO.svelte';
+	import type { NowItem } from '#lib/types.ts';
 	import type { PageData } from './$types';
 
 	export let data: PageData;

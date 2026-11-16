@@ -6,9 +6,9 @@
 	import Image from '@tiptap/extension-image';
 	import Underline from '@tiptap/extension-underline';
 	import Placeholder from '@tiptap/extension-placeholder';
-	import { createRichExtensions } from '$lib/editor/extensions';
-	import { findImageFiles, uploadImage } from '$lib/media';
-	import type { RichTextDocument } from '$lib/types';
+	import { createRichExtensions } from '#lib/editor/extensions.ts';
+	import { findImageFiles, uploadImage } from '#lib/media.ts';
+	import type { RichTextDocument } from '#lib/types.ts';
 
 	export let html = '';
 	export let json: RichTextDocument | null = null;

@@ -1,8 +1,8 @@
 <script lang="ts">
-	import NotesHolder from '$lib/components/NotesHolder.svelte';
-	import { notes } from '$lib/notes_files_desc';
-	import Highlit from '$lib/components/Highlit.svelte';
-	import Seo from '$lib/components/SEO.svelte';
+	import NotesHolder from '#lib/components/NotesHolder.svelte';
+	import { notes } from '#lib/notes_files_desc.ts';
+	import Highlit from '#lib/components/Highlit.svelte';
+	import Seo from '#lib/components/SEO.svelte';
 </script>
 
 <Seo
@@ -69,7 +69,7 @@
 
 	.notes {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
 		gap: 1.5rem;
 	}
 </style>

@@ -1,4 +1,4 @@
-import { listPublishedContent } from '$lib/server/public-content';
+import { listPublishedContent } from '#lib/server/public-content.ts';
 
 export const config = { isr: { expiration: 300 } };
 

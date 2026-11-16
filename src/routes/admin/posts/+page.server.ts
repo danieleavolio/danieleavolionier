@@ -1,11 +1,11 @@
 import { fail } from '@sveltejs/kit';
-import { requireAdmin } from '$lib/server/auth';
+import { requireAdmin } from '#lib/server/auth.ts';
 import {
 	emptyContent,
 	listAdminContent,
 	removeContent,
 	saveContent
-} from '$lib/server/admin-content';
+} from '#lib/server/admin-content.ts';
 
 export async function load({ locals }) {
 	await requireAdmin(locals);

@@ -49,7 +49,7 @@ Dove:
 #### `search.ts`
 
 ```typescript
-import type { Element } from '$lib/types';
+import type { Element } from '#lib/types.ts';
 import { json } from '@sveltejs/kit';
 
 export const prerender = true;
@@ -83,7 +83,7 @@ export async function GET({ fetch }) {
 
 ```typescript
 import FlexSearch from 'flexsearch';
-import type { Element } from '$lib/types';
+import type { Element } from '#lib/types.ts';
 
 let postsIndex: FlexSearch.Index;
 let posts: Element[];
@@ -181,7 +181,7 @@ Praticamente, quello che succede è che:
 
 ```typescript
 <script lang="ts">
-	import { createIndex, searchPostsIndex } from '$lib/search';
+	import { createIndex, searchPostsIndex } from '#lib/search.ts';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import Modal from './Modal.svelte';

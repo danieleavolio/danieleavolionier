@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import ConfirmModal from '$lib/components/ConfirmModal.svelte';
-	import type { NowItem } from '$lib/types';
+	import ConfirmModal from '#lib/components/ConfirmModal.svelte';
+	import type { NowItem } from '#lib/types.ts';
 
 	export let data;
 	export let form;

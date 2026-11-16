@@ -1,5 +1,5 @@
-import { listContentMetadata } from '$lib/server/public-content';
-import { escapeXml } from '$lib/seo';
+import { listContentMetadata } from '#lib/server/public-content.ts';
+import { escapeXml } from '#lib/seo.ts';
 
 const siteURL = 'https://www.danieleavolio.it';
 export const config = { isr: { expiration: 300 } };

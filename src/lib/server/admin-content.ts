@@ -1,13 +1,13 @@
 import { error } from '@sveltejs/kit';
-import { sanitizeContentHtml } from '$lib/server/sanitize';
+import { sanitizeContentHtml } from '#lib/server/sanitize.ts';
 import {
 	deletePostImages,
 	referencedPostImagePaths,
 	storedPostImagePaths
-} from '$lib/server/media-cleanup';
-import { convertGradingTags } from '$lib/rich-grading';
-import { repairPlainMarkdownHtml } from '$lib/server/markdown-repair';
-import type { RichTextDocument } from '$lib/types';
+} from '#lib/server/media-cleanup.ts';
+import { convertGradingTags } from '#lib/rich-grading.ts';
+import { repairPlainMarkdownHtml } from '#lib/server/markdown-repair.ts';
+import type { RichTextDocument } from '#lib/types.ts';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { ContentRow } from './content-row';
 

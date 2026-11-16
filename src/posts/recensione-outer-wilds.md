@@ -21,8 +21,8 @@ developer: Mobius Digital
 ---
 
 <script>
-    import Grading from '$lib/components/Grading.svelte';
-    import Gallery from '$lib/components/Gallery.svelte';
+    import Grading from '#lib/components/Grading.svelte';
+    import Gallery from '#lib/components/Gallery.svelte';
     let gallery1 = [
         "https://i.imgur.com/3MWKU42.png",
         "https://i.imgur.com/fWHEd2P.png",

@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { formatDate } from '$lib/utils';
-	import CategoriesFilter from '$lib/components/CategoriesFilter.svelte';
-	import type { Element } from '$lib/types';
+	import { formatDate } from '#lib/utils.ts';
+	import CategoriesFilter from '#lib/components/CategoriesFilter.svelte';
+	import type { Element } from '#lib/types.ts';
 	import { BoxSelect } from 'lucide-svelte';
 	import { slide } from 'svelte/transition';
-	import Seo from '$lib/components/SEO.svelte';
-	import { projectsCategoryStore } from '$lib/stores/categoryStore';
+	import Seo from '#lib/components/SEO.svelte';
+	import { projectsCategoryStore } from '#lib/stores/categoryStore.ts';
 	import { onMount, tick } from 'svelte';
-	import Tag from '$lib/components/Tag.svelte';
+	import Tag from '#lib/components/Tag.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -116,8 +116,13 @@
 	}
 	.post {
 		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		overflow-wrap: anywhere;
 		gap: 1.2rem;
 		transition: all 0.5s ease-in-out;
+	}
+	.posts {
+		min-width: 0;
 	}
 
 	.post:not(:last-child) {
@@ -148,7 +153,7 @@
 		flex-wrap: wrap;
 	}
 
-	@media (min-width: 768px) {
+	@media (min-width: 1000px) {
 		section {
 			flex-direction: row;
 			align-items: start;

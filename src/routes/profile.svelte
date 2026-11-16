@@ -3,7 +3,7 @@
 	let pagedata: HTMLElement;
 
 	import { onMount } from 'svelte';
-	import Link from '$lib/components/Link.svelte';
+	import Link from '#lib/components/Link.svelte';
 
 	onMount(() => {
 		let frame = 0;
@@ -82,6 +82,9 @@
 	}
 
 	.page-data {
+		min-width: 0;
+		max-width: 100%;
+		overflow-wrap: anywhere;
 		--left: 0px;
 		--top: 0px;
 		position: relative;
@@ -128,6 +131,8 @@
 		width: 100%;
 	}
 	.outer-box {
+		min-width: 0;
+		max-width: 100%;
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
@@ -135,7 +140,7 @@
 	}
 
 	img {
-		max-width: var(--size-14);
+		max-width: min(var(--size-14), 100%);
 
 		max-height: 100%;
 		object-fit: cover;
@@ -144,6 +149,8 @@
 	}
 
 	.inner-box {
+		min-width: 0;
+		max-width: 100%;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -157,6 +164,7 @@
 	}
 
 	.main-features {
+		min-width: 0;
 		display: flex;
 		flex-direction: column;
 		gap: 2em;

@@ -1,4 +1,4 @@
-import { listNowItems } from '$lib/server/public-content';
+import { listNowItems } from '#lib/server/public-content.ts';
 
 export const config = { isr: { expiration: 300 } };
 

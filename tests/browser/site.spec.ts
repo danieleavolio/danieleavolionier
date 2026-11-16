@@ -59,6 +59,22 @@ test('search works on demand, including keyboard and article-to-article navigati
 	await expect(page).toHaveURL(/\/pagine\/recensione-nier-automata$/);
 	await expect(page).toHaveTitle(/Recensione NieR:Automata/);
 	await expect(page.locator('hgroup h1')).toHaveText('Recensione NieR:Automata');
+	await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+		'href',
+		'https://www.danieleavolio.it/pagine/recensione-nier-automata'
+	);
+	const schemas = await page.locator('script[type="application/ld+json"]').allTextContents();
+	expect(schemas).toHaveLength(1);
+	const review = JSON.parse(schemas[0])['@graph'].find(
+		(item: { '@type': string }) => item['@type'] === 'Review'
+	);
+	expect(review.itemReviewed.name).toContain('NieR');
+	await page.goBack();
+	await expect(page).toHaveTitle(/Recensione Outer Wilds/);
+	await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+		'href',
+		'https://www.danieleavolio.it/pagine/recensione-outer-wilds'
+	);
 });
 
 test('search can retry a transient failure', async ({ page }) => {
@@ -87,7 +103,7 @@ test('diagrams render near the viewport and retain the NieR theme', async ({ pag
 	expect(errors).toEqual([]);
 });
 
-test('admin remains private, missing articles remain real 404s', async ({ request }) => {
+test('admin remains private, missing articles remain real 404s', async ({ request, baseURL }) => {
 	const admin = await request.get('/admin', { maxRedirects: 0 });
 	expect(admin.status()).toBe(303);
 	expect(admin.headers()['location']).toBe('/admin/login');
@@ -95,9 +111,52 @@ test('admin remains private, missing articles remain real 404s', async ({ reques
 	const missing = await request.get('/pagine/not-a-real-article-regression-test');
 	expect(missing.status()).toBe(404);
 	expect(await missing.text()).toContain('noindex,follow');
-	const upload = await request.post('/api/media', { maxRedirects: 0 });
+	const upload = await request.post('/api/media', {
+		maxRedirects: 0,
+		headers: { Origin: new URL(baseURL!).origin },
+		multipart: {
+			file: {
+				name: 'rejected.txt',
+				mimeType: 'text/plain',
+				buffer: Buffer.from('anonymous uploads must be rejected')
+			}
+		}
+	});
 	expect(upload.status()).toBe(303);
 	expect(upload.headers()['cache-control']).toContain('no-store');
+});
+
+test('login validation and cross-origin rejection work after the framework migration', async ({
+	request,
+	baseURL
+}) => {
+	const response = await request.post('/admin/login?/login', {
+		headers: {
+			Origin: new URL(baseURL!).origin,
+			Accept: 'application/json',
+			'x-sveltekit-action': 'true'
+		},
+		form: { email: '', password: '' }
+	});
+	expect(response.status()).toBe(400);
+	expect(await response.text()).toContain('Inserisci email e password.');
+	expect(response.headers()['cache-control']).toContain('no-store');
+	const crossOrigin = await request.post('/api/media', {
+		headers: { Origin: 'https://untrusted.example' },
+		form: { test: 'rejected before upload handling' }
+	});
+	expect(crossOrigin.status()).toBe(403);
+});
+
+test('login UI hydrates without exposing an authenticated editor', async ({ page }) => {
+	const errors: string[] = [];
+	page.on('pageerror', (error) => errors.push(error.message));
+	await page.goto('/admin/login');
+	await expect(page.locator('input[name="email"]')).toBeVisible();
+	await expect(page.locator('input[name="password"]')).toBeVisible();
+	await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
+	await expect(page.locator('.admin-layout')).toHaveCount(0);
+	expect(errors).toEqual([]);
 });
 
 test('static pages work without JavaScript, sitemap excludes non-indexable pages', async ({

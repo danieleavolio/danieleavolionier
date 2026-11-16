@@ -2,16 +2,24 @@ import assert from 'node:assert/strict';
 import { writeFile, mkdir } from 'node:fs/promises';
 
 const base = process.argv[2] || 'http://127.0.0.1:5175';
+const canonicalOrigin = 'https://www.danieleavolio.it';
+const robotsResponse = await fetch(`${base}/robots.txt`);
+assert.equal(robotsResponse.status, 200);
+const robots = await robotsResponse.text();
+assert.match(robots, /Sitemap: https:\/\/www\.danieleavolio\.it\/sitemap\.xml/);
+assert.ok(!/^Disallow:\s*\/\s*$/m.test(robots), 'robots.txt blocks the whole site');
 const sitemapResponse = await fetch(`${base}/sitemap.xml`);
 assert.equal(sitemapResponse.status, 200);
 const xml = await sitemapResponse.text();
 const urls = [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => new URL(match[1]).pathname);
+assert.ok(urls.length > 0, 'Empty sitemap');
+assert.equal(new Set(urls).size, urls.length, 'Duplicate sitemap URLs');
 const results = [];
 for (let index = 0; index < urls.length; index += 3) {
 	results.push(
 		...(await Promise.all(
 			urls.slice(index, index + 3).map(async (pathname) => {
-				const response = await fetch(new URL(pathname, base));
+				const response = await fetch(new URL(pathname, base), { redirect: 'manual' });
 				const html = await response.text();
 				assert.equal(response.status, 200, pathname);
 				const schemas = [
@@ -24,12 +32,25 @@ for (let index = 0; index < urls.length; index += 3) {
 					1,
 					`${pathname}: duplicate robots`
 				);
-				assert.ok(html.includes('rel="canonical"'), `${pathname}: missing canonical`);
+				const canonical = html.match(/<link[^>]*rel="canonical"[^>]*href="([^"]+)"/);
+				assert.equal(
+					canonical?.[1],
+					`${canonicalOrigin}${pathname === '/' ? '' : pathname}`,
+					`${pathname}: incorrect canonical`
+				);
+				const robotsMeta = html.match(/<meta[^>]*name="robots"[^>]*content="([^"]+)"/)?.[1];
+				assert.ok(robotsMeta && !/noindex/i.test(robotsMeta), `${pathname}: noindex in sitemap`);
+				assert.ok(
+					!/noindex/i.test(response.headers.get('x-robots-tag') || ''),
+					`${pathname}: noindex header`
+				);
 				return {
 					pathname,
 					status: response.status,
 					bytes: Buffer.byteLength(html),
-					jsonLd: 'valid'
+					jsonLd: 'valid',
+					canonical: canonical[1],
+					robots: robotsMeta
 				};
 			})
 		))

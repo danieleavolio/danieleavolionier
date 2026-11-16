@@ -90,6 +90,10 @@
 </section>
 
 <style>
+	section {
+		min-width: 0;
+		max-width: 100%;
+	}
 	.filter-title {
 		display: flex;
 		justify-content: space-between;
@@ -116,13 +120,18 @@
 		border-bottom: 2px solid var(--automataBlackOpacity);
 		max-height: 300px;
 		height: 0;
-		min-width: 300px;
+		min-width: min(300px, 100%);
+		box-sizing: border-box;
 		overflow: scroll;
 		opacity: 0;
 		transition: all 0.3s ease-in-out;
 		scrollbar-color: var(--automataColor) var(--automataBg);
 		scrollbar-width: thin;
 		/* bare minimum scrollbar */
+	}
+	.filter-item {
+		overflow-wrap: anywhere;
+		min-width: 0;
 	}
 
 	.filter-item {

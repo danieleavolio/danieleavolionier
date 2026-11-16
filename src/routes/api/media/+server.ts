@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from '@sveltejs/kit';
-import { requireAdmin } from '$lib/server/auth';
-import { supabaseAdmin } from '$lib/server/supabase';
+import { requireAdmin } from '#lib/server/auth.ts';
+import { supabaseAdmin } from '#lib/server/supabase.ts';
 
 const BUCKET = 'post-images';
 

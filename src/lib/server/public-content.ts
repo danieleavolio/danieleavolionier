@@ -1,7 +1,7 @@
-import type { Element, NowItem } from '$lib/types';
-import { convertGradingTags } from '$lib/rich-grading';
-import { repairPlainMarkdownHtml } from '$lib/server/markdown-repair';
-import { calculateReadingTime } from '$lib/utils';
+import type { Element, NowItem } from '#lib/types.ts';
+import { convertGradingTags } from '#lib/rich-grading.ts';
+import { repairPlainMarkdownHtml } from '#lib/server/markdown-repair.ts';
+import { calculateReadingTime } from '#lib/utils.ts';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { ContentRow } from './content-row';
 

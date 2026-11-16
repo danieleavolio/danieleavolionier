@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { renderMermaidBlocks } from '$lib/mermaid';
+	import { renderMermaidBlocks } from '#lib/mermaid.ts';
 
 	export let html = '';
 
@@ -28,6 +28,18 @@
 </div>
 
 <style>
+	.rich-content {
+		min-width: 0;
+		overflow-wrap: anywhere;
+	}
+
+	.rich-content :global(table) {
+		display: block;
+		max-width: 100%;
+		width: fit-content;
+		overflow-x: auto;
+	}
+
 	.rich-content :global(img),
 	.rich-content :global(video),
 	.rich-content :global(iframe) {
@@ -44,7 +56,7 @@
 
 	.rich-content :global(.rich-gallery) {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
 		gap: 1rem;
 	}
 
@@ -56,7 +68,7 @@
 
 	.rich-content :global(.rich-grading) {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 		gap: 2rem;
 		padding: 1rem;
 		border-radius: 8px;
@@ -161,5 +173,16 @@
 		border: 1px solid var(--automataColor);
 		text-align: center;
 		font-weight: 700;
+	}
+
+	@media (max-width: 480px) {
+		.rich-content :global(.rich-grading) {
+			grid-template-columns: minmax(0, 1fr);
+			gap: 1rem;
+		}
+		.rich-content :global(.rg-grade),
+		.rich-content :global(.rg-title) {
+			grid-column: 1;
+		}
 	}
 </style>

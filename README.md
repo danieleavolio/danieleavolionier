@@ -4,6 +4,10 @@ Sito personale basato su SvelteKit.
 
 ## Setup
 
+Richiede Node **22.17 o successivo**. Stack: SvelteKit 3, Svelte 5, Vite 8 e
+TypeScript 6. Configurazione in `vite.config.ts`, import interni `#lib` e
+variabili d'ambiente dichiarate in `src/env.ts`.
+
 ```bash
 npm install
 npm run dev
@@ -43,6 +47,7 @@ Dopo il deploy l'editor visuale è disponibile su `/admin/login`; da lì puoi cr
 ```bash
 npm run check
 npm run build
+node scripts/verify-build.mjs
 npm run preview
 ```
 
@@ -75,6 +80,7 @@ npm run assets:optimize
 ```
 
 Misure, limiti noti e verifiche prima/dopo il deploy: [Performance e SEO](docs/performance-and-seo.md).
+Per gli URL esclusi da Google: [Diagnosi Search Console](docs/search-console.md).
 
 ## Nuovi contenuti
 

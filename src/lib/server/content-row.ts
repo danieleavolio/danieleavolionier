@@ -1,4 +1,4 @@
-import type { RichTextDocument } from '$lib/types';
+import type { RichTextDocument } from '#lib/types.ts';
 
 export type ContentRow = {
 	slug: string;

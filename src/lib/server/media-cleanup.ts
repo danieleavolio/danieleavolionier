@@ -1,4 +1,4 @@
-import { supabaseAdmin } from '$lib/server/supabase';
+import { supabaseAdmin } from '#lib/server/supabase.ts';
 
 export const POST_IMAGES_BUCKET = 'post-images';
 

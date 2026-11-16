@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { formatDate } from '$lib/utils';
-	import Author from '$lib/components/Author.svelte';
-	import Seo from '$lib/components/SEO.svelte';
-	import * as config from '$lib/config';
-	import Tag from '$lib/components/Tag.svelte';
-	import RichContent from '$lib/components/RichContent.svelte';
+	import { formatDate } from '#lib/utils.ts';
+	import Author from '#lib/components/Author.svelte';
+	import Seo from '#lib/components/SEO.svelte';
+	import * as config from '#lib/config.ts';
+	import Tag from '#lib/components/Tag.svelte';
+	import RichContent from '#lib/components/RichContent.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;

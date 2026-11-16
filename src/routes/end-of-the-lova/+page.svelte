@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Seo from '$lib/components/SEO.svelte';
+	import Seo from '#lib/components/SEO.svelte';
 	import { onMount, onDestroy } from 'svelte';
 	import type { PageData } from './$types';
 

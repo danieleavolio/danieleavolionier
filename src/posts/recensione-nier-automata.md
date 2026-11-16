@@ -20,8 +20,8 @@ developer: Platinum Games
 ---
 
 <script>
-    import Gallery from '$lib/components/Gallery.svelte';
-    import Grading from '$lib/components/Grading.svelte';
+    import Gallery from '#lib/components/Gallery.svelte';
+    import Grading from '#lib/components/Grading.svelte';
 
     let gallery1 = [
         "https://media.wired.com/photos/5a3c6babb31861035861ccf0/master/w_2560%2Cc_limit/Automata-TopArt.jpg",

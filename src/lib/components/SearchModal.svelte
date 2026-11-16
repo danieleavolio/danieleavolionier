@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { SearchResult } from '$lib/search';
+	import type { SearchResult } from '#lib/search.ts';
 	import { onMount, tick } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import Modal from './Modal.svelte';
@@ -12,7 +12,7 @@
 	let dialog: HTMLDialogElement;
 	let searchInput: HTMLInputElement;
 	let selectedIndex = 0;
-	let searchApi: typeof import('$lib/search') | undefined;
+	let searchApi: typeof import('#lib/search.ts') | undefined;
 	let loadPromise: Promise<void> | undefined;
 
 	function loadSearch(): Promise<void> {
@@ -20,7 +20,7 @@
 		search = 'loading';
 		loadPromise = (async () => {
 			const [api, posts] = await Promise.all([
-				import('$lib/search'),
+				import('#lib/search.ts'),
 				fetch('/search.json').then((response) => {
 					if (!response.ok) throw new Error(`Search returned ${response.status}`);
 					return response.json();

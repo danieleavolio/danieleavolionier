@@ -2,10 +2,10 @@
 	import { Square } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
-	import type { Element } from '$lib/types';
+	import type { Element } from '#lib/types.ts';
 	import Profile from './profile.svelte';
-	import Seo from '$lib/components/SEO.svelte';
-	import { formatDate } from '$lib/utils';
+	import Seo from '#lib/components/SEO.svelte';
+	import { formatDate } from '#lib/utils.ts';
 
 	export let data: PageData;
 
@@ -144,6 +144,8 @@
 	}
 
 	.section-2 {
+		min-width: 0;
+		max-width: 100%;
 		justify-content: center;
 		align-items: center;
 	}

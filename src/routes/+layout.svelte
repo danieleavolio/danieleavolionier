@@ -19,10 +19,10 @@
 
 	import PageTransition from './transition.svelte';
 
-	import isOpened from '$lib/stores/navstore';
+	import isOpened from '#lib/stores/navstore.ts';
 
-	import { dev } from '$app/environment';
-	import { inject } from '@vercel/analytics';
+	import { dev } from '$app/env';
+	import { injectAnalytics } from '#lib/analytics.ts';
 
 	export let data;
 
@@ -39,7 +39,7 @@
 	onMount(() => {
 		// The Vercel analytics endpoint does not exist in local production previews.
 		if (!dev && !['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname)) {
-			inject({ mode: 'production' });
+			injectAnalytics();
 		}
 		const handleGlobalKeydown = (e: KeyboardEvent) => {
 			const target = e.target as HTMLElement | null;

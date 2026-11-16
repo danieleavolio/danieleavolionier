@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { getContentBySlug } from '$lib/server/public-content';
+import { getContentBySlug } from '#lib/server/public-content.ts';
 
 export const config = { isr: { expiration: 300 } };
 

@@ -1,4 +1,4 @@
-import { requireAdmin } from '$lib/server/auth';
+import { requireAdmin } from '#lib/server/auth.ts';
 
 export async function load({ locals, url }) {
 	if (!url.pathname.startsWith('/admin/login')) await requireAdmin(locals);

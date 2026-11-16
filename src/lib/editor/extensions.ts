@@ -1,5 +1,5 @@
 import { Node, mergeAttributes } from '@tiptap/core';
-import { gradingRange, parseArrayLiteral } from '$lib/rich-grading';
+import { gradingRange, parseArrayLiteral } from '#lib/rich-grading.ts';
 
 function nodeToElement(node: unknown): HTMLElement {
 	if (node instanceof HTMLElement) return node;

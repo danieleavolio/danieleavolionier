@@ -1,11 +1,11 @@
 <script lang="ts">
-	import * as config from '$lib/config';
+	import * as config from '#lib/config.ts';
 	import { Settings, ArrowDown01, Home } from 'lucide-svelte';
 	import { fly } from 'svelte/transition';
 
 	//Import store and set to true on click
-	import isOpened from '$lib/stores/navstore';
-	import SearchModal from '$lib/components/SearchModal.svelte';
+	import isOpened from '#lib/stores/navstore.ts';
+	import SearchModal from '#lib/components/SearchModal.svelte';
 
 	function handleClick() {
 		isOpened.set(!$isOpened);

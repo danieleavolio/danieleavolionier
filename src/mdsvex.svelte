@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { img } from '$lib/components/custom';
+	import { img } from '#lib/components/custom/index.ts';
 	export { img };
 </script>
 

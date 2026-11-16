@@ -1,8 +1,8 @@
 import { createServerClient } from '@supabase/ssr';
-import type { Handle } from '@sveltejs/kit';
+import type { Handle } from '@sveltejs/kit/hooks';
 import { error as httpError } from '@sveltejs/kit';
-import { supabaseAnonKey, supabaseUrl } from '$lib/supabaseConfig';
-import { publicSupabase } from '$lib/server/public-supabase';
+import { supabaseAnonKey, supabaseUrl } from '#lib/supabaseConfig.ts';
+import { publicSupabase } from '#lib/server/public-supabase.ts';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const pathname = event.url.pathname;
@@ -85,9 +85,13 @@ export const handle: Handle = async ({ event, resolve }) => {
 	});
 };
 
-export const handleError: import('@sveltejs/kit').HandleServerError = ({ error, event }) => {
+export const handleError: import('@sveltejs/kit/hooks').HandleServerError = ({
+	error,
+	event,
+	kind
+}) => {
+	// Kit 3 also passes expected errors (404, 403, etc.). Keep their status and message.
+	if (kind !== 'unknown') return;
 	console.error('Unhandled server error on', event.url.pathname, error);
-	return {
-		message: error instanceof Error ? error.message : 'Si è verificato un errore imprevisto.'
-	};
+	return { message: 'Si è verificato un errore imprevisto.' };
 };

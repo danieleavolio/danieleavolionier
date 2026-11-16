@@ -1,21 +1,25 @@
 <script lang="ts">
-	import Author from '$lib/components/Author.svelte';
-	import Seo from '$lib/components/SEO.svelte';
-	import * as config from '$lib/config';
-	import { formatDate, calculateReadingTime } from '$lib/utils';
-	import Tag from '$lib/components/Tag.svelte';
-	import ShareComponent from '$lib/components/ShareComponent.svelte';
-	import RichContent from '$lib/components/RichContent.svelte';
-	import { page } from '$app/stores';
+	import Author from '#lib/components/Author.svelte';
+	import Seo from '#lib/components/SEO.svelte';
+	import * as config from '#lib/config.ts';
+	import { formatDate, calculateReadingTime } from '#lib/utils.ts';
+	import Tag from '#lib/components/Tag.svelte';
+	import ShareComponent from '#lib/components/ShareComponent.svelte';
+	import RichContent from '#lib/components/RichContent.svelte';
+	import { page } from '$app/state';
 	import type { PageData } from './$types';
 
-	export let data: PageData;
+	interface Props {
+		data: PageData;
+	}
+
+	let { data }: Props = $props();
 
 	const siteUrl = config.url.replace(/\/$/, '');
-	$: metadata = data.meta;
-	$: metadataCategories = Array.isArray(metadata.categories) ? metadata.categories : [];
-	$: fallbackOg = `${siteUrl}/og/pagine/${data.slug}.svg`;
-	$: seoImage = metadata.image || fallbackOg;
+	let metadata = $derived(data.meta);
+	let metadataCategories = $derived(Array.isArray(metadata.categories) ? metadata.categories : []);
+	let fallbackOg = $derived(`${siteUrl}/og/pagine/${data.slug}.svg`);
+	let seoImage = $derived(metadata.image || fallbackOg);
 </script>
 
 {#if metadata.isReview}
@@ -70,7 +74,7 @@
 
 	<RichContent html={data.contentHtml} />
 
-	<ShareComponent postTitle={metadata.title} postUrl={$page.url.href} />
+	<ShareComponent postTitle={metadata.title} postUrl={page.url.href} />
 
 	<Author
 		name="Daniele"

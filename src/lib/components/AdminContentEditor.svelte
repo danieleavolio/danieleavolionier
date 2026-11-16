@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import RichTextEditor from '$lib/components/RichTextEditor.svelte';
-	import PostPreview from '$lib/components/PostPreview.svelte';
-	import type { EditableContent } from '$lib/server/admin-content';
+	import RichTextEditor from '#lib/components/RichTextEditor.svelte';
+	import PostPreview from '#lib/components/PostPreview.svelte';
+	import type { EditableContent } from '#lib/server/admin-content.ts';
 
 	export let item: EditableContent;
 	export let form;

@@ -1,6 +1,6 @@
 import FlexSearch from 'flexsearch';
-import type { Element } from '$lib/types';
-import { notes } from '$lib/notes_files_desc';
+import type { Element } from '#lib/types.ts';
+import { notes } from '#lib/notes_files_desc.ts';
 
 export interface SearchEntry {
 	slug: string;

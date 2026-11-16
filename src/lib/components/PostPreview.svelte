@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { formatDate, calculateReadingTime } from '$lib/utils';
-	import RichContent from '$lib/components/RichContent.svelte';
-	import type { EditableContent } from '$lib/server/admin-content';
+	import { formatDate, calculateReadingTime } from '#lib/utils.ts';
+	import RichContent from '#lib/components/RichContent.svelte';
+	import type { EditableContent } from '#lib/server/admin-content.ts';
 
 	export let item: EditableContent;
 

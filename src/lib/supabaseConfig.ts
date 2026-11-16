@@ -1,4 +1,4 @@
-import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from '$env/static/public';
+import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from '$app/env/public';
 
 // The anon key is intentionally public and is protected by Supabase RLS.
 // The fallback keeps the public site bootable when Vercel env vars are not set.
