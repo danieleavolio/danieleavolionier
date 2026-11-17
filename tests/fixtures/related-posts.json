@@ -1,0 +1,94 @@
+[
+	{
+		"slug": "opencode",
+		"title": "OpenCode e le balene",
+		"description": "Come sto usando i modelli forniti da opencode paragonandoli ai modelli di frontiera",
+		"categories": ["ai", "coding", "llm"],
+		"published": true
+	},
+	{
+		"slug": "codex",
+		"title": "Come ho refactorato il mio sito Svelte con Codex",
+		"description": "Upgrade a Svelte 5/SvelteKit 2, deploy semplificato, SEO reale, fixing degli errori runtime e workflow admin migliorato.",
+		"categories": ["svelte", "sveltekit", "refactor", "seo", "codex"],
+		"published": true
+	},
+	{
+		"slug": "search",
+		"title": "Come implementare un motore di ricerca in SvelteKit",
+		"description": "Cercare all'interno del proprio sito web rende più facile la navigazione ai propri utenti.",
+		"categories": ["programmazione", "web", "blog", "sveltekit"],
+		"published": true
+	},
+	{
+		"slug": "filters",
+		"title": "Implementazione di un Sistema di Filtri",
+		"description": "Come ho implementato un sistema di filtri per il mio blog",
+		"categories": ["programmazione", "web", "blog"],
+		"published": true
+	},
+	{
+		"slug": "ui",
+		"title": "UI di NieR Automata",
+		"description": "Nuova UI fresca per il diario",
+		"categories": ["programmazione", "web"],
+		"published": true
+	},
+	{
+		"slug": "outer-wilds",
+		"title": "Recensione Outer Wilds",
+		"description": "Un'avventura spaziale che viaggia tra lo spazio/tempo e un oscuro mistero nascosto tra un bagliore stellare.",
+		"categories": ["videogiochi", "recensioni", "indie", "puzzle", "pc", "ps4", "xbox one"],
+		"published": true
+	},
+	{
+		"slug": "chants-of-sennaar",
+		"title": "Recensione Chants Of Sennaar",
+		"description": "Un viaggio tra lingue e culture diverse, un'esperienza artistica che sfida le barriere della comunicazione. Un capolavoro che unisce enigmi e deduzione.",
+		"categories": [
+			"videogiochi",
+			"recensioni",
+			"puzzle",
+			"pc",
+			"ps4",
+			"xbox one",
+			"nintendo switch"
+		],
+		"published": true
+	},
+	{
+		"slug": "nier",
+		"title": "Recensione NieR:Automata",
+		"description": "Un mondo nato dopo la fine di una favola, un racconto di androidi e biomacchine, di filosofia e azione.",
+		"categories": ["videogiochi", "recensioni", "action rpg", "pc", "ps4", "xbox one"],
+		"published": true
+	},
+	{
+		"slug": "pixel",
+		"title": "Come riparare il tasto del volume del Pixel 7 Pro che si stacca",
+		"description": "Se hai un Pixel 7 Pro e il tasto del volume si stacca, ecco come ripararlo senza mandarlo in assistenza.",
+		"categories": ["telefoni", "pixel", "pixel-7-pro", "riparazione"],
+		"published": true
+	},
+	{
+		"slug": "machine-learning",
+		"title": "Primo Modello di Machine Learning [AI]",
+		"description": "Creare un modello di predizione del prezzo delle case con Python e scikit-learn usando regressione lineare.",
+		"categories": ["machine-learning", "python", "scikit-learn"],
+		"published": true
+	},
+	{
+		"slug": "unical",
+		"title": "Fine della magistrale in Informatica all'Unical",
+		"description": "È finita la magistrale in Informatica all'Unical. Manca solo tesi e tirocinio.",
+		"categories": ["blog", "università", "vita"],
+		"published": true
+	},
+	{
+		"slug": "erasmus",
+		"title": "Erasmus a Lisbona",
+		"description": "Sparito nell'ignoto e iniziato una nuova esperienza a Lisbona con l'Erasmus",
+		"categories": ["blog", "università", "vita"],
+		"published": true
+	}
+]

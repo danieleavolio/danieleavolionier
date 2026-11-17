@@ -6,6 +6,7 @@
 	import Tag from '#lib/components/Tag.svelte';
 	import ShareComponent from '#lib/components/ShareComponent.svelte';
 	import RichContent from '#lib/components/RichContent.svelte';
+	import RelatedPosts from '#lib/components/RelatedPosts.svelte';
 	import { page } from '$app/state';
 	import type { PageData } from './$types';
 
@@ -73,6 +74,8 @@
 	{/if}
 
 	<RichContent html={data.contentHtml} />
+
+	<RelatedPosts posts={data.relatedPosts} />
 
 	<ShareComponent postTitle={metadata.title} postUrl={page.url.href} />
 

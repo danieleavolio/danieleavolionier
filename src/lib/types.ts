@@ -26,6 +26,10 @@ export type Element = {
 	developer?: string;
 };
 
+export type RelatedPost = Pick<Element, 'slug' | 'title' | 'description'> & {
+	reason: string;
+};
+
 export type RichTextMark = {
 	type: string;
 	attrs?: Record<string, unknown>;

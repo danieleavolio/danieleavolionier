@@ -1,6 +1,7 @@
 import { after, before, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createServer } from 'vite';
+import { readFile } from 'node:fs/promises';
 
 let server;
 let content;
@@ -8,6 +9,11 @@ let seo;
 let sitemap;
 let home;
 let hooks;
+let related;
+let article;
+const relatedFixture = JSON.parse(
+	await readFile(new URL('./fixtures/related-posts.json', import.meta.url), 'utf8')
+);
 before(async () => {
 	server = await createServer({ server: { middlewareMode: true }, appType: 'custom' });
 	content = await server.ssrLoadModule('/src/lib/server/public-content.ts');
@@ -15,6 +21,8 @@ before(async () => {
 	sitemap = await server.ssrLoadModule('/src/routes/sitemap.xml/+server.ts');
 	home = await server.ssrLoadModule('/src/routes/+page.server.ts');
 	hooks = await server.ssrLoadModule('/src/hooks.server.ts');
+	related = await server.ssrLoadModule('/src/lib/server/related-posts.ts');
+	article = await server.ssrLoadModule('/src/routes/pagine/[slug]/+page.server.ts');
 });
 after(async () => {
 	await server?.close();
@@ -187,4 +195,141 @@ test('the client-rendered admin shell redirects anonymous requests with no-store
 	assert.equal(response.status, 303);
 	assert.equal(response.headers.get('location'), '/admin/login');
 	assert.equal(response.headers.get('cache-control'), 'private, no-store');
+});
+
+test('related posts rank useful neighbours with a hard cap and no self-links, drafts or duplicates', () => {
+	const current = relatedFixture.find((post) => post.slug === 'search');
+	const draft = { ...current, slug: 'draft', published: false };
+	const candidates = [
+		...relatedFixture,
+		draft,
+		relatedFixture.find((post) => post.slug === 'filters')
+	];
+	const before = JSON.stringify(candidates);
+	const selected = related.selectRelatedPosts(current, candidates);
+	assert.equal(selected.length, 3);
+	assert.equal(new Set(selected.map((post) => post.slug)).size, 3);
+	assert.ok(selected.some((post) => post.slug === 'filters'));
+	assert.ok(selected.some((post) => post.slug === 'codex'));
+	assert.ok(
+		selected.every((post) => !['search', 'draft', 'pixel', 'outer-wilds'].includes(post.slug))
+	);
+	assert.equal(JSON.stringify(candidates), before, 'Ranking must not mutate CMS summaries');
+	for (const post of selected)
+		assert.deepEqual(Object.keys(post).sort(), ['description', 'reason', 'slug', 'title']);
+});
+
+test('explicit themes bridge OpenCode/Codex without recommending generic AI content', () => {
+	const current = relatedFixture.find((post) => post.slug === 'opencode');
+	const selected = related.selectRelatedPosts(current, relatedFixture);
+	assert.deepEqual(
+		selected.map((post) => post.slug),
+		['codex']
+	);
+	assert.match(selected[0].reason, /sviluppo assistito da AI/);
+});
+
+test('review recommendations prefer shared game topics over technical articles', () => {
+	const current = relatedFixture.find((post) => post.slug === 'outer-wilds');
+	const selected = related.selectRelatedPosts(current, relatedFixture);
+	assert.equal(selected[0].slug, 'chants-of-sennaar');
+	assert.ok(selected.some((post) => post.slug === 'nier'));
+	assert.ok(selected.every((post) => !['search', 'pixel', 'codex'].includes(post.slug)));
+});
+
+test('isolated topics, empty candidates and generic platform-only overlaps do not force results', () => {
+	const current = relatedFixture.find((post) => post.slug === 'pixel');
+	assert.deepEqual(related.selectRelatedPosts(current, relatedFixture), []);
+	assert.deepEqual(related.selectRelatedPosts(current, []), []);
+	const generic = {
+		slug: 'a',
+		title: '',
+		description: '',
+		categories: ['pc', 'ps4'],
+		published: true
+	};
+	assert.deepEqual(related.selectRelatedPosts(generic, [{ ...generic, slug: 'b' }]), []);
+	assert.deepEqual(
+		related.selectRelatedPosts({ ...generic, categories: [] }, [
+			{ ...generic, slug: 'b', categories: [] }
+		]),
+		[]
+	);
+});
+
+test('category aliases are case/accent-insensitive and ties have stable ordering', () => {
+	const current = {
+		slug: 'source',
+		title: '',
+		description: '',
+		categories: ['SVELTE', 'SvelteKit'],
+		published: true
+	};
+	const candidates = ['z', 'b', 'a'].map((slug) => ({
+		slug,
+		title: '',
+		description: '',
+		categories: ['sveltekit'],
+		published: true
+	}));
+	const selected = related.selectRelatedPosts(current, candidates);
+	assert.deepEqual(
+		selected.map((post) => post.slug),
+		['a', 'b', 'z']
+	);
+	assert.deepEqual(selected, related.selectRelatedPosts(current, [...candidates].reverse()));
+	const university = relatedFixture.find((post) => post.slug === 'unical');
+	const erasmus = relatedFixture.find((post) => post.slug === 'erasmus');
+	assert.deepEqual(
+		related.selectRelatedPosts(university, [erasmus]),
+		related.selectRelatedPosts({ ...university, categories: ['BLOG', 'UNIVERSITA', 'VITA'] }, [
+			erasmus
+		])
+	);
+});
+
+test('article load adds only selected lightweight summaries and preserves ISR', async () => {
+	const source = relatedFixture.find((post) => post.slug === 'search');
+	const rows = [source, ...relatedFixture.filter((post) => post.slug !== source.slug)].map(
+		(post) => ({ ...row, ...post })
+	);
+	const { client, calls } = database(rows);
+	const result = await article.load({
+		params: { slug: source.slug },
+		locals: { supabase: client }
+	});
+	assert.equal(result.relatedPosts.length, 3);
+	assert.equal(result.contentHtml, row.content_html);
+	assert.equal(calls.filter((call) => call.method === 'select').length, 2);
+	const summaryProjection = calls.filter((call) => call.method === 'select')[1].value;
+	assert.ok(!/content|metadata/.test(summaryProjection));
+	assert.equal(
+		result.relatedPosts.some((post) => 'contentHtml' in post || 'score' in post),
+		false
+	);
+	assert.equal(article.config.isr.expiration, 300);
+});
+
+test('missing articles stay 404 without querying recommendations', async () => {
+	const { client, calls } = database([]);
+	await assert.rejects(
+		article.load({ params: { slug: 'missing' }, locals: { supabase: client } }),
+		(error) => error.status === 404
+	);
+	assert.equal(calls.filter((call) => call.method === 'select').length, 1);
+});
+
+test('optional recommendation failures leave the requested article available', async () => {
+	const { client } = database([row]);
+	const originalFrom = client.from;
+	client.from = (table) => {
+		const chain = originalFrom(table);
+		chain.returns = () =>
+			Promise.resolve({ data: null, error: new Error('test: summaries offline') });
+		return chain;
+	};
+	const result = await article.load({ params: { slug: row.slug }, locals: { supabase: client } });
+	assert.equal(result.meta.title, row.title);
+	assert.equal(result.contentHtml, row.content_html);
+	assert.deepEqual(result.relatedPosts, []);
 });

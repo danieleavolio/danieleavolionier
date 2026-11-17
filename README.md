@@ -81,6 +81,7 @@ npm run assets:optimize
 
 Misure, limiti noti e verifiche prima/dopo il deploy: [Performance e SEO](docs/performance-and-seo.md).
 Per gli URL esclusi da Google: [Diagnosi Search Console](docs/search-console.md).
+Ranking e UI dei suggerimenti negli articoli: [Leggi anche](docs/related-posts.md).
 
 ## Nuovi contenuti
 
