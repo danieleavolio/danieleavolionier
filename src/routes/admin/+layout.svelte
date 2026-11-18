@@ -89,11 +89,13 @@
 	}
 
 	nav a {
-		display: block;
+		display: flex;
+		align-items: center;
+		gap: 0.55rem;
 		width: 100%;
 		box-sizing: border-box;
 		text-decoration: none;
-		text-align: center;
+		text-align: left;
 		text-transform: uppercase;
 		font-family: var(--font-mono);
 		font-weight: 500;
@@ -109,6 +111,14 @@
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+	}
+
+	nav a::before {
+		content: '';
+		flex: 0 0 auto;
+		width: 0.5rem;
+		height: 0.5rem;
+		background-color: currentColor;
 	}
 
 	nav a:hover,

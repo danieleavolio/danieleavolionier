@@ -91,4 +91,14 @@
 		display: block;
 		margin: auto;
 	}
+
+	.nier-button:focus-visible {
+		background-color: var(--automataBgRGBA);
+		border-color: transparent;
+		color: var(--automataColor) !important;
+	}
+
+	.nier-button:focus-visible::before {
+		width: 0;
+	}
 </style>

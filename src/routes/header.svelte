@@ -1,18 +1,20 @@
 <script lang="ts">
 	import * as config from '#lib/config.ts';
-	import { Settings, ArrowDown01, Home } from 'lucide-svelte';
-	import { fly } from 'svelte/transition';
+	import { Settings, X, Home } from 'lucide-svelte';
+	import { page } from '$app/state';
 
 	//Import store and set to true on click
 	import isOpened from '#lib/stores/navstore.ts';
 	import SearchModal from '#lib/components/SearchModal.svelte';
 
+	let menu: HTMLDialogElement;
+	$: if (menu) {
+		if ($isOpened && !menu.open) menu.showModal();
+		else if (!$isOpened && menu.open) menu.close();
+	}
+
 	function handleClick() {
 		isOpened.set(!$isOpened);
-		if (isOpened) {
-			window.document.body.style.scrollBehavior = 'unset';
-			window.scrollTo(0, 0);
-		}
 	}
 </script>
 
@@ -20,12 +22,14 @@
 	<div class="nav-div">
 		<a href="/" class="title desktop"><b>{config.title}</b></a>
 		<a href="/" class="home mobile" aria-label="Home"><Home fill-opacity="0" size="2.5em" /></a>
-		<ul class="links desktop" data-sveltekit-preload-code="viewport">
-			<li><a href="/pagine">BLOG</a></li>
-			<li><a href="/progetti">PROGETTI</a></li>
-			<li><a href="/now">NOW</a></li>
-			<li><a href="/data">DATA</a></li>
-			<li><a href="/appunti">APPUNTI</a></li>
+		<ul class="links desktop yr-tabs" data-sveltekit-preload-code="viewport">
+			<li><a href="/pagine" class:active={page.url.pathname.startsWith('/pagine')}>BLOG</a></li>
+			<li>
+				<a href="/progetti" class:active={page.url.pathname.startsWith('/progetti')}>PROGETTI</a>
+			</li>
+			<li><a href="/now" class:active={page.url.pathname === '/now'}>NOW</a></li>
+			<li><a href="/data" class:active={page.url.pathname === '/data'}>DATA</a></li>
+			<li><a href="/appunti" class:active={page.url.pathname === '/appunti'}>APPUNTI</a></li>
 		</ul>
 		<SearchModal />
 		<button
@@ -33,24 +37,45 @@
 			class="button-hamburger mobile"
 			aria-label="Apri menu"
 			aria-expanded={$isOpened}
+			aria-controls="mobile-menu"
 		>
 			<Settings fill-opacity="0" size="2.5em" />
 		</button>
 	</div>
 </nav>
-{#if $isOpened}
-	<div transition:fly={{ y: 1000, duration: 300, opacity: 1 }} class="hidden-menu">
-		<button on:click={handleClick} class="close" aria-label="Chiudi menu">
-			<ArrowDown01 cursor="pointer" size="3em" fill-opacity="0" />
-		</button>
-		<a on:click={() => handleClick()} href="/">D.A</a>
-		<a on:click={() => handleClick()} href="/pagine">BLOG</a>
-		<a on:click={() => handleClick()} href="/progetti">PROGETTI</a>
-		<a on:click={() => handleClick()} href="/now">NOW</a>
-		<a on:click={() => handleClick()} href="/data">DATA</a>
-		<a on:click={() => handleClick()} href="/appunti">APPUNTI</a>
-	</div>
-{/if}
+<dialog
+	bind:this={menu}
+	id="mobile-menu"
+	class="hidden-menu yr-tabs"
+	aria-label="Menu di navigazione"
+	on:close={() => isOpened.set(false)}
+>
+	<button on:click={handleClick} class="close" aria-label="Chiudi menu">
+		<X size="2em" />
+	</button>
+	<a on:click={() => isOpened.set(false)} href="/" class:active={page.url.pathname === '/'}>D.A</a>
+	<a
+		on:click={() => isOpened.set(false)}
+		href="/pagine"
+		class:active={page.url.pathname.startsWith('/pagine')}>BLOG</a
+	>
+	<a
+		on:click={() => isOpened.set(false)}
+		href="/progetti"
+		class:active={page.url.pathname.startsWith('/progetti')}>PROGETTI</a
+	>
+	<a on:click={() => isOpened.set(false)} href="/now" class:active={page.url.pathname === '/now'}
+		>NOW</a
+	>
+	<a on:click={() => isOpened.set(false)} href="/data" class:active={page.url.pathname === '/data'}
+		>DATA</a
+	>
+	<a
+		on:click={() => isOpened.set(false)}
+		href="/appunti"
+		class:active={page.url.pathname === '/appunti'}>APPUNTI</a
+	>
+</dialog>
 
 <style>
 	a {
@@ -85,6 +110,7 @@
 
 	.nav-div {
 		display: flex;
+		align-items: center;
 		justify-content: space-between;
 	}
 
@@ -145,8 +171,52 @@
 	.links {
 		margin-block: var(--size-7);
 		display: flex;
-		gap: var(--size-7);
+		gap: 0.45rem;
 		margin-block: 0;
+	}
+
+	.links a,
+	.hidden-menu a {
+		height: auto;
+		text-shadow: none;
+		color: var(--automataColor);
+		background-color: var(--yr-muted);
+		transition: none;
+	}
+
+	.links a:hover,
+	.links a:focus-visible,
+	.links a.active,
+	.hidden-menu a:hover,
+	.hidden-menu a:focus-visible,
+	.hidden-menu a.active {
+		color: var(--automataBg);
+		background-color: var(--automataColor);
+	}
+
+	.links a::before,
+	.hidden-menu a::before {
+		content: '';
+		position: static;
+		z-index: auto;
+		flex: 0 0 0.75rem;
+		width: 0.75rem;
+		height: 0.75rem;
+		background: currentColor;
+	}
+
+	.links a::after,
+	.hidden-menu a::after {
+		display: none;
+		content: none;
+	}
+
+	.hidden-menu a {
+		justify-content: flex-start;
+		width: min(100%, 20rem);
+		min-height: 2.75rem;
+		padding: 0.65rem 1rem;
+		gap: 0.75rem;
 	}
 
 	li {
@@ -169,31 +239,36 @@
 	}
 
 	.hidden-menu {
-		position: absolute;
-		top: 0;
-		right: 0;
-		left: 0;
-		bottom: 0;
+		position: fixed;
+		inset: 0;
 		background-color: var(--automataBg);
-		height: 100vh;
-		display: flex;
+		color: var(--automataColor);
+		width: 100%;
+		height: 100dvh;
+		max-width: none;
+		max-height: none;
+		margin: 0;
+		border: 0;
+		border-radius: 0;
+		box-sizing: border-box;
+		display: none;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		gap: var(--size-7);
-		padding: 1em;
-		transition: all 0.5s ease-in-out;
+		gap: 0.75rem;
+		padding: 5rem 1.5rem 2rem;
+		overflow-y: auto;
 		z-index: 999;
 	}
 
-	.hidden-menu a {
-		width: 90%;
+	.hidden-menu[open] {
+		display: flex;
 	}
 
 	.close {
 		position: absolute;
-		bottom: 3rem;
-		right: 10px;
+		top: 1rem;
+		right: 1.5rem;
 		padding: 0.2em;
 		opacity: 0.7;
 		transition: all 0.2s ease-in-out;
@@ -213,10 +288,12 @@
 		transform: rotate(-90deg);
 	}
 
-	@media (max-width: 800) {
+	@media (max-width: 800px) {
 		nav {
 			justify-content: space-between;
 			position: sticky;
+			background-color: var(--automataBg);
+			padding-block: var(--size-4);
 		}
 	}
 </style>

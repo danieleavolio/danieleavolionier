@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import ConfirmModal from '#lib/components/ConfirmModal.svelte';
+	import Switch from '#lib/components/ui/Switch.svelte';
 	import type { NowItem } from '#lib/types.ts';
 
 	export let data;
@@ -97,9 +98,7 @@
 				type="number"
 				bind:value={selected.position}
 			/>
-			<label class="checkbox"
-				><input type="checkbox" name="published" value="true" bind:checked={selected.published} /> Pubblicato</label
-			>
+			<Switch name="published" bind:checked={selected.published} label="Pubblicato" />
 			<button type="submit">Salva</button>
 			{#if form?.message}<p class="message">{form.message}</p>{/if}
 		</form>
@@ -251,11 +250,6 @@
 	textarea {
 		min-height: 8rem;
 		resize: vertical;
-	}
-	.checkbox {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
 	}
 	button[type='submit'] {
 		margin-top: 1rem;

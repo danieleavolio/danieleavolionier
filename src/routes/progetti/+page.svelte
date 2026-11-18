@@ -90,12 +90,14 @@
 		{/if}
 	</ul>
 
-	<CategoriesFilter
-		bind:activeFilters
-		bind:this={CatFilter}
-		{categories}
-		on:filter={handleFilter}
-	/>
+	<div class="filter-column">
+		<CategoriesFilter
+			bind:activeFilters
+			bind:this={CatFilter}
+			{categories}
+			on:filter={handleFilter}
+		/>
+	</div>
 </section>
 
 <style>
@@ -119,23 +121,84 @@
 		grid-template-columns: minmax(0, 1fr);
 		overflow-wrap: anywhere;
 		gap: 1.2rem;
-		transition: all 0.5s ease-in-out;
+		box-sizing: border-box;
+		padding: 1.1rem 1.2rem;
+		border: 1px solid var(--yr-line);
+		background-color: var(--yr-surface);
+		box-shadow: var(--yr-shadow);
+		background-image: none;
+		max-inline-size: none;
+		transition: background-color 0.15s ease;
 	}
 	.posts {
+		display: grid;
+		gap: 1.25rem;
 		min-width: 0;
 	}
 
 	.post:not(:last-child) {
-		padding-bottom: var(--size-7);
+		padding-bottom: 1.1rem;
 	}
 
-	.post:hover {
-		background-color: var(--automataBg);
+	.post:hover,
+	.post:focus-within {
+		border-color: var(--automataColor);
+		background-color: var(--automataColor);
+		color: var(--automataBg);
+	}
+
+	.post:hover .date,
+	.post:hover .description,
+	.post:focus-within .date,
+	.post:focus-within .description {
+		color: inherit;
+	}
+
+	.post:hover .title,
+	.post:focus-within .title,
+	.post:hover :global(.tag),
+	.post:focus-within :global(.tag) {
+		color: var(--automataBg) !important;
+	}
+
+	.post:hover :global(.tag),
+	.post:focus-within :global(.tag) {
+		border-color: var(--automataBg) !important;
 	}
 
 	.title {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		width: fit-content;
+		padding: 0;
+		background-color: transparent;
+		text-align: left;
+		text-shadow: none;
 		font-size: var(--font-size-fluid-2);
 		text-transform: capitalize;
+	}
+
+	.title::before {
+		content: '';
+		position: static;
+		display: inline-block;
+		flex: 0 0 auto;
+		width: 0.55rem;
+		height: 0.55rem;
+		margin-right: 0;
+		background-color: currentColor;
+	}
+
+	.title:hover,
+	.title:focus-visible {
+		background-color: transparent;
+		border-color: transparent;
+		color: inherit !important;
+	}
+
+	.title:hover::before {
+		width: 0.55rem;
 	}
 
 	.date {
@@ -146,6 +209,18 @@
 		margin-top: var(--size-3);
 	}
 
+	@media (max-width: 700px) {
+		.post {
+			gap: 0.9rem;
+			padding: 0.9rem;
+		}
+
+		.title {
+			font-size: 1.35rem;
+			letter-spacing: 0.12rem;
+		}
+	}
+
 	.tags {
 		display: flex;
 		gap: 0.5em;
@@ -153,10 +228,24 @@
 		flex-wrap: wrap;
 	}
 
+	.filter-column {
+		width: 100%;
+		min-width: 0;
+	}
+
 	@media (min-width: 1000px) {
 		section {
 			flex-direction: row;
 			align-items: start;
+		}
+
+		.posts {
+			flex: 1 1 auto;
+		}
+
+		.filter-column {
+			flex: 0 0 240px;
+			width: 240px;
 		}
 	}
 </style>

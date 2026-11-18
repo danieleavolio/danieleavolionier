@@ -22,21 +22,36 @@
 
 <style>
 	.tag {
-		background-color: var(--automataColor);
-		color: var(--automataBg);
-		padding: 0.2em 0.5em;
-		cursor: pointer;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4em;
+		min-height: 1.9rem;
+		background-color: transparent;
+		color: var(--automataColor);
+		border: 1px solid var(--automataColor);
 		border-radius: 0;
-		transition: background-color 0.3s;
+		padding: 0.18em 0.5em;
+		font-size: 0.7rem;
+		font-weight: 500;
+		letter-spacing: 0.1rem;
+		cursor: pointer;
+		transition:
+			background-color 0.12s ease,
+			color 0.12s ease;
 		text-shadow: none;
 	}
 
-	.tag:hover {
-		background-color: var(--automataRed);
+	.tag::before {
+		content: '';
+		width: 0.4rem;
+		height: 0.4rem;
+		flex: 0 0 auto;
+		background-color: currentColor;
 	}
 
+	.tag:hover,
 	.active {
-		transition: background-color 0.3s;
-		background-color: var(--automataRed);
+		background-color: var(--automataColor);
+		color: var(--automataBg);
 	}
 </style>

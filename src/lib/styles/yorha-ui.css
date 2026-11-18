@@ -1,0 +1,617 @@
+/*
+ * YoRHa UI layer: flat panels, square swatches, thin rules and mechanical states.
+ * Visual specs adapted from the YoRHa design system; written for this site's tokens.
+ */
+
+:root {
+	--yr-surface: #d6d0b8;
+	--yr-muted: #b8b29b;
+	--yr-line: rgba(77, 73, 62, 0.45);
+	--yr-line-strong: var(--automataColor);
+	--yr-shadow: 4px 4px 0 rgba(77, 73, 62, 0.16);
+	--yr-focus: var(--automataRed);
+}
+
+/* ---------- Panels ---------- */
+
+.yr-panel {
+	min-width: 0;
+	border: 1px solid var(--yr-line);
+	background-color: var(--yr-surface);
+	box-shadow: var(--yr-shadow);
+}
+
+.yr-panel__head {
+	display: flex;
+	align-items: center;
+	gap: 0.55rem;
+	margin: 0;
+	padding: 0.5rem 0.75rem;
+	border: 0;
+	background-color: var(--automataColor);
+	color: var(--automataBg);
+	font-family: inherit;
+	font-size: 0.82rem;
+	font-weight: 500;
+	line-height: 1.4;
+	letter-spacing: 0.18rem;
+	text-transform: uppercase;
+	text-shadow: none;
+}
+
+.yr-panel__square {
+	flex: 0 0 auto;
+	margin: 0;
+	width: 0.6rem;
+	height: 0.6rem;
+	background-color: currentColor;
+}
+
+.yr-panel__body {
+	padding: 0.9rem;
+}
+
+.yr-rule {
+	height: 1px;
+	border: 0;
+	margin-block: 1.5rem;
+	background-color: var(--yr-line);
+}
+
+/* ---------- Navigation tabs ---------- */
+
+.yr-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.45rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.yr-tabs > li {
+	margin: 0;
+	padding: 0;
+	background-image: none;
+	max-inline-size: none;
+}
+
+.yr-tabs a {
+	box-sizing: border-box;
+	min-width: 0;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.4rem 0.75rem;
+	border: 1px solid var(--yr-line);
+	background-color: var(--yr-muted);
+	color: var(--automataColor);
+	font-size: 0.8rem;
+	font-weight: 500;
+	line-height: 1.3;
+	letter-spacing: 0.16rem;
+	text-transform: uppercase;
+	text-decoration: none;
+	text-shadow: none;
+	white-space: nowrap;
+}
+
+.yr-tabs a::before {
+	content: '';
+	position: static;
+	z-index: auto;
+	inset: auto;
+	display: block;
+	flex: 0 0 auto;
+	width: 0.55rem;
+	height: 0.55rem;
+	background-color: currentColor;
+	transition: none;
+}
+
+.yr-tabs a::after {
+	display: none;
+}
+
+.yr-tabs a:hover,
+.yr-tabs a:focus-visible,
+.yr-tabs a.active {
+	border-color: var(--automataColor);
+	background-color: var(--automataColor);
+	color: var(--automataBg);
+	text-decoration: none;
+}
+
+/* ---------- Buttons ---------- */
+
+.yr-button,
+a.yr-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.55rem;
+	min-height: 2.5rem;
+	box-sizing: border-box;
+	padding: 0.45rem 1rem;
+	border: 1px solid var(--yr-line-strong);
+	border-radius: 0;
+	background-color: var(--yr-surface);
+	color: var(--automataColor);
+	font: inherit;
+	font-size: 0.8rem;
+	font-weight: 500;
+	line-height: 1.3;
+	letter-spacing: 0.16rem;
+	text-transform: uppercase;
+	text-align: center;
+	text-decoration: none;
+	text-shadow: none;
+	cursor: pointer;
+}
+
+.yr-button::before {
+	content: '';
+	position: static;
+	z-index: auto;
+	display: block;
+	flex: 0 0 auto;
+	width: 0.55rem;
+	height: 0.55rem;
+	background-color: currentColor;
+}
+
+.yr-button::after {
+	display: none;
+}
+
+.yr-button:hover,
+.yr-button:focus-visible,
+a.yr-button:hover,
+a.yr-button:focus-visible {
+	border-color: var(--automataColor);
+	background-color: var(--automataColor);
+	color: var(--automataBg);
+	text-decoration: none;
+}
+
+.yr-button--primary,
+a.yr-button--primary {
+	border-color: var(--automataColor);
+	background-color: var(--automataColor);
+	color: var(--automataBg);
+}
+
+.yr-button--primary:hover,
+.yr-button--primary:focus-visible,
+a.yr-button--primary:hover,
+a.yr-button--primary:focus-visible {
+	border-color: var(--automataRed);
+	background-color: var(--automataRed);
+	color: var(--automataWhite);
+}
+
+.yr-button--ghost,
+a.yr-button--ghost {
+	background-color: transparent;
+}
+
+.yr-button--danger,
+a.yr-button--danger {
+	border-color: var(--automataRed);
+	background-color: transparent;
+	color: var(--automataRed);
+}
+
+.yr-button--danger:hover,
+.yr-button--danger:focus-visible,
+a.yr-button--danger:hover,
+a.yr-button--danger:focus-visible {
+	border-color: var(--automataRed);
+	background-color: var(--automataRed);
+	color: var(--automataWhite);
+}
+
+.yr-button:disabled,
+.yr-button[aria-disabled='true'] {
+	opacity: 0.45;
+	cursor: not-allowed;
+}
+
+/* ---------- Fields ---------- */
+
+.yr-field,
+:where(
+	input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='hidden']):not(
+			[type='file']
+		):not([type='submit']):not([type='button'])
+),
+:where(textarea),
+:where(select) {
+	box-sizing: border-box;
+	width: 100%;
+	padding: 0.62rem 0.75rem;
+	border: 1px solid var(--yr-line);
+	border-radius: 0;
+	background-color: var(--yr-surface);
+	color: var(--automataColor);
+	font: inherit;
+	font-size: 0.95rem;
+	letter-spacing: 0.03rem;
+	transition:
+		border-color 0.12s ease,
+		box-shadow 0.12s ease;
+}
+
+.yr-field:focus,
+:where(
+	input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='hidden']):not(
+			[type='file']
+		)
+):focus,
+:where(textarea):focus,
+:where(select):focus {
+	border-color: var(--automataColor);
+	outline: none;
+	box-shadow: inset 0 -2px 0 var(--automataColor);
+}
+
+.yr-field::placeholder,
+:where(input):placeholder,
+:where(textarea)::placeholder {
+	color: var(--automataColor);
+	opacity: 0.45;
+}
+
+.yr-textarea,
+:where(textarea) {
+	min-height: 6rem;
+	resize: vertical;
+}
+
+.yr-select,
+:where(select) {
+	appearance: none;
+	padding-left: 1.7rem;
+	padding-right: 2rem;
+	background-image:
+		linear-gradient(var(--automataColor), var(--automataColor)),
+		url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0h10L5 6z' fill='%234d493e'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-size:
+		0.5rem 0.5rem,
+		0.55rem 0.34rem;
+	background-position:
+		0.7rem 50%,
+		right 0.7rem 50%;
+	cursor: pointer;
+}
+
+.yr-label {
+	display: block;
+	margin-bottom: 0.3rem;
+	font-size: 0.72rem;
+	font-weight: 500;
+	letter-spacing: 0.14rem;
+	text-transform: uppercase;
+	opacity: 0.8;
+}
+
+/* ---------- Checkbox / radio ---------- */
+
+:where(input[type='checkbox']) {
+	appearance: none;
+	display: inline-grid;
+	place-content: center;
+	flex: 0 0 auto;
+	width: 1.05rem;
+	height: 1.05rem;
+	margin: 0 0.45rem 0 0;
+	border: 2px solid var(--automataColor);
+	border-radius: 0;
+	background-color: transparent;
+	cursor: pointer;
+	vertical-align: -0.18em;
+}
+
+:where(input[type='checkbox']):checked {
+	background-color: var(--automataColor);
+	background-image: linear-gradient(var(--automataBg), var(--automataBg));
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 0.42rem 0.42rem;
+}
+
+:where(input[type='radio']) {
+	appearance: none;
+	display: inline-grid;
+	place-content: center;
+	width: 1.05rem;
+	height: 1.05rem;
+	border: 2px solid var(--automataColor);
+	border-radius: 50%;
+	background: transparent;
+	cursor: pointer;
+	vertical-align: -0.18em;
+}
+
+:where(input[type='radio']):checked {
+	background-color: var(--automataColor);
+	box-shadow: inset 0 0 0 3px var(--automataBg);
+}
+
+/* ---------- Range / progress ---------- */
+
+:where(input[type='range']) {
+	appearance: none;
+	width: 100%;
+	height: 1.2rem;
+	background: transparent;
+	cursor: pointer;
+}
+
+:where(input[type='range'])::-webkit-slider-runnable-track {
+	height: 2px;
+	background-color: var(--automataColor);
+}
+
+:where(input[type='range'])::-webkit-slider-thumb {
+	appearance: none;
+	width: 0.7rem;
+	height: 1rem;
+	margin-top: -0.44rem;
+	border: 2px solid var(--automataBg);
+	background-color: var(--automataColor);
+}
+
+:where(input[type='range'])::-moz-range-track {
+	height: 2px;
+	background-color: var(--automataColor);
+}
+
+:where(input[type='range'])::-moz-range-thumb {
+	width: 0.7rem;
+	height: 1rem;
+	border: 2px solid var(--automataBg);
+	border-radius: 0;
+	background-color: var(--automataColor);
+}
+
+:where(progress) {
+	appearance: none;
+	width: 100%;
+	height: 0.35rem;
+	border: 0;
+	background-color: var(--yr-muted);
+}
+
+:where(progress)::-webkit-progress-bar {
+	background-color: var(--yr-muted);
+}
+
+:where(progress)::-webkit-progress-value {
+	background-color: var(--automataColor);
+}
+
+:where(progress)::-moz-progress-bar {
+	background-color: var(--automataColor);
+}
+
+/* ---------- Tables ---------- */
+
+:where(table) {
+	width: 100%;
+	border-collapse: collapse;
+	border: 1px solid var(--yr-line);
+	font-size: 0.92rem;
+}
+
+:where(thead th) {
+	padding: 0.5rem 0.75rem;
+	border: 1px solid var(--automataColor);
+	background-color: var(--automataColor);
+	color: var(--automataBg);
+	font-size: 0.74rem;
+	font-weight: 500;
+	letter-spacing: 0.12rem;
+	text-align: left;
+	text-transform: uppercase;
+}
+
+:where(th, td) {
+	padding: 0.5rem 0.75rem;
+	border: 1px solid var(--yr-line);
+	text-align: left;
+	vertical-align: top;
+}
+
+:where(tbody tr:nth-child(even)) {
+	background-color: rgba(255, 255, 255, 0.14);
+}
+
+:where(tbody tr:hover) {
+	background-color: rgba(77, 73, 62, 0.08);
+}
+
+/* ---------- Badges ---------- */
+
+.yr-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 0.12rem 0.42rem;
+	border: 1px solid var(--automataColor);
+	border-radius: 0;
+	background-color: transparent;
+	color: var(--automataColor);
+	font-family: inherit;
+	font-size: 0.68rem;
+	font-weight: 500;
+	line-height: 1.5;
+	letter-spacing: 0.1rem;
+	text-transform: uppercase;
+	white-space: nowrap;
+}
+
+.yr-badge::before {
+	content: '';
+	flex: 0 0 auto;
+	width: 0.4rem;
+	height: 0.4rem;
+	background-color: currentColor;
+}
+
+.yr-badge--solid {
+	background-color: var(--automataColor);
+	color: var(--automataBg);
+}
+
+.yr-badge--alert {
+	border-color: var(--automataRed);
+	background-color: var(--automataRed);
+	color: var(--automataWhite);
+}
+
+.yr-badge--muted {
+	border-color: var(--yr-line);
+	color: var(--automataColor);
+	opacity: 0.75;
+}
+
+/* ---------- Item list ---------- */
+
+.yr-list {
+	display: grid;
+	gap: 0.3rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.yr-item {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 0.2rem;
+	min-width: 0;
+	margin: 0;
+	padding: 0.7rem 0.8rem 0.7rem 1.7rem;
+	background-color: var(--yr-surface);
+	border: 1px solid var(--yr-line);
+	background-image: none;
+	max-inline-size: none;
+	overflow-wrap: anywhere;
+	line-height: 1.5;
+	transition:
+		background-color 0.12s ease,
+		color 0.12s ease;
+}
+
+.yr-item p,
+.yr-item small {
+	margin: 0;
+	line-height: 1.6;
+}
+
+.yr-item::before {
+	content: '';
+	position: absolute;
+	left: 0.6rem;
+	top: 1.05rem;
+	width: 0.5rem;
+	height: 0.5rem;
+	background-color: currentColor;
+}
+
+.yr-item:hover,
+.yr-item.active {
+	border-color: var(--automataColor);
+	background-color: var(--automataColor);
+	color: var(--automataBg);
+}
+
+.yr-item a {
+	color: inherit;
+	background: none;
+	padding: 0;
+	text-shadow: none;
+}
+
+.yr-item a::before,
+.yr-item a::after {
+	display: none;
+}
+
+/* ---------- Tooltip ---------- */
+
+[data-tooltip] {
+	position: relative;
+}
+
+[data-tooltip]::after {
+	content: attr(data-tooltip);
+	position: absolute;
+	left: 50%;
+	bottom: calc(100% + 0.5rem);
+	z-index: 80;
+	padding: 0.3rem 0.5rem;
+	background-color: var(--automataColor);
+	color: var(--automataBg);
+	font-size: 0.68rem;
+	letter-spacing: 0.08rem;
+	text-transform: uppercase;
+	white-space: nowrap;
+	opacity: 0;
+	pointer-events: none;
+	transform: translate(-50%, 0.2rem);
+	transition:
+		opacity 0.12s ease,
+		transform 0.12s ease;
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:focus-visible::after {
+	opacity: 1;
+	transform: translate(-50%, 0);
+}
+
+/* ---------- Small helpers ---------- */
+
+.yr-eyebrow {
+	margin: 0;
+	font-size: 0.72rem;
+	font-weight: 500;
+	letter-spacing: 0.24rem;
+	text-transform: uppercase;
+	opacity: 0.7;
+}
+
+.yr-mono {
+	font-family: var(--font-mono);
+}
+
+.yr-dots::after {
+	content: '';
+	animation: yr-dots 1.2s steps(4, end) infinite;
+}
+
+@keyframes yr-dots {
+	0% {
+		content: '';
+	}
+	25% {
+		content: '.';
+	}
+	50% {
+		content: '..';
+	}
+	75% {
+		content: '...';
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.yr-dots::after {
+		animation: none;
+		content: '...';
+	}
+}

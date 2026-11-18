@@ -189,6 +189,6 @@ test('mobile menu opens and navigates without duplicate headers', async ({ page,
 	await page.getByRole('button', { name: 'Apri menu' }).click();
 	await page.locator('.hidden-menu a[href="/now"]').click();
 	await expect(page).toHaveURL(/\/now$/);
-	await expect(page.locator('.hidden-menu')).toHaveCount(0);
+	await expect(page.locator('.hidden-menu')).not.toBeVisible();
 	await expect(page.getByRole('button', { name: 'Cerca nel sito' })).toHaveCount(1);
 });

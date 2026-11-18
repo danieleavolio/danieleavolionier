@@ -3,6 +3,7 @@
 	import { onMount, tick } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import Modal from './Modal.svelte';
+	import Spinner from './ui/Spinner.svelte';
 	import { goto } from '$app/navigation';
 
 	let search: 'loading' | 'ready' | 'error' = 'loading';
@@ -137,6 +138,7 @@
 			<div class="input-wrapper">
 				<span class="material-symbols-outlined search-input-icon"> search </span>
 				<input
+					class="yr-field"
 					bind:this={searchInput}
 					bind:value={searchTerm}
 					placeholder="Cerca articoli, progetti, appunti (premi ↑↓ e Invio)..."
@@ -195,7 +197,11 @@
 			<button on:click={() => void loadSearch()}>Riprova</button>
 		</div>
 	{:else}
-		<p class="search" role="status">Caricamento ricerca…</p>
+		<div class="search loading-state" role="status">
+			<Spinner size={18} label="" />
+			<span>CARICAMENTO</span>
+			<span class="yr-dots" aria-hidden="true"></span>
+		</div>
 	{/if}
 </Modal>
 
@@ -205,6 +211,15 @@
 		display: flex;
 		flex-direction: column;
 		gap: 1em;
+	}
+
+	.loading-state {
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		font-size: 0.8rem;
+		letter-spacing: 0.18rem;
+		text-transform: uppercase;
 	}
 
 	.search-icon {
@@ -220,18 +235,23 @@
 	button {
 		background-color: var(--automataBlackO);
 		color: var(--automataWhite);
-		border: none;
+		border: 1px solid transparent;
 		padding: 0.5em;
 		cursor: pointer;
-		border-radius: 100%;
+		border-radius: 0;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		transition: background-color 0.2s ease;
+		transition:
+			background-color 0.12s ease,
+			color 0.12s ease,
+			border-color 0.12s ease;
 	}
 
 	button:hover {
-		background-color: var(--automataBlackOpacity);
+		background-color: var(--automataWhite);
+		border-color: var(--automataWhite);
+		color: var(--automataBlackO);
 	}
 
 	.input-wrapper {
@@ -251,16 +271,23 @@
 		width: 100%;
 		padding: 0.75em 1em 0.75em 2.6em;
 		font-size: 1.05rem;
-		background-color: var(--automataBlackO);
+		background-color: #3a3832;
 		color: var(--automataWhite);
-		border: 1px solid var(--border, rgba(255, 255, 255, 0.2));
-		border-radius: 4px;
+		border: 1px solid #57544a;
+		border-radius: 0;
 		outline: none;
-		transition: border-color 0.2s ease;
+		transition:
+			border-color 0.12s ease,
+			box-shadow 0.12s ease;
 	}
 
 	input:focus {
 		border-color: var(--automataWhite);
+		box-shadow: inset 0 -2px 0 var(--automataWhite);
+	}
+
+	input:focus-visible {
+		outline-color: var(--automataWhite) !important;
 	}
 
 	/* input placeholder */
@@ -285,19 +312,19 @@
 
 	.link {
 		cursor: pointer;
-		background-color: var(--automataBlackOpacity);
+		background-color: #3a3832;
 		color: var(--automataWhite);
 		padding: 0.85em 1.1em;
-		border: 1px solid transparent;
-		border-radius: 4px;
+		border: 1px solid #57544a;
+		border-radius: 0;
 		transition:
-			background-color 0.15s,
-			border-color 0.15s;
+			background-color 0.12s,
+			border-color 0.12s;
 	}
 
 	.link:hover,
 	.link.selected {
-		background-color: var(--automataBlackO);
+		background-color: #4e4b42;
 		border-color: var(--automataWhite);
 	}
 
@@ -308,24 +335,36 @@
 	}
 
 	.type-badge {
-		font-size: 0.72rem;
-		font-weight: 700;
-		letter-spacing: 0.05em;
-		padding: 0.15em 0.45em;
-		border-radius: 3px;
-		background: rgba(255, 255, 255, 0.12);
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35em;
+		font-size: 0.68rem;
+		font-weight: 500;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		padding: 0.12em 0.4em;
+		border: 1px solid currentColor;
+		border-radius: 0;
+		background: transparent;
+	}
+
+	.type-badge::before {
+		content: '';
+		width: 0.4em;
+		height: 0.4em;
+		background: currentColor;
 	}
 
 	.type-badge.post {
-		color: #9cdcfe;
+		color: var(--automataYellow);
 	}
 
 	.type-badge.progetto {
-		color: #ce9178;
+		color: var(--automataRed);
 	}
 
 	.type-badge.appunto {
-		color: #4ec9b0;
+		color: #9fb8a8;
 	}
 
 	h3 {
@@ -338,7 +377,7 @@
 		margin-top: 0.4em;
 		margin-bottom: 0;
 		font-size: 0.88rem;
-		color: var(--text-2, rgba(255, 255, 255, 0.75));
+		color: rgba(236, 231, 213, 0.72);
 	}
 
 	.no-results,

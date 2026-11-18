@@ -1,73 +1,94 @@
-<script>
+<script lang="ts">
+	import { Copy, ExternalLink } from 'lucide-svelte';
 	export let postTitle = '';
 	export let postUrl = '';
+	let message = '';
 
-	// Funzione per aprire una finestra popup di condivisione su Twitter
-	function shareOnTwitter() {
-		const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-			postTitle
-		)}&url=${encodeURIComponent(postUrl)}`;
-		window.open(twitterUrl, '_blank', 'width=500,height=400');
-	}
-
-	// Funzione per copiare il link del post negli appunti
-	function copyLink() {
-		navigator.clipboard.writeText(postUrl);
+	async function copyLink() {
+		try {
+			await navigator.clipboard.writeText(postUrl);
+			message = 'Link copiato.';
+		} catch {
+			message = 'Copia non riuscita. Puoi copiare il link dalla barra degli indirizzi.';
+		}
 	}
 </script>
 
-<!-- HTML per i pulsanti di condivisione -->
-<div class="share-buttons">
-	<button on:click={shareOnTwitter} class="twitter-share">
-		<img src="https://simpleicons.org/icons/x.svg" alt="twitter" />Condividi su X</button
-	>
-	<button on:click={copyLink} class="copy-link"> Copia il link</button>
-</div>
+<section class="share-buttons" aria-label="Condividi questo contenuto">
+	<span class="share-label">Condividi</span>
+	<div class="actions">
+		<a
+			class="share-action"
+			href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(postTitle)}&url=${encodeURIComponent(postUrl)}`}
+			target="_blank"
+			rel="noopener noreferrer"><ExternalLink size={16} aria-hidden="true" />Condividi su X</a
+		>
+		<button type="button" class="share-action" on:click={copyLink}
+			><Copy size={16} aria-hidden="true" />Copia il link</button
+		>
+	</div>
+	<p class="feedback" role="status">{message}</p>
+</section>
 
-<!-- Stili per i pulsanti di condivisione -->
 <style>
 	.share-buttons {
 		display: flex;
-		gap: 10px;
-		margin: 1em;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 0.75rem 1.25rem;
+		margin-block: 1.5rem;
+		padding-block: 1rem;
+		border-block: 1px solid var(--yr-line);
+	}
+	.share-label {
+		font-size: 0.72rem;
+		letter-spacing: 0.16rem;
+		text-transform: uppercase;
+	}
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+	.share-action {
+		display: inline-flex;
+		align-items: center;
 		justify-content: center;
-	}
-
-	.share-buttons button {
-		padding: 10px;
-		border: none;
-		font-size: 1rem;
-		cursor: pointer;
-		transition: all 0.2s ease;
-		text-shadow: none;
-		color: var(--automataWhite);
-	}
-
-	img {
-		width: 20px;
-		height: 20px;
-		margin-right: 5px;
+		gap: 0.6rem;
+		box-sizing: border-box;
+		min-height: 2.75rem;
+		padding: 0.65rem 0.85rem;
+		border: 1px solid var(--yr-line);
+		border-radius: 0;
+		background: var(--yr-muted);
+		color: var(--automataColor);
 		box-shadow: none;
+		font: inherit;
+		font-size: 0.75rem;
+		line-height: 1.5;
+		letter-spacing: 0.08rem;
+		text-transform: uppercase;
+		text-shadow: none;
+		text-decoration: none;
+		cursor: pointer;
 	}
-
-	.twitter-share {
-		background-color: var(--automataBlackOpacity);
+	.share-action::before,
+	.share-action::after {
+		display: none;
 	}
-
-	.copy-link {
-		background-color: var(--automataRedOpacity);
+	.share-action:hover,
+	.share-action:focus-visible {
+		background: var(--automataColor);
+		color: var(--automataBg);
+		border-color: var(--automataColor);
 	}
-
-	.twitter-share:hover,
-	.copy-link:hover {
-		transform: scale(1.05);
+	.feedback {
+		flex-basis: 100%;
+		margin: 0;
+		font-size: 0.8rem;
+		line-height: 1.5;
 	}
-
-	.twitter-share:hover {
-		background-color: var(--automataBlackO);
-	}
-
-	.copy-link:hover {
-		background-color: var(--automataRed);
+	.feedback:empty {
+		display: none;
 	}
 </style>

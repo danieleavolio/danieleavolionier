@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import Spinner from '#lib/components/ui/Spinner.svelte';
 
 	export let form;
 	let loading = false;
@@ -7,8 +8,8 @@
 
 <svelte:head><title>Admin login | Daniele Avolio</title></svelte:head>
 
-<section class="login-card">
-	<p class="eyebrow">DANIELE AVOLIO · ADMIN</p>
+<section class="login-card yr-panel">
+	<p class="eyebrow yr-eyebrow">DANIELE AVOLIO · ADMIN</p>
 	<h1>Accedi</h1>
 	<form
 		method="POST"
@@ -21,11 +22,21 @@
 			};
 		}}
 	>
-		<label for="email">Email</label>
-		<input id="email" name="email" type="email" autocomplete="email" required />
-		<label for="password">Password</label>
-		<input id="password" name="password" type="password" autocomplete="current-password" required />
-		<button type="submit" disabled={loading}>{loading ? 'Accesso in corso…' : 'Entra'}</button>
+		<label class="yr-label" for="email">Email</label>
+		<input class="yr-field" id="email" name="email" type="email" autocomplete="email" required />
+		<label class="yr-label" for="password">Password</label>
+		<input
+			class="yr-field"
+			id="password"
+			name="password"
+			type="password"
+			autocomplete="current-password"
+			required
+		/>
+		<button class="yr-button yr-button--primary" type="submit" disabled={loading}>
+			{#if loading}<Spinner size={14} label="" />{/if}
+			{loading ? 'Accesso in corso…' : 'Entra'}
+		</button>
 	</form>
 	{#if form?.message}<p class="error">{form.message}</p>{/if}
 </section>

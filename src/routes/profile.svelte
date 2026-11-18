@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Square } from 'lucide-svelte';
 	let pagedata: HTMLElement;
 
 	import { onMount } from 'svelte';
@@ -25,7 +24,7 @@
 
 <div bind:this={pagedata} class="page-data">
 	<div class="top-header">
-		<Square />
+		<span class="header-square" aria-hidden="true"></span>
 		<p>Daniele Avolio - Data Engineer @ AgileLab</p>
 	</div>
 	<div class="outer-box">
@@ -129,6 +128,13 @@
 	.top-header {
 		background-color: var(--automataBgRGBA);
 		width: 100%;
+	}
+	.header-square {
+		flex: 0 0 auto;
+		width: 0.9rem;
+		height: 0.9rem;
+		margin-right: 0.6rem;
+		background-color: var(--automataColor);
 	}
 	.outer-box {
 		min-width: 0;

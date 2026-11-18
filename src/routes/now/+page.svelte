@@ -39,7 +39,13 @@
 							class:paused={item.status === 'paused'}
 						>
 							<div class="item-heading">
-								<span class="status" aria-label={item.status}></span>
+								<span class="status yr-badge">
+									{item.status === 'completed'
+										? 'Completato'
+										: item.status === 'paused'
+											? 'In pausa'
+											: 'In corso'}
+								</span>
 								<h3>{item.title}</h3>
 							</div>
 							<p>{item.description}</p>
@@ -114,19 +120,21 @@
 	}
 
 	.status {
-		width: 0.75rem;
-		height: 0.75rem;
 		flex: 0 0 auto;
-		border-radius: 50%;
-		background: var(--automataRed);
+		align-self: flex-start;
+		border-color: var(--automataRed);
+		color: var(--automataRed);
 	}
 
 	.completed .status {
-		background: var(--automataColor);
+		border-color: var(--automataColor);
+		background-color: var(--automataColor);
+		color: var(--automataBg);
 	}
 
 	.paused .status {
-		background: var(--automataYellow);
+		border-color: var(--automataYellow);
+		color: var(--automataYellow);
 	}
 
 	.items p {

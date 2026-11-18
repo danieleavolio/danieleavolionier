@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import RichTextEditor from '#lib/components/RichTextEditor.svelte';
+	import Switch from '#lib/components/ui/Switch.svelte';
 	import PostPreview from '#lib/components/PostPreview.svelte';
 	import type { EditableContent } from '#lib/server/admin-content.ts';
 
@@ -139,9 +140,7 @@
 				bind:value={item.image}
 			/>
 
-			<label class="checkbox"
-				><input type="checkbox" name="published" value="true" bind:checked={item.published} /> Pubblicato</label
-			>
+			<Switch name="published" bind:checked={item.published} label="Pubblicato" />
 
 			{#if item.metadata.contentType === 'posts'}
 				<fieldset>

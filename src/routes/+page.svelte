@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Square } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
 	import type { Element } from '#lib/types.ts';
@@ -65,10 +64,10 @@
 	<section class="section-1">
 		<li class="post">
 			<div bind:this={items_container} class="items-container">
-				<a href="/pagine" class="title"><Square /> Blog</a>
-				<a href="/progetti" class="title"><Square /> Progetti</a>
-				<a href="/data" class="title"><Square /> Data</a>
-				<a href="/appunti" class="title"><Square /> Appunti</a>
+				<a href="/pagine" class="title">Blog</a>
+				<a href="/progetti" class="title">Progetti</a>
+				<a href="/data" class="title">Data</a>
+				<a href="/appunti" class="title">Appunti</a>
 			</div>
 		</li>
 	</section>
@@ -76,11 +75,13 @@
 </div>
 
 <section class="latest-grid">
-	<article class="latest-panel">
-		<h2>Ultimi articoli</h2>
-		<ul>
+	<article class="latest-panel yr-panel">
+		<h2 class="yr-panel__head">
+			<span class="yr-panel__square" aria-hidden="true"></span>Ultimi articoli
+		</h2>
+		<ul class="yr-panel__body">
 			{#each latestPosts as post (post.slug)}
-				<li>
+				<li class="yr-item">
 					<a href={`/pagine/${post.slug}`}>{post.title}</a>
 					<p>{formatDate(post.date)}</p>
 					{#if categoryList(post).length}
@@ -91,11 +92,13 @@
 		</ul>
 	</article>
 
-	<article class="latest-panel">
-		<h2>Ultimi progetti</h2>
-		<ul>
+	<article class="latest-panel yr-panel">
+		<h2 class="yr-panel__head">
+			<span class="yr-panel__square" aria-hidden="true"></span>Ultimi progetti
+		</h2>
+		<ul class="yr-panel__body">
 			{#each latestProjects as project (project.slug)}
-				<li>
+				<li class="yr-item">
 					<a href={`/progetti/${project.slug}`}>{project.title}</a>
 					<p>{formatDate(project.date)}</p>
 					{#if categoryList(project).length}
@@ -120,9 +123,11 @@
 	li {
 		display: flex !important;
 		align-items: center;
-		padding-top: 0;
-		padding-bottom: 0;
+		padding: 0;
 		width: 100%;
+		background-image: none;
+		margin-bottom: 0;
+		max-inline-size: none;
 	}
 
 	.separator {
@@ -186,7 +191,36 @@
 
 	.title {
 		font-size: var(--font-size-fluid-2);
-		text-transform: capitalize;
+		text-transform: none;
+	}
+
+	.items-container a::before {
+		content: '';
+		position: static;
+		z-index: auto;
+		display: block;
+		flex: 0 0 auto;
+		width: 0.75rem;
+		height: 0.75rem;
+		background-color: var(--automataColor);
+	}
+
+	.items-container a {
+		align-items: center;
+		gap: 0.75rem;
+		text-shadow: none;
+	}
+
+	.items-container a:hover,
+	.items-container a:focus-visible {
+		background-color: var(--automataColor);
+		border-color: var(--automataColor);
+		color: var(--automataBg) !important;
+	}
+
+	.items-container a:hover::before,
+	.items-container a:focus-visible::before {
+		background-color: var(--automataBg);
 	}
 
 	.latest-grid {
@@ -197,14 +231,11 @@
 	}
 
 	.latest-panel {
-		background-color: var(--automataBgOpacity);
-		padding: 1rem;
-		border-top: 1px solid var(--automataBlackOpacity);
-		border-bottom: 1px solid var(--automataBlackOpacity);
+		min-width: 0;
 	}
 
 	.latest-panel h2 {
-		margin-bottom: 1rem;
+		margin-bottom: 0;
 	}
 
 	.latest-panel ul {
@@ -215,13 +246,15 @@
 
 	.latest-panel li {
 		display: block !important;
-		padding-left: 0;
-		background-image: none;
+		width: auto;
+		padding: 0.7rem 0.8rem 0.7rem 1.7rem;
 		margin-bottom: 0;
+		background-image: none;
 	}
 
 	.latest-panel a {
 		padding-left: 0;
+		line-height: 1.5;
 	}
 
 	.latest-panel p {
@@ -233,6 +266,15 @@
 		display: block;
 		margin-top: 0.3rem;
 		color: var(--automataBlackOpacity);
+	}
+
+	.latest-panel li:hover p,
+	.latest-panel li:hover a,
+	.latest-panel li:hover small,
+	.latest-panel li:focus-within p,
+	.latest-panel li:focus-within a,
+	.latest-panel li:focus-within small {
+		color: inherit;
 	}
 
 	@media (min-width: 1000px) {
