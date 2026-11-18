@@ -108,3 +108,97 @@ test('card hover preserves title and badge contrast', async ({ page }) => {
 	await expect(card.locator('.title')).toHaveCSS('color', 'rgb(200, 194, 170)');
 	await expect(card.locator('.tag').first()).toHaveCSS('color', 'rgb(200, 194, 170)');
 });
+
+test('theme toggle switches palette and persists across reloads', async ({ page }) => {
+	await page.goto('/');
+	const html = page.locator('html');
+	const lightBg = await html.evaluate((element) => getComputedStyle(element).backgroundColor);
+	await page.getByRole('button', { name: 'Passa al tema scuro' }).click();
+	await expect(html).toHaveAttribute('data-theme', 'dark');
+	const darkBg = await html.evaluate((element) => getComputedStyle(element).backgroundColor);
+	expect(darkBg).not.toBe(lightBg);
+	await expect(page.getByRole('button', { name: 'Passa al tema chiaro' })).toHaveAttribute(
+		'aria-pressed',
+		'true'
+	);
+	await page.reload();
+	await expect(html).toHaveAttribute('data-theme', 'dark');
+	await page.getByRole('button', { name: 'Passa al tema chiaro' }).click();
+	await expect(html).toHaveAttribute('data-theme', 'light');
+});
+
+test('photo avatar and custom icons render on the home page', async ({ page }) => {
+	await page.goto('/');
+	await expect(page.locator('.avatar-photo img')).toBeVisible();
+	await expect(page.getByRole('button', { name: 'Cerca nel sito' }).locator('svg')).toHaveCount(1);
+});
+
+test('photo avatar spins to Emi with mouse drag and touch drag', async ({ page }) => {
+	await page.goto('/');
+	const avatar = page.locator('.avatar-photo');
+	await avatar.scrollIntoViewIfNeeded();
+	const box = await avatar.boundingBox();
+	expect(box).not.toBeNull();
+	const rotor = page.locator('.avatar-rotor');
+	const initial = await rotor.evaluate((element) => getComputedStyle(element).transform);
+	await avatar.hover();
+	await expect(avatar).toHaveCSS('box-shadow', 'none');
+	await expect(avatar).toHaveCSS('outline-style', 'none');
+
+	const midY = box!.y + box!.height / 2;
+	await page.mouse.move(box!.x + 20, midY);
+	await page.mouse.down();
+	await page.mouse.move(box!.x + box!.width - 20, midY, { steps: 5 });
+	await page.mouse.up();
+	await page.waitForTimeout(150);
+	const afterMouse = await rotor.evaluate((element) => getComputedStyle(element).transform);
+	expect(afterMouse).not.toBe(initial);
+	await page.waitForTimeout(350);
+	const afterInertia = await rotor.evaluate((element) => getComputedStyle(element).transform);
+	expect(afterInertia).not.toBe(afterMouse);
+
+	await avatar.evaluate((element) => {
+		const rect = element.getBoundingClientRect();
+		const y = rect.top + rect.height / 2;
+		const event = (type: string, x: number) =>
+			new PointerEvent(type, {
+				pointerId: 7,
+				pointerType: 'touch',
+				clientX: x,
+				clientY: y,
+				bubbles: true
+			});
+		element.dispatchEvent(event('pointerdown', rect.left + 20));
+		element.dispatchEvent(event('pointermove', rect.left + rect.width - 20));
+		element.dispatchEvent(event('pointerup', rect.left + rect.width - 20));
+	});
+	await page.waitForTimeout(150);
+	const afterTouch = await rotor.evaluate((element) => getComputedStyle(element).transform);
+	expect(afterTouch).not.toBe(afterMouse);
+});
+
+test('latest panel rows open their article from anywhere', async ({ page }) => {
+	await page.goto('/');
+	const item = page.locator('.latest-panel .yr-item').first();
+	await item.scrollIntoViewIfNeeded();
+	const box = await item.boundingBox();
+	expect(box).not.toBeNull();
+	await page.mouse.click(box!.x + box!.width / 2, box!.y + box!.height - 8);
+	await expect(page).toHaveURL(/\/pagine\//);
+});
+
+test('whole post card opens the article while tags keep filtering', async ({ page }) => {
+	await page.goto('/pagine');
+	const card = page.locator('.post').first();
+	const box = await card.boundingBox();
+	expect(box).not.toBeNull();
+	await page.mouse.click(box!.x + box!.width - 24, box!.y + box!.height / 2);
+	await expect(page).toHaveURL(/\/pagine\/[^/]+$/);
+
+	await page.goBack();
+	await expect(page.locator('.post').first()).toBeVisible();
+	const count = await page.locator('.post').count();
+	await page.locator('.post').first().locator('.tag').first().click();
+	await expect(page).toHaveURL(/\/pagine$/);
+	await expect.poll(() => page.locator('.post').count()).toBeLessThan(count);
+});

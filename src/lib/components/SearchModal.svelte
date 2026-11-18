@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { SearchResult } from '#lib/search.ts';
+	import Icon from '#lib/components/ui/Icon.svelte';
 	import { onMount, tick } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import Modal from './Modal.svelte';
@@ -128,7 +129,7 @@
 		title="Cerca (Ctrl+K)"
 		aria-label="Cerca nel sito"
 	>
-		<span class="material-symbols-outlined"> search </span>
+		<Icon name="search" size={22} />
 	</button>
 </div>
 
@@ -136,7 +137,7 @@
 	{#if search === 'ready'}
 		<div class="search">
 			<div class="input-wrapper">
-				<span class="material-symbols-outlined search-input-icon"> search </span>
+				<span class="search-input-icon"><Icon name="search" size={18} /></span>
 				<input
 					class="yr-field"
 					bind:this={searchInput}
@@ -263,7 +264,9 @@
 	.search-input-icon {
 		position: absolute;
 		left: 0.75em;
-		color: var(--text-2, rgba(255, 255, 255, 0.6));
+		display: flex;
+		color: var(--automataWhite);
+		opacity: 0.8;
 		pointer-events: none;
 	}
 
@@ -291,8 +294,9 @@
 	}
 
 	/* input placeholder */
-	::placeholder {
-		color: var(--text-2, rgba(255, 255, 255, 0.5));
+	input::placeholder {
+		color: var(--automataWhite);
+		opacity: 0.65;
 	}
 
 	.results {
@@ -380,9 +384,14 @@
 		color: rgba(236, 231, 213, 0.72);
 	}
 
+	.results .no-results,
+	.results .hint-text {
+		color: var(--automataColor);
+	}
+
 	.no-results,
 	.hint-text {
-		color: var(--text-2, rgba(255, 255, 255, 0.6));
+		color: var(--automataColor);
 		text-align: center;
 		padding: 2em 1em;
 		font-style: italic;
@@ -393,16 +402,16 @@
 		justify-content: flex-end;
 		gap: 1.2em;
 		padding-top: 0.75em;
-		border-top: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+		border-top: 1px solid var(--automataBlackOpacity);
 		font-size: 0.78rem;
-		color: var(--text-2, rgba(255, 255, 255, 0.6));
+		color: var(--automataColor);
 	}
 
 	.palette-footer kbd {
 		font-family: inherit;
-		background: rgba(255, 255, 255, 0.08);
+		background: var(--automataBgRGBA);
 		padding: 0.1em 0.35em;
-		border-radius: 3px;
-		border: 1px solid rgba(255, 255, 255, 0.15);
+		border-radius: 0;
+		border: 1px solid var(--automataBlackOpacity);
 	}
 </style>

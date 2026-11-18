@@ -53,7 +53,7 @@
 		margin: 0;
 		padding: 0;
 		box-sizing: border-box;
-		border-radius: 2px;
+		border-radius: 0;
 	}
 
 	.data {
@@ -66,6 +66,7 @@
 		font-size: var(--font-size-fluid-2);
 	}
 
+	/* Original light-theme swatches, frozen so dark mode keeps the same colours. */
 	.stack {
 		display: flex;
 		flex-direction: column;
@@ -81,26 +82,29 @@
 	.stack-element {
 		text-align: center;
 		padding: 1em;
-		box-shadow: 0 5px 0px var(--automataColor);
+		box-shadow: 0 5px 0 var(--automataColor);
 		cursor: pointer;
 		transition: all 0.1s ease-in;
 	}
 
 	.stack-yellow {
-		background-color: var(--automataYellowOpacity);
+		background-color: #d6ceaa;
+		color: #4d493e;
 	}
 
 	.stack-red {
-		background-color: var(--automataRedOpacity);
+		background-color: #cb9279;
+		color: #4d493e;
 	}
 
 	.stack-white {
-		background-color: var(--automataWhiteOpacity);
+		background-color: #dad5c0;
+		color: #4d493e;
 	}
 
 	.stack-black {
-		background-color: var(--automataBlackOpacity);
-		color: var(--automataBg);
+		background-color: #716d5e;
+		color: #e8e2cf;
 	}
 
 	.stack-element:hover {
@@ -108,19 +112,19 @@
 	}
 
 	.stack-yellow:hover {
-		background-color: var(--automataYellow);
+		background-color: #e1d8aa;
 	}
 
 	.stack-red:hover {
-		background-color: var(--automataRed);
+		background-color: #cd674d;
 	}
 
 	.stack-white:hover {
-		background-color: var(--automataWhite);
+		background-color: #ece7d5;
 	}
 
 	.stack-black:hover {
-		background-color: var(--automataColor);
-		color: var(--automataBg);
+		background-color: #4d493e;
+		color: #e8e2cf;
 	}
 </style>

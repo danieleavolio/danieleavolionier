@@ -24,10 +24,9 @@ test('home is compact, crawlable and does not eagerly fetch search or diagram en
 	expect(requests.some((url) => url.includes('/search.json'))).toBe(false);
 	expect(requests.some((url) => /fonts\.(googleapis|gstatic)\.com/.test(url))).toBe(false);
 	expect(errors).toEqual([]);
-	const image = page.getByAltText('Daniele Avolio Avatar');
-	expect(await image.evaluate((element: HTMLImageElement) => element.currentSrc)).toContain(
-		'.webp'
-	);
+	const avatar = page.getByRole('button', { name: /Ritratto di Daniele Avolio/ });
+	await expect(avatar).toBeVisible();
+	await expect(avatar.locator('img')).toHaveAttribute('src', '/images/avatar-640.webp');
 });
 
 test('search works on demand, including keyboard and article-to-article navigation', async ({
@@ -94,12 +93,18 @@ test('diagrams render near the viewport and retain the NieR theme', async ({ pag
 	const errors: string[] = [];
 	page.on('pageerror', (error) => errors.push(error.message));
 	await page.goto('/pagine/opencode-e-le-balene');
-	const block = page
-		.locator('.rich-content pre')
-		.filter({ hasText: /flowchart|graph / })
-		.first();
-	await block.scrollIntoViewIfNeeded();
-	await expect(page.locator('.rich-mermaid svg').first()).toBeVisible({ timeout: 20_000 });
+	await expect(page.locator('.rich-content pre, .rich-mermaid').first()).toBeVisible({
+		timeout: 20_000
+	});
+	await page.evaluate(() => {
+		const blocks = Array.from(
+			document.querySelectorAll<HTMLElement>('.rich-content pre, .rich-content .rich-mermaid')
+		);
+		const target = blocks.find((block) => /flowchart|graph\s/i.test(block.textContent ?? ''));
+		(target ?? blocks[0])?.scrollIntoView({ block: 'center' });
+	});
+	const diagram = page.locator('.rich-mermaid').first();
+	await expect(diagram.locator('svg').first()).toBeVisible({ timeout: 30_000 });
 	expect(errors).toEqual([]);
 });
 

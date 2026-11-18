@@ -1,7 +1,8 @@
 <script lang="ts">
 	import * as config from '#lib/config.ts';
-	import { Settings, X, Home } from 'lucide-svelte';
 	import { page } from '$app/state';
+	import Icon from '#lib/components/ui/Icon.svelte';
+	import ThemeToggle from '#lib/components/ui/ThemeToggle.svelte';
 
 	//Import store and set to true on click
 	import isOpened from '#lib/stores/navstore.ts';
@@ -21,7 +22,7 @@
 <nav aria-label="Navigazione principale">
 	<div class="nav-div">
 		<a href="/" class="title desktop"><b>{config.title}</b></a>
-		<a href="/" class="home mobile" aria-label="Home"><Home fill-opacity="0" size="2.5em" /></a>
+		<a href="/" class="home mobile" aria-label="Home"><Icon name="home" size={30} /></a>
 		<ul class="links desktop yr-tabs" data-sveltekit-preload-code="viewport">
 			<li><a href="/pagine" class:active={page.url.pathname.startsWith('/pagine')}>BLOG</a></li>
 			<li>
@@ -31,6 +32,7 @@
 			<li><a href="/data" class:active={page.url.pathname === '/data'}>DATA</a></li>
 			<li><a href="/appunti" class:active={page.url.pathname === '/appunti'}>APPUNTI</a></li>
 		</ul>
+		<ThemeToggle />
 		<SearchModal />
 		<button
 			on:click={handleClick}
@@ -39,7 +41,7 @@
 			aria-expanded={$isOpened}
 			aria-controls="mobile-menu"
 		>
-			<Settings fill-opacity="0" size="2.5em" />
+			<Icon name="menu" size={28} />
 		</button>
 	</div>
 </nav>
@@ -51,7 +53,7 @@
 	on:close={() => isOpened.set(false)}
 >
 	<button on:click={handleClick} class="close" aria-label="Chiudi menu">
-		<X size="2em" />
+		<Icon name="close" size={26} />
 	</button>
 	<a on:click={() => isOpened.set(false)} href="/" class:active={page.url.pathname === '/'}>D.A</a>
 	<a
@@ -129,13 +131,18 @@
 	}
 
 	.button-hamburger :global(svg) {
-		width: 2.5em;
-		height: 2.5em;
+		width: 1.9em;
+		height: 1.9em;
 	}
 
 	.close :global(svg) {
-		width: 3em;
-		height: 3em;
+		width: 1.6em;
+		height: 1.6em;
+	}
+
+	:global(html[data-theme='dark']) nav::after,
+	:global(html[data-theme='dark']) a::after {
+		filter: invert(1) hue-rotate(180deg);
 	}
 
 	.home::before,
@@ -191,7 +198,7 @@
 	.hidden-menu a:focus-visible,
 	.hidden-menu a.active {
 		color: var(--automataBg);
-		background-color: var(--automataColor);
+		background-color: var(--yr-accent);
 	}
 
 	.links a::before,
@@ -232,10 +239,6 @@
 		cursor: pointer;
 		transition: all 0.5s ease-in-out;
 		z-index: 3;
-	}
-
-	.button-hamburger:hover {
-		transform: rotate(90deg);
 	}
 
 	.hidden-menu {
@@ -285,7 +288,6 @@
 
 	.home:hover {
 		opacity: 1;
-		transform: rotate(-90deg);
 	}
 
 	@media (max-width: 800px) {

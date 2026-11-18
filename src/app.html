@@ -3,7 +3,22 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="theme-color" content="#101010" />
+		<meta name="theme-color" content="#c8c2aa" />
+		<script>
+			(() => {
+				try {
+					const stored = localStorage.getItem('theme');
+					if (stored === 'dark' || stored === 'light') {
+						document.documentElement.dataset.theme = stored;
+						document
+							.querySelector('meta[name="theme-color"]')
+							?.setAttribute('content', stored === 'dark' ? '#2e2c26' : '#c8c2aa');
+					}
+				} catch {
+					/* localStorage can be unavailable; keep the default light theme. */
+				}
+			})();
+		</script>
 		<meta name="google-site-verification" content="FTolVaK-x02wu54OEQqZv2yP7npBnNRQtI6mSv8W4RQ" />
 		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />

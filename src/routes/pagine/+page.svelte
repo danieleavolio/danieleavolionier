@@ -3,7 +3,7 @@
 	import type { Element } from '#lib/types.ts';
 	import { formatDate, calculateReadingTime } from '#lib/utils.ts';
 	import { slide } from 'svelte/transition';
-	import { BoxSelect } from 'lucide-svelte';
+	import Icon from '#lib/components/ui/Icon.svelte';
 	import Seo from '#lib/components/SEO.svelte';
 	import Tag from '#lib/components/Tag.svelte';
 	import { onMount, tick } from 'svelte';
@@ -87,7 +87,7 @@
 			</li>
 		{/each}
 		{#if postToShow.length === 0}
-			<h1>Nessun post trovato! <BoxSelect size="2em" /></h1>
+			<h1>Nessun post trovato! <Icon name="empty" size={30} /></h1>
 		{/if}
 	</ul>
 	<div class="filter-column">
@@ -114,6 +114,7 @@
 		flex-direction: column-reverse;
 	}
 	.post {
+		position: relative;
 		display: grid;
 		grid-template-columns: minmax(0, 1fr);
 		overflow-wrap: anywhere;
@@ -163,6 +164,7 @@
 	}
 
 	.title {
+		position: static;
 		display: flex;
 		align-items: center;
 		gap: 0.6rem;
@@ -184,6 +186,18 @@
 		height: 0.55rem;
 		margin-right: 0;
 		background-color: currentColor;
+	}
+
+	.title::after {
+		content: '';
+		display: block;
+		position: absolute;
+		inset: 0;
+		width: auto;
+		height: auto;
+		background: transparent;
+		z-index: 1;
+		cursor: pointer;
 	}
 
 	.title:hover,
@@ -218,6 +232,8 @@
 	}
 
 	.tags {
+		position: relative;
+		z-index: 2;
 		display: flex;
 		gap: 0.5em;
 		margin-top: var(--size-3);

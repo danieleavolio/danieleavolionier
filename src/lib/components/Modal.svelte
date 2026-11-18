@@ -92,6 +92,19 @@
 		margin: auto;
 	}
 
+	dialog.search .nier-button {
+		border-color: var(--automataColor);
+		background-color: var(--automataColor);
+		color: var(--automataBg);
+	}
+
+	dialog.search .nier-button:hover,
+	dialog.search .nier-button:focus-visible {
+		border-color: var(--automataRed);
+		background-color: var(--automataRed);
+		color: var(--automataWhite);
+	}
+
 	.nier-button:focus-visible {
 		background-color: var(--automataBgRGBA);
 		border-color: transparent;

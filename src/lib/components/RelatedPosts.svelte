@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ArrowRight, Square } from 'lucide-svelte';
+	import Icon from '#lib/components/ui/Icon.svelte';
 	import type { RelatedPost } from '#lib/types.ts';
 
 	let { posts }: { posts: RelatedPost[] } = $props();
@@ -8,7 +8,9 @@
 {#if posts.length}
 	<section class="related-posts" aria-labelledby="related-posts-heading">
 		<div class="section-heading">
-			<h2 id="related-posts-heading"><Square aria-hidden="true" />Leggi anche</h2>
+			<h2 id="related-posts-heading">
+				<span class="heading-square" aria-hidden="true"></span>Leggi anche
+			</h2>
 		</div>
 		<p class="intro">Altre letture sullo stesso tema.</p>
 		<ul class="related-list">
@@ -19,7 +21,7 @@
 						<h3>{post.title}</h3>
 						<p class="description">{post.description}</p>
 						<p class="reason">{post.reason}</p>
-						<span class="read-link">Leggi articolo<ArrowRight size={18} aria-hidden="true" /></span>
+						<span class="read-link">Leggi articolo<Icon name="arrow-right" size={18} /></span>
 					</a>
 				</li>
 			{/each}
@@ -49,6 +51,13 @@
 
 	h2 :global(svg) {
 		flex-shrink: 0;
+	}
+
+	.heading-square {
+		flex: 0 0 auto;
+		width: 0.6rem;
+		height: 0.6rem;
+		background: currentColor;
 	}
 
 	.intro {

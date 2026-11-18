@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { ChevronDown } from 'lucide-svelte';
 	import { createEventDispatcher } from 'svelte';
+	import Icon from '#lib/components/ui/Icon.svelte';
 
 	export let categories: string[] = [];
 	export let activeFilters: string[] = [];
@@ -30,7 +30,7 @@
 <section aria-label="Filtri per categoria">
 	<button type="button" class="filter-title" aria-expanded={isShowing} on:click={handleClick}>
 		<span>FILTRI{activeFilters.length ? ` (${activeFilters.length})` : ''}</span>
-		<ChevronDown size={18} />
+		<Icon name="chevron-down" size={18} />
 	</button>
 	{#if isShowing}
 		<div class="filters">
@@ -82,6 +82,14 @@
 	}
 	.filter-title {
 		justify-content: space-between;
+	}
+
+	.filter-title :global(svg) {
+		transition: transform 0.15s ease;
+	}
+
+	.filter-title[aria-expanded='true'] :global(svg) {
+		transform: rotate(180deg);
 	}
 	.filters {
 		display: grid;

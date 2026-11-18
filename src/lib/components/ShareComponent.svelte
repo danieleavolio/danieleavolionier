@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Copy, ExternalLink } from 'lucide-svelte';
+	import Icon from '#lib/components/ui/Icon.svelte';
 	export let postTitle = '';
 	export let postUrl = '';
 	let message = '';
@@ -21,10 +21,10 @@
 			class="share-action"
 			href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(postTitle)}&url=${encodeURIComponent(postUrl)}`}
 			target="_blank"
-			rel="noopener noreferrer"><ExternalLink size={16} aria-hidden="true" />Condividi su X</a
+			rel="noopener noreferrer"><Icon name="external" size={16} />Condividi su X</a
 		>
 		<button type="button" class="share-action" on:click={copyLink}
-			><Copy size={16} aria-hidden="true" />Copia il link</button
+			><Icon name="copy" size={16} />Copia il link</button
 		>
 	</div>
 	<p class="feedback" role="status">{message}</p>

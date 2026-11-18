@@ -3,6 +3,7 @@
 
 	import { onMount } from 'svelte';
 	import Link from '#lib/components/Link.svelte';
+	import AvatarPhoto from '#lib/components/ui/AvatarPhoto.svelte';
 
 	onMount(() => {
 		let frame = 0;
@@ -29,16 +30,9 @@
 	</div>
 	<div class="outer-box">
 		<div class="inner-box">
-			<img
-				alt="Daniele Avolio Avatar"
-				src="/images/avatar-640.webp"
-				srcset="/images/avatar-320.webp 320w, /images/avatar-640.webp 640w"
-				sizes="320px"
-				width="640"
-				height="640"
-				fetchpriority="high"
-				decoding="async"
-			/>
+			<div class="avatar-frame">
+				<AvatarPhoto />
+			</div>
 			<div class="main-features">
 				<p></p>
 				<p class="content">
@@ -145,13 +139,10 @@
 		align-items: center;
 	}
 
-	img {
-		max-width: min(var(--size-14), 100%);
-
-		max-height: 100%;
-		object-fit: cover;
-		aspect-ratio: 1/1;
-		box-shadow: none;
+	.avatar-frame {
+		width: min(var(--size-14), 100%);
+		flex: 0 0 auto;
+		aspect-ratio: 1 / 1;
 	}
 
 	.inner-box {
@@ -197,11 +188,8 @@
 			border-top: 1px solid var(--automataBgRGBA);
 			border-bottom: 1px solid var(--automataBgRGBA);
 		}
-		img {
+		.avatar-frame {
 			width: var(--size-14);
-			height: 100%;
-			object-fit: cover;
-			aspect-ratio: 1/1;
 		}
 
 		.socials {

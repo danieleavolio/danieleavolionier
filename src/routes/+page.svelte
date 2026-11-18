@@ -245,6 +245,7 @@
 	}
 
 	.latest-panel li {
+		position: relative;
 		display: block !important;
 		width: auto;
 		padding: 0.7rem 0.8rem 0.7rem 1.7rem;
@@ -253,8 +254,22 @@
 	}
 
 	.latest-panel a {
+		position: static;
 		padding-left: 0;
 		line-height: 1.5;
+		color: var(--automataColor);
+	}
+
+	.latest-panel a::after {
+		content: '';
+		display: block;
+		position: absolute;
+		inset: 0;
+		width: auto;
+		height: auto;
+		background: transparent;
+		z-index: 1;
+		cursor: pointer;
 	}
 
 	.latest-panel p {
@@ -265,7 +280,8 @@
 	.latest-panel small {
 		display: block;
 		margin-top: 0.3rem;
-		color: var(--automataBlackOpacity);
+		color: var(--automataColor);
+		opacity: 0.7;
 	}
 
 	.latest-panel li:hover p,

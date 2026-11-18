@@ -91,6 +91,9 @@ html {
 	--automataBlackO: #4d493e;
 	--automataBlack: #3d3b34;
 
+	--yr-grid-line: rgba(0, 0, 0, 0.045);
+	--yr-accent: #4d493e;
+
 	::selection {
 		background-color: var(--automataColor);
 		color: var(--automataBg);
@@ -103,7 +106,7 @@ html {
 }
 
 :root {
-	color-scheme: dark;
+	color-scheme: light;
 
 	--brand: var(--brand-dark);
 	--text-1: var(--text-1-dark);
@@ -114,6 +117,39 @@ html {
 	--surface-4: #2e2d27;
 	--background: var(--background-dark);
 	--border: var(--border-dark);
+}
+
+html[data-theme='dark'] {
+	color-scheme: dark;
+
+	/* Exact palette from the YoRHa design system reference. */
+	--automataBg: #2e2c26;
+	--automataBgOpacity: #3a3832cc;
+	--automataColor: #d1cdb7;
+	--automataBgRGBA: rgba(180, 175, 154, 0.18);
+	--automataBlackOpacity: #4e4b42;
+	--automataBlackO: #4e4b42;
+	--automataBlack: #2e2c26;
+	--automataRed: #cd664d;
+	--automataRedOpacity: rgba(205, 102, 77, 0.35);
+	--automataWhite: #d1cdb7;
+	--automataWhiteOpacity: rgba(209, 205, 183, 0.08);
+	--automataYellow: #b4af9a;
+	--automataYellowOpacity: rgba(180, 175, 154, 0.18);
+
+	--surface-1-dark: #2e2c26;
+	--surface-2-dark: #3a3832;
+	--surface-3-dark: #4e4b42;
+	--surface-4: #4e4b42;
+	--border-dark: #4e4b42;
+
+	--yr-surface: #3a3832;
+	--yr-muted: #4e4b42;
+	--yr-line: #3a3832;
+	--yr-line-strong: #b4af9a;
+	--yr-grid-line: #3a3832;
+	--yr-accent: #b4af9a;
+	--yr-shadow: none;
 }
 
 @media (prefers-color-scheme: light) {
@@ -191,8 +227,8 @@ body {
 	background-size: 4px 4px;
 	background-repeat: repeat;
 	background-image:
-		linear-gradient(90deg, transparent, transparent 3px, rgba(0, 0, 0, 0.045) 4px),
-		linear-gradient(transparent, transparent 3px, rgba(0, 0, 0, 0.045) 4px);
+		linear-gradient(90deg, transparent, transparent 3px, var(--yr-grid-line) 4px),
+		linear-gradient(transparent, transparent 3px, var(--yr-grid-line) 4px);
 }
 
 html {

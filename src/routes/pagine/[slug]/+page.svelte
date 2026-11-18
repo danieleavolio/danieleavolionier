@@ -105,7 +105,7 @@
 	.tags {
 		display: flex;
 		gap: var(--size-3);
-		margin-top: var(--size-7);
+		margin-top: clamp(2.5rem, 6vw, 4rem);
 		flex-wrap: wrap;
 		justify-content: center;
 		align-items: center;
@@ -164,7 +164,7 @@
 		display: block;
 		width: 100%;
 		height: auto;
-		margin: 0 auto var(--size-7);
+		margin: clamp(2rem, 5vw, 3.5rem) auto var(--size-7);
 		border-radius: 10px;
 		border: 2px solid var(--automataBlackO);
 		object-fit: cover;
