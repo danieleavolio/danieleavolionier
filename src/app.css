@@ -492,6 +492,9 @@ hgroup h1 {
 	padding: 1rem;
 	border-radius: 8px;
 	tab-size: 2;
+	background: var(--surface-2);
+	border: 1px solid var(--border);
+	box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
 }
 
 .prose h3 {
@@ -688,8 +691,23 @@ code {
 	background-color: var(--automataRed);
 }
 
-pre code {
+.prose code {
+	background-color: var(--surface-2);
+	padding: 0.125rem 0.35rem;
+	border-radius: 4px;
+	border: 1px solid var(--border);
+	font-size: 0.9em;
+}
+
+pre code,
+.prose pre code {
 	background: transparent;
+}
+
+.prose pre code {
+	border: 0;
+	padding: 0;
+	font-size: inherit;
 }
 
 /* Visible keyboard focus; the pointer outline stays suppressed above. */
