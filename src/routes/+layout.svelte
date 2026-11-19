@@ -27,6 +27,10 @@
 	export let data;
 
 	import { onMount } from 'svelte';
+	import { createI18n, provideI18n, type Locale } from '#lib/i18n.ts';
+
+	const i18n = createI18n((data.locale as Locale) ?? 'it');
+	provideI18n(i18n);
 
 	//If the window is not defined, we are in SSR
 	const document = typeof window !== 'undefined' ? window.document : null;
@@ -37,6 +41,9 @@
 
 	let globalSecretSequence = '';
 	onMount(() => {
+		const detected = window.document.documentElement.dataset.locale as Locale | undefined;
+		if (detected && detected !== data.locale) i18n.locale.set(detected);
+
 		// The Vercel analytics endpoint does not exist in local production previews.
 		if (!dev && !['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname)) {
 			injectAnalytics();

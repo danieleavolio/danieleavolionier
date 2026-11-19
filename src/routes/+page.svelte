@@ -5,6 +5,9 @@
 	import Profile from './profile.svelte';
 	import Seo from '#lib/components/SEO.svelte';
 	import { formatDate } from '#lib/utils.ts';
+	import { useI18n } from '#lib/i18n.ts';
+
+	const { t } = useI18n();
 
 	export let data: PageData;
 
@@ -64,10 +67,10 @@
 	<section class="section-1">
 		<li class="post">
 			<div bind:this={items_container} class="items-container">
-				<a href="/pagine" class="title">Blog</a>
-				<a href="/progetti" class="title">Progetti</a>
-				<a href="/data" class="title">Data</a>
-				<a href="/appunti" class="title">Appunti</a>
+				<a href="/pagine" class="title">{$t('blog')}</a>
+				<a href="/progetti" class="title">{$t('projects')}</a>
+				<a href="/data" class="title">{$t('data')}</a>
+				<a href="/appunti" class="title">{$t('notes')}</a>
 			</div>
 		</li>
 	</section>
@@ -77,7 +80,7 @@
 <section class="latest-grid">
 	<article class="latest-panel yr-panel">
 		<h2 class="yr-panel__head">
-			<span class="yr-panel__square" aria-hidden="true"></span>Ultimi articoli
+			<span class="yr-panel__square" aria-hidden="true"></span>{$t('latest_posts')}
 		</h2>
 		<ul class="yr-panel__body">
 			{#each latestPosts as post (post.slug)}
@@ -94,7 +97,7 @@
 
 	<article class="latest-panel yr-panel">
 		<h2 class="yr-panel__head">
-			<span class="yr-panel__square" aria-hidden="true"></span>Ultimi progetti
+			<span class="yr-panel__square" aria-hidden="true"></span>{$t('latest_projects')}
 		</h2>
 		<ul class="yr-panel__body">
 			{#each latestProjects as project (project.slug)}

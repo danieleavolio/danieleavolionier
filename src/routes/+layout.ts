@@ -1,5 +1,6 @@
-export async function load({ url }) {
+export async function load({ url, data }) {
 	return {
-		url: url.pathname
+		url: url.pathname,
+		locale: data.locale
 	};
 }

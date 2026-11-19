@@ -1,6 +1,9 @@
 <script lang="ts">
 	import type { SearchResult } from '#lib/search.ts';
 	import Icon from '#lib/components/ui/Icon.svelte';
+	import { useI18n } from '#lib/i18n.ts';
+
+	const { t } = useI18n();
 	import { onMount, tick } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import Modal from './Modal.svelte';
@@ -126,8 +129,8 @@
 				tick().then(() => searchInput?.focus());
 			}
 		}}
-		title="Cerca (Ctrl+K)"
-		aria-label="Cerca nel sito"
+		title={$t('search_hint_keyboard')}
+		aria-label={$t('search_site')}
 	>
 		<Icon name="search" size={22} />
 	</button>
@@ -142,7 +145,7 @@
 					class="yr-field"
 					bind:this={searchInput}
 					bind:value={searchTerm}
-					placeholder="Cerca articoli, progetti, appunti (premi ↑↓ e Invio)..."
+					placeholder={$t('search_placeholder')}
 					autocomplete="off"
 					spellcheck="false"
 					type="search"
@@ -178,29 +181,27 @@
 						{/each}
 					</ul>
 				{:else if searchTerm.trim()}
-					<p class="no-results">Nessun risultato trovato per "{searchTerm}".</p>
+					<p class="no-results">{$t('search_no_results', { term: searchTerm })}</p>
 				{:else}
-					<p class="hint-text">
-						Digita per cercare tra tutti gli articoli, progetti e dispense universitarie.
-					</p>
+					<p class="hint-text">{$t('search_hint')}</p>
 				{/if}
 			</div>
 
 			<div class="palette-footer">
-				<span><kbd>↑</kbd> <kbd>↓</kbd> Spostati</span>
-				<span><kbd>↵</kbd> Seleziona</span>
-				<span><kbd>ESC</kbd> Chiudi</span>
+				<span><kbd>↑</kbd> <kbd>↓</kbd> {$t('search_move')}</span>
+				<span><kbd>↵</kbd> {$t('search_select')}</span>
+				<span><kbd>ESC</kbd> {$t('search_close')}</span>
 			</div>
 		</div>
 	{:else if search === 'error'}
 		<div class="search" role="status">
-			<p>Ricerca temporaneamente non disponibile.</p>
-			<button on:click={() => void loadSearch()}>Riprova</button>
+			<p>{$t('search_unavailable')}</p>
+			<button on:click={() => void loadSearch()}>{$t('search_retry')}</button>
 		</div>
 	{:else}
 		<div class="search loading-state" role="status">
 			<Spinner size={18} label="" />
-			<span>CARICAMENTO</span>
+			<span>{$t('search_loading')}</span>
 			<span class="yr-dots" aria-hidden="true"></span>
 		</div>
 	{/if}

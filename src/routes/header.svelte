@@ -3,6 +3,10 @@
 	import { page } from '$app/state';
 	import Icon from '#lib/components/ui/Icon.svelte';
 	import ThemeToggle from '#lib/components/ui/ThemeToggle.svelte';
+	import LanguageToggle from '#lib/components/ui/LanguageToggle.svelte';
+	import { useI18n } from '#lib/i18n.ts';
+
+	const { t } = useI18n();
 
 	//Import store and set to true on click
 	import isOpened from '#lib/stores/navstore.ts';
@@ -22,22 +26,30 @@
 <nav aria-label="Navigazione principale">
 	<div class="nav-div">
 		<a href="/" class="title desktop"><b>{config.title}</b></a>
-		<a href="/" class="home mobile" aria-label="Home"><Icon name="home" size={30} /></a>
+		<a href="/" class="home mobile" aria-label={$t('nav_home')}><Icon name="home" size={30} /></a>
 		<ul class="links desktop yr-tabs" data-sveltekit-preload-code="viewport">
-			<li><a href="/pagine" class:active={page.url.pathname.startsWith('/pagine')}>BLOG</a></li>
 			<li>
-				<a href="/progetti" class:active={page.url.pathname.startsWith('/progetti')}>PROGETTI</a>
+				<a href="/pagine" class:active={page.url.pathname.startsWith('/pagine')}>{$t('nav_blog')}</a
+				>
 			</li>
-			<li><a href="/now" class:active={page.url.pathname === '/now'}>NOW</a></li>
-			<li><a href="/data" class:active={page.url.pathname === '/data'}>DATA</a></li>
-			<li><a href="/appunti" class:active={page.url.pathname === '/appunti'}>APPUNTI</a></li>
+			<li>
+				<a href="/progetti" class:active={page.url.pathname.startsWith('/progetti')}
+					>{$t('nav_projects')}</a
+				>
+			</li>
+			<li><a href="/now" class:active={page.url.pathname === '/now'}>{$t('nav_now')}</a></li>
+			<li><a href="/data" class:active={page.url.pathname === '/data'}>{$t('nav_data')}</a></li>
+			<li>
+				<a href="/appunti" class:active={page.url.pathname === '/appunti'}>{$t('nav_notes')}</a>
+			</li>
 		</ul>
+		<LanguageToggle />
 		<ThemeToggle />
 		<SearchModal />
 		<button
 			on:click={handleClick}
 			class="button-hamburger mobile"
-			aria-label="Apri menu"
+			aria-label={$t('open_menu')}
 			aria-expanded={$isOpened}
 			aria-controls="mobile-menu"
 		>
@@ -49,33 +61,33 @@
 	bind:this={menu}
 	id="mobile-menu"
 	class="hidden-menu yr-tabs"
-	aria-label="Menu di navigazione"
+	aria-label={$t('navigation_menu')}
 	on:close={() => isOpened.set(false)}
 >
-	<button on:click={handleClick} class="close" aria-label="Chiudi menu">
+	<button on:click={handleClick} class="close" aria-label={$t('close_menu')}>
 		<Icon name="close" size={26} />
 	</button>
 	<a on:click={() => isOpened.set(false)} href="/" class:active={page.url.pathname === '/'}>D.A</a>
 	<a
 		on:click={() => isOpened.set(false)}
 		href="/pagine"
-		class:active={page.url.pathname.startsWith('/pagine')}>BLOG</a
+		class:active={page.url.pathname.startsWith('/pagine')}>{$t('nav_blog')}</a
 	>
 	<a
 		on:click={() => isOpened.set(false)}
 		href="/progetti"
-		class:active={page.url.pathname.startsWith('/progetti')}>PROGETTI</a
+		class:active={page.url.pathname.startsWith('/progetti')}>{$t('nav_projects')}</a
 	>
 	<a on:click={() => isOpened.set(false)} href="/now" class:active={page.url.pathname === '/now'}
-		>NOW</a
+		>{$t('nav_now')}</a
 	>
 	<a on:click={() => isOpened.set(false)} href="/data" class:active={page.url.pathname === '/data'}
-		>DATA</a
+		>{$t('nav_data')}</a
 	>
 	<a
 		on:click={() => isOpened.set(false)}
 		href="/appunti"
-		class:active={page.url.pathname === '/appunti'}>APPUNTI</a
+		class:active={page.url.pathname === '/appunti'}>{$t('nav_notes')}</a
 	>
 </dialog>
 

@@ -9,7 +9,8 @@
 		| 'copy'
 		| 'external'
 		| 'empty'
-		| 'theme';
+		| 'theme'
+		| 'globe';
 
 	let {
 		name,
@@ -73,6 +74,10 @@
 	{:else if name === 'theme'}
 		<rect x="4" y="4" width="16" height="16" />
 		<path class="solid" d="M12 4h8v16h-8z" />
+	{:else if name === 'globe'}
+		<rect x="3.5" y="3.5" width="17" height="17" />
+		<path d="M3.5 12h17M12 3.5v17" />
+		<path d="M8 5.5c2 2 2 10.5 0 13M16 5.5c-2 2-2 10.5 0 13" />
 	{/if}
 </svg>
 

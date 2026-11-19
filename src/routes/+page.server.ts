@@ -1,4 +1,5 @@
 import { listPublishedContent } from '#lib/server/public-content.ts';
+import { translateElements } from '#lib/server/translate.ts';
 
 export const config = { isr: { expiration: 300 } };
 
@@ -8,5 +9,8 @@ export async function load({ locals }) {
 		listPublishedContent(locals.supabase, 'projects', { limit: 3 })
 	]);
 
-	return { posts, progetti };
+	return {
+		posts: await translateElements(posts, locals.locale),
+		progetti: await translateElements(progetti, locals.locale)
+	};
 }

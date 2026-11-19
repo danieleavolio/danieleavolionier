@@ -3,9 +3,19 @@ import type { Handle } from '@sveltejs/kit/hooks';
 import { error as httpError } from '@sveltejs/kit';
 import { supabaseAnonKey, supabaseUrl } from '#lib/supabaseConfig.ts';
 import { publicSupabase } from '#lib/server/public-supabase.ts';
+import { detectLocale } from '#lib/i18n.ts';
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const pathname = event.url.pathname;
+	let requested: string | null = null;
+	try {
+		requested = event.url.searchParams.get('lang');
+	} catch {
+		// Prerendered pages have no query string.
+	}
+	const acceptLanguage = event.request?.headers?.get?.('accept-language');
+	event.locals.locale =
+		requested === 'it' || requested === 'en' ? requested : detectLocale(acceptLanguage);
 	const needsAuth =
 		pathname === '/admin' || pathname.startsWith('/admin/') || pathname === '/api/media';
 	if (!needsAuth) {

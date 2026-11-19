@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
+	import { useI18n } from '#lib/i18n.ts';
+
+	const { t } = useI18n();
 
 	export let showModal = false;
 	export let isSearch = false; // boolean
@@ -31,7 +34,7 @@
 		<slot class="internal" />
 		<!-- svelte-ignore a11y-autofocus -->
 		<button type="button" class="nier-button" autofocus on:click={() => dialog?.close()}
-			>CHIUDI</button
+			>{$t('close')}</button
 		>
 	</div>
 </dialog>

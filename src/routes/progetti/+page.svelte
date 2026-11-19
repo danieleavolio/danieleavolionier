@@ -3,6 +3,9 @@
 	import CategoriesFilter from '#lib/components/CategoriesFilter.svelte';
 	import type { Element } from '#lib/types.ts';
 	import Icon from '#lib/components/ui/Icon.svelte';
+	import { useI18n } from '#lib/i18n.ts';
+
+	const { t } = useI18n();
 	import { slide } from 'svelte/transition';
 	import Seo from '#lib/components/SEO.svelte';
 	import { projectsCategoryStore } from '#lib/stores/categoryStore.ts';
@@ -86,7 +89,7 @@
 			</li>
 		{/each}
 		{#if projectToShow.length === 0}
-			<h1>Nessun progetto trovato! <Icon name="empty" size={30} /></h1>
+			<h1>{$t('no_projects')} <Icon name="empty" size={30} /></h1>
 		{/if}
 	</ul>
 

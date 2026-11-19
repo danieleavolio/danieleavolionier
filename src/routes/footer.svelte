@@ -1,10 +1,14 @@
 <script lang="ts">
 	import * as config from '#lib/config.ts';
+	import { useI18n } from '#lib/i18n.ts';
+
+	const { t } = useI18n();
 </script>
 
 <footer>
 	<p>
-		{config.title} &copy {new Date().getFullYear()} · <a href="/rss.xml" class="rss-link">RSS</a>
+		{config.title} &copy {new Date().getFullYear()} ·
+		<a href="/rss.xml" class="rss-link">{$t('rss')}</a>
 	</p>
 </footer>
 

@@ -1,5 +1,8 @@
 <script lang="ts">
 	import Icon from '#lib/components/ui/Icon.svelte';
+	import { useI18n } from '#lib/i18n.ts';
+
+	const { t } = useI18n();
 	import type { RelatedPost } from '#lib/types.ts';
 
 	let { posts }: { posts: RelatedPost[] } = $props();
@@ -9,10 +12,10 @@
 	<section class="related-posts" aria-labelledby="related-posts-heading">
 		<div class="section-heading">
 			<h2 id="related-posts-heading">
-				<span class="heading-square" aria-hidden="true"></span>Leggi anche
+				<span class="heading-square" aria-hidden="true"></span>{$t('read_also')}
 			</h2>
 		</div>
-		<p class="intro">Altre letture sullo stesso tema.</p>
+		<p class="intro">{$t('read_also_intro')}</p>
 		<ul class="related-list">
 			{#each posts as post, index (post.slug)}
 				<li>
@@ -21,7 +24,7 @@
 						<h3>{post.title}</h3>
 						<p class="description">{post.description}</p>
 						<p class="reason">{post.reason}</p>
-						<span class="read-link">Leggi articolo<Icon name="arrow-right" size={18} /></span>
+						<span class="read-link">{$t('read_article')}<Icon name="arrow-right" size={18} /></span>
 					</a>
 				</li>
 			{/each}

@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import Icon from '#lib/components/ui/Icon.svelte';
+	import { useI18n } from '#lib/i18n.ts';
+
+	const { t } = useI18n();
 
 	export let categories: string[] = [];
 	export let activeFilters: string[] = [];
@@ -29,7 +32,7 @@
 
 <section aria-label="Filtri per categoria">
 	<button type="button" class="filter-title" aria-expanded={isShowing} on:click={handleClick}>
-		<span>FILTRI{activeFilters.length ? ` (${activeFilters.length})` : ''}</span>
+		<span>{$t('filters')}{activeFilters.length ? ` (${activeFilters.length})` : ''}</span>
 		<Icon name="chevron-down" size={18} />
 	</button>
 	{#if isShowing}
@@ -49,7 +52,7 @@
 		</div>
 	{/if}
 	{#if activeFilters.length}
-		<button type="button" class="clear" on:click={clearFilters}>RIPRISTINA</button>
+		<button type="button" class="clear" on:click={clearFilters}>{$t('reset')}</button>
 	{/if}
 </section>
 

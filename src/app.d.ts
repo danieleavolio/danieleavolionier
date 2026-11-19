@@ -7,6 +7,7 @@ declare global {
 			getSession: () => Promise<import('@supabase/supabase-js').Session | null>;
 			user: import('@supabase/supabase-js').User | null;
 			isAdmin: boolean;
+			locale: import('#lib/i18n.ts').Locale;
 		}
 		// interface Error {}
 		// interface PageData {}

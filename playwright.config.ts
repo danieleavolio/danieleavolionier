@@ -8,7 +8,11 @@ export default defineConfig({
 	fullyParallel: false,
 	workers: 2,
 	timeout: 45_000,
-	use: { baseURL: remoteURL || 'http://127.0.0.1:4173', trace: 'retain-on-failure' },
+	use: {
+		baseURL: remoteURL || 'http://127.0.0.1:4173',
+		trace: 'retain-on-failure',
+		locale: 'it-IT'
+	},
 	projects: [
 		{ name: 'desktop', use: { viewport: { width: 1440, height: 1000 } } },
 		{
