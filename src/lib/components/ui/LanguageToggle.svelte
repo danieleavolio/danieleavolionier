@@ -1,15 +1,12 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { get } from 'svelte/store';
 	import { useI18n } from '#lib/i18n.ts';
-	import Icon from './Icon.svelte';
 
 	const i18n = useI18n();
-	const { t } = i18n;
+	const { locale, t } = i18n;
 
 	async function toggle() {
-		const current = get(i18n.locale);
-		const next = current === 'it' ? 'en' : 'it';
+		const next = $locale === 'it' ? 'en' : 'it';
 		i18n.setLocale(next);
 		await goto(`?lang=${next}`, { replace: true, reset: false });
 	}
@@ -22,30 +19,27 @@
 	aria-label={$t('language')}
 	title={$t('language')}
 >
-	<Icon name="globe" size={20} />
-	<span>{$t('language')}</span>
+	{$locale === 'it' ? 'IT' : 'EN'}
 </button>
 
 <style>
 	.language-toggle {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		gap: 0.5rem;
+		display: inline-grid;
+		place-items: center;
 		flex: 0 0 auto;
-		min-width: 2.75rem;
-		height: 2.75rem;
+		min-width: 1.75rem;
+		height: 1.75rem;
 		box-sizing: border-box;
-		padding: 0 0.6rem;
+		padding: 0 0.25rem;
 		border: 1px solid var(--yr-line);
 		border-radius: 0;
-		background: var(--yr-muted);
-		color: var(--automataColor);
+		background: transparent;
 		box-shadow: none;
+		color: var(--automataColor);
 		font: inherit;
-		font-size: 0.72rem;
-		letter-spacing: 0.12rem;
-		text-transform: uppercase;
+		font-size: 0.65rem;
+		font-weight: 500;
+		letter-spacing: 0.08rem;
 		cursor: pointer;
 	}
 	.language-toggle:hover,
@@ -53,13 +47,5 @@
 		border-color: var(--yr-accent);
 		background: var(--yr-accent);
 		color: var(--automataBg);
-	}
-	span {
-		display: none;
-	}
-	@media (min-width: 1301px) {
-		span {
-			display: inline;
-		}
 	}
 </style>
