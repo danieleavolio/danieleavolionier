@@ -127,6 +127,12 @@ test('theme toggle switches palette and persists across reloads', async ({ page 
 	await expect(html).toHaveAttribute('data-theme', 'light');
 });
 
+test('admin is reachable with the hidden Ctrl+Alt+A shortcut', async ({ page }) => {
+	await page.goto('/');
+	await page.keyboard.press('Control+Alt+a');
+	await expect(page).toHaveURL(/\/admin\/login$/);
+});
+
 test('photo avatar and custom icons render on the home page', async ({ page }) => {
 	await page.goto('/');
 	await expect(page.locator('.avatar-photo img')).toBeVisible();

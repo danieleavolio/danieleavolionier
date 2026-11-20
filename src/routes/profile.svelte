@@ -36,24 +36,20 @@
 			<div class="main-features">
 				<p></p>
 				<p class="content">
-					Ciao, sono <b>Daniele Avolio</b>, <b><code>Data Engineer</code></b> presso
-					<Link href="https://agilelab.it/" target="_blank"><i>Agile Lab</i></Link> e laureato magistrale
-					in
-					<b>Informatica e Intelligenza Artificiale</b> presso l'<Link
-						href="https://www.unical.it/"
-					>
-						<b>Università della Calabria</b>
-					</Link>. Lavoro su pipeline dati scalabili ed ecosistemi Big Data, con forte
-					specializzazione su
-					<b><code>Apache Spark</code></b>, <b><code>Databricks</code></b>,
-					<b><code>Google Cloud Platform (GCP)</code></b>
-					e <b><code>Apache Airflow</code></b>. Ho inoltre solida esperienza nel
-					<b>web development</b>
-					(tra cui
-					<Link href="https://kit.svelte.dev/"><b><code>SvelteKit</code></b></Link> e
-					<Link href="https://angular.dev/"><b><code>Angular</code></b></Link>), e sono un grande
-					appassionato di
-					<b>videogiochi</b> e <b>cultura pop giapponese</b>.
+					Ciao, sono <b>Daniele Avolio</b>, <Link href="https://www.linkedin.com/in/danieleavolio/"
+						><code>Data Engineer</code></Link
+					> presso <Link href="https://agilelab.it/"><code>Agile Lab</code></Link> e laureato magistrale
+					in <b>Informatica e Intelligenza Artificiale</b> presso l'<Link
+						href="https://www.unical.it/"><code>Università della Calabria</code></Link
+					>. Lavoro su pipeline dati scalabili ed ecosistemi Big Data, con forte specializzazione su <Link
+						href="https://spark.apache.org/"><code>Apache Spark</code></Link
+					>, <Link href="https://www.databricks.com/"><code>Databricks</code></Link>,
+					<Link href="https://cloud.google.com/"><code>Google Cloud Platform (GCP)</code></Link>
+					e <Link href="https://airflow.apache.org/"><code>Apache Airflow</code></Link>. Ho inoltre
+					solida esperienza nel <b>web development</b> (tra cui
+					<Link href="https://kit.svelte.dev/"><code>SvelteKit</code></Link> e
+					<Link href="https://angular.dev/"><code>Angular</code></Link>), e sono un grande
+					appassionato di <b>videogiochi</b> e <b>cultura pop giapponese</b>.
 				</p>
 				<div class="socials">
 					<a target="_blank" class="title" href="https://www.linkedin.com/in/danieleavolio/"
@@ -63,7 +59,7 @@
 					<a target="_blank" href="https://github.com/danieleavolio">GitHub</a>
 					<a href="mailto:daniele.avolio14@gmail.com">EMAIL</a>
 				</div>
-				<a target="_blank" href="/CV-DA.pdf">CV</a>
+				<a href="/cv">CV</a>
 			</div>
 		</div>
 	</div>
@@ -97,6 +93,14 @@
 	.content :global(a)::after {
 		content: none;
 		display: none;
+	}
+
+	.content :global(a code) {
+		border: 0;
+		padding: 0;
+		background: transparent;
+		color: inherit;
+		font-size: inherit;
 	}
 
 	.content :global(a):hover,

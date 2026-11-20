@@ -51,6 +51,12 @@
 				return;
 			}
 
+			if ((e.ctrlKey || e.metaKey) && e.altKey && e.key.toLowerCase() === 'a') {
+				e.preventDefault();
+				window.location.href = '/admin';
+				return;
+			}
+
 			globalSecretSequence += e.key.toLowerCase();
 			if (globalSecretSequence.length > 25) {
 				globalSecretSequence = globalSecretSequence.slice(-25);

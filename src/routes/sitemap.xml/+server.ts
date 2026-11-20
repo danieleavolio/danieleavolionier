@@ -19,7 +19,7 @@ export async function GET({ locals }) {
 		// Only canonical, indexable HTML pages. Downloads remain linked from Appunti;
 		// the RSS feed and the client-only easter egg are not search landing pages.
 		const urls = [
-			...['/', '/pagine', '/progetti', '/appunti', '/data', '/now', '/privacy-policy'].map(
+			...['/', '/pagine', '/progetti', '/appunti', '/data', '/now', '/cv', '/privacy-policy'].map(
 				(route) => ({ loc: `${siteURL}${route}`, lastmod: undefined as string | undefined })
 			),
 			...posts.map((post) => ({

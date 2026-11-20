@@ -54,8 +54,8 @@
 </script>
 
 <Seo
-	title="Daniele Avolio - Data Engineer @ AgileLab"
-	description="Daniele Avolio - Data Engineer @ AgileLab. Laureato magistrale in Informatica e AI all'Unical. Specializzato in Apache Spark, Databricks, GCP, Airflow e sviluppo web."
+	title="Daniele Avolio — Data Engineer, progetti e articoli"
+	description="Daniele Avolio, Data Engineer ad AgileLab. Articoli su SvelteKit, AI e sviluppo web, progetti con Apache Spark, Databricks e GCP, CV e contatti."
 	image="https://i.imgur.com/juSgfgF.png"
 />
 

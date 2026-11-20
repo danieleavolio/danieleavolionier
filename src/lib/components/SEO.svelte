@@ -202,7 +202,8 @@
 							'@type': 'Organization',
 							name: siteName
 						},
-						reviewBody: safeDescription
+						reviewBody: safeDescription,
+						...(publishDate ? { datePublished: publishDate } : {})
 					}
 				: isHomepage
 					? {
