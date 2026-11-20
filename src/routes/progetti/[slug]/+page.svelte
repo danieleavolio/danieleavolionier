@@ -11,6 +11,11 @@
 
 	const siteUrl = config.url.replace(/\/$/, '');
 	$: metadata = data.meta;
+	$: faq =
+		((metadata.metadata as Record<string, unknown> | undefined)?.faq as Array<{
+			question: string;
+			answer: string;
+		}>) ?? [];
 	$: metadataCategories = Array.isArray(metadata.categories) ? metadata.categories : [];
 	$: fallbackOg = `${siteUrl}/og/progetti/${data.slug}.svg`;
 	$: seoImage = metadata.image || fallbackOg;
@@ -25,10 +30,7 @@
 	publishDate={metadata.date}
 	dateModified={metadata.updatedAt || metadata.date}
 	articleBody={metadata.description}
-	faq={((metadata as Record<string, unknown>).faq as Array<{
-		question: string;
-		answer: string;
-	}>) ?? []}
+	{faq}
 />
 
 <article>
