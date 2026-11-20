@@ -1,8 +1,8 @@
 import { error } from '@sveltejs/kit';
-import { getContentBySlug } from '#lib/server/public-content.ts';
-import { translateMany } from '#lib/server/translate.ts';
 
 export const config = { isr: { expiration: 300 } };
+import { getContentBySlug } from '#lib/server/public-content.ts';
+import { translateMany } from '#lib/server/translate.ts';
 
 export async function load({ params, locals }) {
 	const project = await getContentBySlug(locals.supabase, 'projects', params.slug);

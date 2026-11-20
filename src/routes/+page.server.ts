@@ -1,7 +1,7 @@
 import { listPublishedContent } from '#lib/server/public-content.ts';
-import { translateElements } from '#lib/server/translate.ts';
 
 export const config = { isr: { expiration: 300 } };
+import { translateElements } from '#lib/server/translate.ts';
 
 export async function load({ locals }) {
 	const [posts, progetti] = await Promise.all([

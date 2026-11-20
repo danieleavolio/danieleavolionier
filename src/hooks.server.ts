@@ -24,6 +24,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		event.locals.isAdmin = false;
 		event.locals.getSession = async () => null;
 		const response = await resolve(event);
+		response.headers.append('Vary', 'Accept-Language');
 		if (pathname === '/end-of-the-lova') response.headers.set('X-Robots-Tag', 'noindex, nofollow');
 		return response;
 	}

@@ -18,4 +18,10 @@ test.describe('English device', () => {
 		await expect(page.getByRole('link', { name: 'PROGETTI' }).first()).toBeVisible();
 		await expect(page.locator('html')).toHaveAttribute('lang', 'it');
 	});
+
+	test('translates the article title on the server for an English device', async ({ page }) => {
+		await page.goto('/pagine/opencode-e-le-balene');
+		await expect(page.locator('h1').first()).not.toHaveText('OpenCode e le balene');
+		await expect(page.locator('h1').first()).toContainText('OpenCode');
+	});
 });

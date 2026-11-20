@@ -1,10 +1,10 @@
 import { error } from '@sveltejs/kit';
+
+export const config = { isr: { expiration: 300 } };
 import { getContentBySlug, listPublishedContent } from '#lib/server/public-content.ts';
 import { selectRelatedPosts } from '#lib/server/related-posts.ts';
 import { translateMany } from '#lib/server/translate.ts';
 import type { RelatedPost } from '#lib/types.ts';
-
-export const config = { isr: { expiration: 300 } };
 
 export async function load({ params, locals }) {
 	const post = await getContentBySlug(locals.supabase, 'posts', params.slug);
