@@ -104,7 +104,7 @@ test('card hover preserves title and badge contrast', async ({ page }) => {
 	await page.goto('/pagine');
 	const card = page.locator('.post').first();
 	await card.hover();
-	await expect(card).toHaveCSS('background-color', 'rgb(77, 73, 62)');
+	await expect(card).toHaveCSS('background-color', 'rgb(63, 61, 54)');
 	await expect(card.locator('.title')).toHaveCSS('color', 'rgb(200, 194, 170)');
 	await expect(card.locator('.tag').first()).toHaveCSS('color', 'rgb(200, 194, 170)');
 });

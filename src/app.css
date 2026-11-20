@@ -77,8 +77,8 @@ html {
 
 	--automataBg: #c8c2aa;
 	--automataBgOpacity: #c8c2aa96;
-	--automataColor: #4d493e;
-	--automataBgRGBA: rgba(77, 73, 62, 0.35);
+	--automataColor: #3f3d36;
+	--automataBgRGBA: rgba(77, 73, 62, 0.2);
 	--automataSpacing: 0.075rem;
 	--automataShadow: 3px 3px 0 rgba(var(--automataColor), 0.6);
 	--automataRedOpacity: #cd674d86;
@@ -689,10 +689,12 @@ code {
 	white-space: pre-wrap;
 	word-wrap: break-word;
 	background-color: var(--automataRed);
+	color: #1a1815;
 }
 
 .prose code {
 	background-color: var(--surface-2);
+	color: var(--automataColor);
 	padding: 0.125rem 0.35rem;
 	border-radius: 4px;
 	border: 1px solid var(--border);
@@ -702,6 +704,7 @@ code {
 pre code,
 .prose pre code {
 	background: transparent;
+	color: var(--automataColor);
 }
 
 .prose pre code {

@@ -16,6 +16,7 @@ test('home is compact, crawlable and does not eagerly fetch search or diagram en
 	page.on('request', (request) => requests.push(request.url()));
 	page.on('pageerror', (error) => errors.push(error.message));
 	await page.goto('/');
+	await expect(page.locator('.hero-list > li')).toHaveCount(1);
 	await expect(page.locator('.latest-panel li')).toHaveCount(6);
 	await expect(page.locator('main h1')).toHaveCount(1);
 	const schemas = await page.locator('script[type="application/ld+json"]').allTextContents();

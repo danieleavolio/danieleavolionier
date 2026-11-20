@@ -4,9 +4,6 @@
 	import { onMount } from 'svelte';
 	import Link from '#lib/components/Link.svelte';
 	import AvatarPhoto from '#lib/components/ui/AvatarPhoto.svelte';
-	import { useI18n } from '#lib/i18n.ts';
-
-	const { t } = useI18n();
 
 	onMount(() => {
 		let frame = 0;
@@ -39,7 +36,24 @@
 			<div class="main-features">
 				<p></p>
 				<p class="content">
-					{@html $t('profile_intro')}
+					Ciao, sono <b>Daniele Avolio</b>, <b><code>Data Engineer</code></b> presso
+					<Link href="https://agilelab.it/" target="_blank"><i>Agile Lab</i></Link> e laureato magistrale
+					in
+					<b>Informatica e Intelligenza Artificiale</b> presso l'<Link
+						href="https://www.unical.it/"
+					>
+						<b>Università della Calabria</b>
+					</Link>. Lavoro su pipeline dati scalabili ed ecosistemi Big Data, con forte
+					specializzazione su
+					<b><code>Apache Spark</code></b>, <b><code>Databricks</code></b>,
+					<b><code>Google Cloud Platform (GCP)</code></b>
+					e <b><code>Apache Airflow</code></b>. Ho inoltre solida esperienza nel
+					<b>web development</b>
+					(tra cui
+					<Link href="https://kit.svelte.dev/"><b><code>SvelteKit</code></b></Link> e
+					<Link href="https://angular.dev/"><b><code>Angular</code></b></Link>), e sono un grande
+					appassionato di
+					<b>videogiochi</b> e <b>cultura pop giapponese</b>.
 				</p>
 				<div class="socials">
 					<a target="_blank" class="title" href="https://www.linkedin.com/in/danieleavolio/"
@@ -58,6 +72,37 @@
 <style>
 	a {
 		z-index: 20;
+	}
+
+	.content :global(a),
+	.content :global(code) {
+		display: inline;
+		padding: 0.04em 0.22em;
+		border: 1px solid var(--automataRed);
+		border-radius: 0;
+		background: transparent;
+		box-shadow: none;
+		color: var(--automataColor);
+		font-size: 0.85em;
+		font-style: normal;
+		font-weight: 500;
+		letter-spacing: 0.02em;
+		line-height: inherit;
+		text-transform: none;
+		text-shadow: none;
+		white-space: normal;
+	}
+
+	.content :global(a)::before,
+	.content :global(a)::after {
+		content: none;
+		display: none;
+	}
+
+	.content :global(a):hover,
+	.content :global(a):focus-visible {
+		background: var(--automataRed);
+		color: #1a1815;
 	}
 
 	.page-data {

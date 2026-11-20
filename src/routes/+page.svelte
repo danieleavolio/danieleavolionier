@@ -5,9 +5,6 @@
 	import Profile from './profile.svelte';
 	import Seo from '#lib/components/SEO.svelte';
 	import { formatDate } from '#lib/utils.ts';
-	import { useI18n } from '#lib/i18n.ts';
-
-	const { t } = useI18n();
 
 	export let data: PageData;
 
@@ -65,14 +62,16 @@
 <h1 class="sr-only">Daniele Avolio - Data Engineer @ AgileLab</h1>
 <div class="separator">
 	<section class="section-1">
-		<li class="post">
-			<div bind:this={items_container} class="items-container">
-				<a href="/pagine" class="title">{$t('blog')}</a>
-				<a href="/progetti" class="title">{$t('projects')}</a>
-				<a href="/data" class="title">{$t('data')}</a>
-				<a href="/appunti" class="title">{$t('notes')}</a>
-			</div>
-		</li>
+		<ul class="hero-list">
+			<li class="post">
+				<div bind:this={items_container} class="items-container">
+					<a href="/pagine" class="title">Blog</a>
+					<a href="/progetti" class="title">Progetti</a>
+					<a href="/data" class="title">Data</a>
+					<a href="/appunti" class="title">Appunti</a>
+				</div>
+			</li>
+		</ul>
 	</section>
 	<section class="section-2"><Profile /></section>
 </div>
@@ -80,7 +79,7 @@
 <section class="latest-grid">
 	<article class="latest-panel yr-panel">
 		<h2 class="yr-panel__head">
-			<span class="yr-panel__square" aria-hidden="true"></span>{$t('latest_posts')}
+			<span class="yr-panel__square" aria-hidden="true"></span>Ultimi articoli
 		</h2>
 		<ul class="yr-panel__body">
 			{#each latestPosts as post (post.slug)}
@@ -97,7 +96,7 @@
 
 	<article class="latest-panel yr-panel">
 		<h2 class="yr-panel__head">
-			<span class="yr-panel__square" aria-hidden="true"></span>{$t('latest_projects')}
+			<span class="yr-panel__square" aria-hidden="true"></span>Ultimi progetti
 		</h2>
 		<ul class="yr-panel__body">
 			{#each latestProjects as project (project.slug)}
@@ -139,6 +138,13 @@
 		justify-content: space-around;
 		align-items: center;
 		gap: 4rem;
+	}
+
+	.hero-list {
+		width: 100%;
+		margin: 0;
+		padding: 0;
+		list-style: none;
 	}
 
 	.section-1 {
@@ -284,7 +290,6 @@
 		display: block;
 		margin-top: 0.3rem;
 		color: var(--automataColor);
-		opacity: 0.7;
 	}
 
 	.latest-panel li:hover p,

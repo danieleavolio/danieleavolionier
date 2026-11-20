@@ -17,16 +17,6 @@
 				} catch {
 					/* localStorage can be unavailable; keep the default light theme. */
 				}
-
-				try {
-					const stored = localStorage.getItem('locale');
-					const language = stored || navigator.language || 'it';
-					const locale = language.toLowerCase().startsWith('en') ? 'en' : 'it';
-					document.documentElement.lang = locale;
-					document.documentElement.dataset.locale = locale;
-				} catch {
-					/* Keep the server-detected language. */
-				}
 			})();
 		</script>
 		<meta name="google-site-verification" content="FTolVaK-x02wu54OEQqZv2yP7npBnNRQtI6mSv8W4RQ" />

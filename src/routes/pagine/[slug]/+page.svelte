@@ -8,7 +8,6 @@
 	import RichContent from '#lib/components/RichContent.svelte';
 	import RelatedPosts from '#lib/components/RelatedPosts.svelte';
 	import { page } from '$app/state';
-	import { useI18n } from '#lib/i18n.ts';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -18,48 +17,7 @@
 	let { data }: Props = $props();
 
 	const siteUrl = config.url.replace(/\/$/, '');
-	const { locale } = useI18n();
-	let translated = $state<{ title: string; description: string; contentHtml: string } | null>(null);
-	let loadingTranslation = false;
-
-	$effect(() => {
-		if ($locale !== 'en' || translated || loadingTranslation) return;
-		loadingTranslation = true;
-		void (async () => {
-			try {
-				const [plain, rich] = await Promise.all([
-					fetch('/api/translate', {
-						method: 'POST',
-						headers: { 'content-type': 'application/json' },
-						body: JSON.stringify({ texts: [data.meta.title, data.meta.description] })
-					}),
-					fetch('/api/translate', {
-						method: 'POST',
-						headers: { 'content-type': 'application/json' },
-						body: JSON.stringify({ texts: [data.contentHtml], html: true })
-					})
-				]);
-				const plainData = (await plain.json()) as { translations: string[] };
-				const richData = (await rich.json()) as { translations: string[] };
-				translated = {
-					title: plainData.translations[0] ?? data.meta.title,
-					description: plainData.translations[1] ?? data.meta.description,
-					contentHtml: richData.translations[0] ?? data.contentHtml
-				};
-			} catch {
-				translated = null;
-			} finally {
-				loadingTranslation = false;
-			}
-		})();
-	});
-
-	let displayContent = $derived(translated?.contentHtml ?? data.contentHtml);
-	let metadata = $derived(
-		translated
-			? { ...data.meta, title: translated.title, description: translated.description }
-			: data.meta
-	);
+	let metadata = $derived(data.meta);
 	let metadataCategories = $derived(Array.isArray(metadata.categories) ? metadata.categories : []);
 	let fallbackOg = $derived(`${siteUrl}/og/pagine/${data.slug}.svg`);
 	let seoImage = $derived(metadata.image || fallbackOg);
@@ -97,7 +55,7 @@
 		<h3>{data.meta.description}</h3>
 		<p>
 			Data: {formatDate(data.meta.date)} · {calculateReadingTime(
-				displayContent || metadata.description
+				data.contentHtml || metadata.description
 			)} min di lettura
 		</p>
 		{#if metadata.gameImage}
@@ -115,7 +73,7 @@
 		<img class="cover-image" src={metadata.image} alt={metadata.title} />
 	{/if}
 
-	<RichContent html={displayContent} />
+	<RichContent html={data.contentHtml} />
 
 	<RelatedPosts posts={data.relatedPosts} />
 

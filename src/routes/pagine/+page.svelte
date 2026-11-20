@@ -4,9 +4,6 @@
 	import { formatDate, calculateReadingTime } from '#lib/utils.ts';
 	import { slide } from 'svelte/transition';
 	import Icon from '#lib/components/ui/Icon.svelte';
-	import { useI18n } from '#lib/i18n.ts';
-
-	const { t } = useI18n();
 	import Seo from '#lib/components/SEO.svelte';
 	import Tag from '#lib/components/Tag.svelte';
 	import { onMount, tick } from 'svelte';
@@ -90,7 +87,7 @@
 			</li>
 		{/each}
 		{#if postToShow.length === 0}
-			<h1>{$t('no_posts')} <Icon name="empty" size={30} /></h1>
+			<h1>Nessun post trovato! <Icon name="empty" size={30} /></h1>
 		{/if}
 	</ul>
 	<div class="filter-column">
