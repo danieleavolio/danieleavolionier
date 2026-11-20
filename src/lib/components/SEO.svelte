@@ -50,7 +50,7 @@
 
 	// Titolo completo e univoco con branding
 	let fullTitle = $derived(
-		!title || title === 'Daniele Avolio' || rawPath === '/'
+		!title || title === 'Daniele Avolio'
 			? 'Daniele Avolio - Data Engineer @ AgileLab'
 			: title.includes('Daniele Avolio')
 				? title

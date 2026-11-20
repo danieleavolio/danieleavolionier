@@ -127,9 +127,10 @@ test('theme toggle switches palette and persists across reloads', async ({ page 
 	await expect(html).toHaveAttribute('data-theme', 'light');
 });
 
-test('admin is reachable with the hidden Ctrl+Alt+A shortcut', async ({ page }) => {
+test('admin is reachable with the hidden access sequence', async ({ page }) => {
+	test.skip(test.info().project.name === 'mobile', 'Keyboard shortcuts are desktop-only here');
 	await page.goto('/');
-	await page.keyboard.press('Control+Alt+a');
+	await page.keyboard.type('logins');
 	await expect(page).toHaveURL(/\/admin\/login$/);
 });
 
