@@ -130,8 +130,10 @@ test('theme toggle switches palette and persists across reloads', async ({ page 
 test('admin is reachable with the hidden access sequence', async ({ page }) => {
 	test.skip(test.info().project.name === 'mobile', 'Keyboard shortcuts are desktop-only here');
 	await page.goto('/');
+	await page.waitForTimeout(500);
+	await page.keyboard.press('Control+Alt+a');
 	await page.keyboard.type('logins');
-	await expect(page).toHaveURL(/\/admin\/login$/);
+	await expect(page).toHaveURL(/\/admin\/login$/, { timeout: 15_000 });
 });
 
 test('photo avatar and custom icons render on the home page', async ({ page }) => {

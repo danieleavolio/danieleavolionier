@@ -9,6 +9,19 @@ export type PublicContentTable = 'posts' | 'projects';
 
 function toElement(row: ContentRow, contentType: PublicContentTable): Element {
 	const metadata = row.metadata && typeof row.metadata === 'object' ? row.metadata : {};
+	const publicMetadata: Record<string, unknown> = { contentType };
+	for (const key of [
+		'isReview',
+		'gameName',
+		'gameImage',
+		'ratingValue',
+		'reviewBody',
+		'developer',
+		'faq'
+	]) {
+		if (metadata[key] !== undefined) publicMetadata[key] = metadata[key];
+	}
+
 	return {
 		title: row.title ?? row.slug,
 		slug: row.slug,
@@ -21,7 +34,7 @@ function toElement(row: ContentRow, contentType: PublicContentTable): Element {
 		contentHtml: prepareMedia(
 			convertGradingTags(repairPlainMarkdownHtml(row.content_html ?? ''), metadata)
 		),
-		metadata: { contentType },
+		metadata: publicMetadata,
 		isReview: Boolean(metadata.isReview),
 		gameName: metadata.gameName,
 		gameImage: metadata.gameImage,

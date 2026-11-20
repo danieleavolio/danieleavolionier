@@ -127,10 +127,24 @@ function parseFrontmatter(source) {
 	if (!match) return { values, body: source.trim() };
 
 	let currentList = null;
+	let currentObject = null;
 	for (const line of match[1].split(/\r?\n/)) {
 		const listItem = line.match(/^\s*-\s*(.*)$/);
 		if (listItem && currentList) {
-			values[currentList].push(parseValue(listItem[1]));
+			const pair = listItem[1].match(/^([\w-]+):\s*(.*)$/);
+			if (pair) {
+				const object = { [pair[1]]: parseValue(pair[2]) };
+				values[currentList].push(object);
+				currentObject = object;
+			} else {
+				values[currentList].push(parseValue(listItem[1]));
+				currentObject = null;
+			}
+			continue;
+		}
+		const nested = line.match(/^\s{2,}([\w-]+):\s*(.*)$/);
+		if (nested && currentObject) {
+			currentObject[nested[1]] = parseValue(nested[2]);
 			continue;
 		}
 		const field = line.match(/^([\w-]+):\s*(.*)$/);
@@ -139,6 +153,7 @@ function parseFrontmatter(source) {
 		if (!raw.trim()) {
 			values[key] = [];
 			currentList = key;
+			currentObject = null;
 		} else if (raw.trim().startsWith('[')) {
 			values[key] = raw
 				.replace(/[\u005b\u005d]/g, '')
@@ -146,9 +161,11 @@ function parseFrontmatter(source) {
 				.map(parseValue)
 				.filter(Boolean);
 			currentList = null;
+			currentObject = null;
 		} else {
 			values[key] = parseValue(raw);
 			currentList = null;
+			currentObject = null;
 		}
 	}
 
@@ -181,7 +198,8 @@ function readEntries(directory, contentType) {
 				'gameImage',
 				'ratingValue',
 				'reviewBody',
-				'developer'
+				'developer',
+				'faq'
 			]) {
 				if (values[key] !== undefined) metadata[key] = values[key];
 			}
@@ -203,9 +221,11 @@ function readEntries(directory, contentType) {
 }
 
 async function migrateTable(table, directory) {
-	const entries = readEntries(directory, table);
+	let entries = readEntries(directory, table);
+	const onlySlug = process.argv.find((arg) => arg.startsWith('--slug='))?.split('=')[1];
+	if (onlySlug) entries = entries.filter((entry) => entry.slug === onlySlug);
 	console.log(`${table}: ${entries.length} elementi${dryRun ? ' (dry-run)' : ''}`);
-	if (dryRun) return;
+	if (dryRun || entries.length === 0) return;
 	const { error } = await supabase.from(table).upsert(entries);
 	if (error) throw error;
 }

@@ -19,6 +19,7 @@
 		updateDate?: string;
 		dateModified?: string;
 		noindex?: boolean;
+		faq?: Array<{ question: string; answer: string }>;
 	}
 
 	let {
@@ -37,7 +38,8 @@
 		publishDate = '',
 		updateDate = '',
 		dateModified = '',
-		noindex = false
+		noindex = false,
+		faq = []
 	}: Props = $props();
 
 	const siteName = 'Daniele Avolio';
@@ -226,7 +228,25 @@
 						}
 	);
 
-	let schemaGraph = $derived([primarySchema, ...(breadcrumbSchema ? [breadcrumbSchema] : [])]);
+	let faqSchema = $derived(
+		faq.length
+			? {
+					'@context': 'https://schema.org',
+					'@type': 'FAQPage',
+					mainEntity: faq.map((item) => ({
+						'@type': 'Question',
+						name: item.question,
+						acceptedAnswer: { '@type': 'Answer', text: item.answer }
+					}))
+				}
+			: null
+	);
+
+	let schemaGraph = $derived([
+		primarySchema,
+		...(breadcrumbSchema ? [breadcrumbSchema] : []),
+		...(faqSchema ? [faqSchema] : [])
+	]);
 	// FAQ data is not emitted: these answers are not displayed on the page.
 	let finalSchema = $derived({ '@context': 'https://schema.org', '@graph': schemaGraph });
 

@@ -25,6 +25,10 @@
 	publishDate={metadata.date}
 	dateModified={metadata.updatedAt || metadata.date}
 	articleBody={metadata.description}
+	faq={((metadata as Record<string, unknown>).faq as Array<{
+		question: string;
+		answer: string;
+	}>) ?? []}
 />
 
 <article>
