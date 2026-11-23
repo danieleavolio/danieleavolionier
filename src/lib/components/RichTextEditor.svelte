@@ -6,9 +6,12 @@
 	import Image from '@tiptap/extension-image';
 	import Underline from '@tiptap/extension-underline';
 	import Placeholder from '@tiptap/extension-placeholder';
-	import { createRichExtensions } from '#lib/editor/extensions.ts';
+	import { chartEditButtons, createRichExtensions } from '#lib/editor/extensions.ts';
 	import { findImageFiles, uploadImage } from '#lib/media.ts';
+	import { parseChart, type ChartSettings } from '#lib/bar-chart.ts';
+	import { isGalleryUrl } from '#lib/rich-gallery.ts';
 	import type { RichTextDocument } from '#lib/types.ts';
+	import ChartStudio from '#lib/components/ChartStudio.svelte';
 
 	export let html = '';
 	export let json: RichTextDocument | null = null;
@@ -18,6 +21,10 @@
 	let editorElement: HTMLDivElement;
 	let editor: Editor | null = null;
 	let pendingUploads = 0;
+	let chartStudio: {
+		initial: ChartSettings | null;
+		at: number | { from: number; to: number };
+	} | null = null;
 
 	function emitChange() {
 		if (!editor) return;
@@ -104,16 +111,56 @@
 		return value?.trim() || null;
 	}
 
+	function openChartStudio() {
+		if (!editor) return;
+		const { $from, $to } = editor.state.selection;
+		const block = $from.parent;
+		if (block.type.name !== 'codeBlock') {
+			chartStudio = { initial: null, at: $from.pos };
+			return;
+		}
+		const initial =
+			block === $to.parent && block.attrs.language === 'bar-chart'
+				? parseChart(block.textContent)
+				: null;
+		chartStudio = {
+			initial,
+			at: initial ? { from: $from.before(), to: $from.after() } : $from.after()
+		};
+	}
+
+	function applyChart(source: string) {
+		if (!editor || !chartStudio) return;
+		editor
+			.chain()
+			.focus()
+			.insertContentAt(chartStudio.at, {
+				type: 'codeBlock',
+				attrs: { language: 'bar-chart' },
+				content: [{ type: 'text', text: source }]
+			})
+			.run();
+	}
+
+	function editChartAt(position: number) {
+		const node = editor?.state.doc.nodeAt(position);
+		if (node?.type.name !== 'codeBlock' || node.attrs.language !== 'bar-chart') return;
+		const initial = parseChart(node.textContent);
+		if (initial) chartStudio = { initial, at: { from: position, to: position + node.nodeSize } };
+	}
+
 	function insertBlock(kind: string) {
 		if (!editor) return;
 		const src = promptForUrl(
 			kind === 'gallery'
-				? 'Inserisci gli URL delle immagini separati da virgola'
+				? 'Incolla gli URL delle immagini o dei video, separati da uno spazio'
 				: 'Inserisci l’URL del contenuto'
 		);
 		if (!src) return;
 
 		if (kind === 'gallery') {
+			const images = src.split(/\s+/).filter(isGalleryUrl);
+			if (!images.length) return;
 			editor
 				.chain()
 				.focus()
@@ -121,10 +168,7 @@
 					type: 'richBlock',
 					attrs: {
 						kind,
-						images: src
-							.split(',')
-							.map((item) => item.trim())
-							.filter(Boolean)
+						images
 					}
 				})
 				.run();
@@ -138,12 +182,14 @@
 		editor = new Editor({
 			element: editorElement,
 			extensions: [
-				StarterKit,
+				// Link e Underline sono configurati sotto: niente doppioni da StarterKit v3.
+				StarterKit.configure({ link: false, underline: false }),
 				Underline,
 				Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true }),
 				Image.configure({ allowBase64: false }),
 				Placeholder.configure({ placeholder }),
-				...createRichExtensions()
+				...createRichExtensions(),
+				chartEditButtons(editChartAt)
 			],
 			content: json ?? html ?? '',
 			editorProps: mediaEditorProps,
@@ -159,89 +205,113 @@
 	}
 </script>
 
-{#if editor}
-	<div class="toolbar" aria-label="Strumenti di formattazione">
-		<button
-			type="button"
-			on:click={() => editor?.chain().focus().toggleBold().run()}
-			class:active={editor.isActive('bold')}>B</button
-		>
-		<button
-			type="button"
-			on:click={() => editor?.chain().focus().toggleItalic().run()}
-			class:active={editor.isActive('italic')}>I</button
-		>
-		<button
-			type="button"
-			on:click={() => editor?.chain().focus().toggleUnderline().run()}
-			class:active={editor.isActive('underline')}>U</button
-		>
-		<button
-			type="button"
-			on:click={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
-			class:active={editor.isActive('heading', { level: 2 })}>H2</button
-		>
-		<button
-			type="button"
-			on:click={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()}
-			class:active={editor.isActive('heading', { level: 3 })}>H3</button
-		>
-		<button
-			type="button"
-			on:click={() => editor?.chain().focus().toggleBulletList().run()}
-			class:active={editor.isActive('bulletList')}>Lista</button
-		>
-		<button
-			type="button"
-			on:click={() => editor?.chain().focus().toggleOrderedList().run()}
-			class:active={editor.isActive('orderedList')}>1.</button
-		>
-		<button
-			type="button"
-			on:click={() => editor?.chain().focus().toggleBlockquote().run()}
-			class:active={editor.isActive('blockquote')}>Citazione</button
-		>
-		<button
-			type="button"
-			on:click={() => editor?.chain().focus().toggleCodeBlock().run()}
-			class:active={editor.isActive('codeBlock')}>Codice</button
-		>
-		<button
-			type="button"
-			on:click={() => {
-				const url = promptForUrl('URL del link');
-				if (url) editor?.chain().focus().setLink({ href: url }).run();
-			}}
-			class:active={editor.isActive('link')}>Link</button
-		>
-		<button
-			type="button"
-			on:click={() => {
-				const url = promptForUrl('URL dell’immagine');
-				if (url) editor?.chain().focus().setImage({ src: url, alt: 'Immagine' }).run();
-			}}>Immagine</button
-		>
-		<button type="button" on:click={() => insertBlock('video')}>Video</button>
-		<button type="button" on:click={() => insertBlock('embed')}>Embed</button>
-		<button type="button" on:click={() => insertBlock('gallery')}>Galleria</button>
-	</div>
-{/if}
+<div class="editor-frame">
+	{#if editor}
+		<div class="toolbar" role="group" aria-label="Strumenti di formattazione">
+			<button
+				type="button"
+				on:click={() => editor?.chain().focus().toggleBold().run()}
+				class:active={editor.isActive('bold')}>B</button
+			>
+			<button
+				type="button"
+				on:click={() => editor?.chain().focus().toggleItalic().run()}
+				class:active={editor.isActive('italic')}>I</button
+			>
+			<button
+				type="button"
+				on:click={() => editor?.chain().focus().toggleUnderline().run()}
+				class:active={editor.isActive('underline')}>U</button
+			>
+			<button
+				type="button"
+				on:click={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
+				class:active={editor.isActive('heading', { level: 2 })}>H2</button
+			>
+			<button
+				type="button"
+				on:click={() => editor?.chain().focus().toggleHeading({ level: 3 }).run()}
+				class:active={editor.isActive('heading', { level: 3 })}>H3</button
+			>
+			<button
+				type="button"
+				on:click={() => editor?.chain().focus().toggleBulletList().run()}
+				class:active={editor.isActive('bulletList')}>Lista</button
+			>
+			<button
+				type="button"
+				on:click={() => editor?.chain().focus().toggleOrderedList().run()}
+				class:active={editor.isActive('orderedList')}>1.</button
+			>
+			<button
+				type="button"
+				on:click={() => editor?.chain().focus().toggleBlockquote().run()}
+				class:active={editor.isActive('blockquote')}>Citazione</button
+			>
+			<button
+				type="button"
+				on:click={() => editor?.chain().focus().toggleCodeBlock().run()}
+				class:active={editor.isActive('codeBlock')}>Codice</button
+			>
+			<button
+				type="button"
+				on:click={() => {
+					const url = promptForUrl('URL del link');
+					if (url) editor?.chain().focus().setLink({ href: url }).run();
+				}}
+				class:active={editor.isActive('link')}>Link</button
+			>
+			<button
+				type="button"
+				on:click={() => {
+					const url = promptForUrl('URL dell’immagine');
+					if (url) editor?.chain().focus().setImage({ src: url, alt: 'Immagine' }).run();
+				}}>Immagine</button
+			>
+			<button type="button" on:click={() => insertBlock('video')}>Video</button>
+			<button type="button" on:click={() => insertBlock('embed')}>Embed</button>
+			<button type="button" on:click={() => insertBlock('gallery')}>Galleria</button>
+			<button
+				type="button"
+				aria-haspopup="dialog"
+				title="Inserisci un grafico o posiziona il cursore in un grafico esistente per modificarlo"
+				on:click={openChartStudio}>Studio grafici</button
+			>
+		</div>
+	{/if}
 
-{#if pendingUploads > 0}
-	<p class="upload-status">Caricamento immagini ({pendingUploads}) in corso…</p>
-{/if}
+	{#if pendingUploads > 0}
+		<p class="upload-status">Caricamento immagini ({pendingUploads}) in corso…</p>
+	{/if}
 
-<div class="editor prose" bind:this={editorElement} aria-label="Editor del contenuto"></div>
+	<div class="editor prose" bind:this={editorElement} aria-label="Editor del contenuto"></div>
+</div>
+
+{#if chartStudio}
+	<ChartStudio
+		initial={chartStudio.initial}
+		apply={applyChart}
+		dismiss={() => (chartStudio = null)}
+	/>
+{/if}
 
 <style>
+	.editor-frame {
+		display: grid;
+		gap: 0.6rem;
+		min-width: 0;
+	}
+
 	.toolbar {
+		position: sticky;
+		top: 0;
+		z-index: 2;
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.35rem;
 		padding: 0.6rem;
 		border: 1px solid var(--automataColor);
-		border-bottom: 0;
-		background: var(--automataBgRGBA);
+		background: var(--automataBg);
 	}
 
 	.toolbar button {
@@ -293,6 +363,19 @@
 		color: var(--automataColor);
 	}
 
+	.editor :global(.chart-edit-button) {
+		display: block;
+		margin-block: 0.75rem 0.25rem;
+		padding: 0.3rem 0.55rem;
+		border: 1px solid var(--yr-line-strong);
+		border-radius: 0;
+		box-shadow: none;
+		color: var(--automataColor);
+		background: var(--automataBg);
+		font-family: var(--font-mono);
+		font-size: 0.85rem;
+	}
+
 	.editor :global(.ProseMirror p.is-editor-empty:first-child::before) {
 		content: attr(data-placeholder);
 		float: left;
@@ -316,13 +399,15 @@
 
 	.editor :global(.rich-gallery) {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(min(7rem, 100%), 1fr));
 		gap: 0.75rem;
 	}
 
-	.editor :global(.rich-gallery img) {
+	.editor :global(.rich-gallery img),
+	.editor :global(.rich-gallery video) {
 		width: 100%;
 		aspect-ratio: 4 / 3;
+		margin: 0;
 		object-fit: cover;
 	}
 
@@ -339,26 +424,30 @@
 		font-size: 4rem;
 		font-weight: bold;
 		grid-column: span 2;
-		color: var(--automataWhite);
+		color: #26241e;
 		width: 100px;
 		height: 100px;
 		border-radius: 100%;
 		margin: auto;
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+		line-height: 1;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	}
 	.editor :global(.rg-low .rg-grade) {
 		background-color: #cd674d;
 	}
+	.editor :global(.rg-max) {
+		font-family: var(--font-mono);
+		font-size: 0.9rem;
+	}
 	.editor :global(.rg-mid .rg-grade) {
 		background-color: #ece7d5;
-		color: var(--automataBlack0);
 	}
 	.editor :global(.rg-high .rg-grade) {
 		background-color: #e1d8aa;
-		color: var(--automataBlack0);
 	}
 	.editor :global(.rg-list) {
 		padding: 1rem;
@@ -390,15 +479,6 @@
 		font-weight: bold;
 		text-align: center;
 		margin: 1em 0 0;
-		color: var(--automataWhite);
-	}
-	.editor :global(.rg-low .rg-title) {
-		color: #cd674d;
-	}
-	.editor :global(.rg-mid .rg-title) {
-		color: #ece7d5;
-	}
-	.editor :global(.rg-high .rg-title) {
-		color: #e1d8aa;
+		color: var(--automataColor);
 	}
 </style>

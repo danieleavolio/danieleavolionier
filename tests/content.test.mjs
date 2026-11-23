@@ -11,6 +11,14 @@ let home;
 let hooks;
 let related;
 let article;
+let renderBarCharts;
+let chartSource;
+let chartCodeBlock;
+let chartDataSource;
+let parseChart;
+let sanitizeContentHtml;
+let restoreArticleHtml;
+let linkGalleryImages;
 const relatedFixture = JSON.parse(
 	await readFile(new URL('./fixtures/related-posts.json', import.meta.url), 'utf8')
 );
@@ -23,9 +31,139 @@ before(async () => {
 	hooks = await server.ssrLoadModule('/src/hooks.server.ts');
 	related = await server.ssrLoadModule('/src/lib/server/related-posts.ts');
 	article = await server.ssrLoadModule('/src/routes/pagine/[slug]/+page.server.ts');
+	({ renderBarCharts, chartSource, chartCodeBlock, chartDataSource, parseChart } =
+		await server.ssrLoadModule('/src/lib/bar-chart.ts'));
+	({ sanitizeContentHtml } = await server.ssrLoadModule('/src/lib/server/sanitize.ts'));
+	({ restoreArticleHtml } = await server.ssrLoadModule('/src/lib/server/article-repairs.ts'));
+	({ linkGalleryImages } = await server.ssrLoadModule('/src/lib/rich-gallery.ts'));
 });
 after(async () => {
 	await server?.close();
+});
+
+test('bar-chart renders readable labels and proportional bars from a Markdown fence', async () => {
+	const { marked } = await import('marked');
+	const html = marked.parse(
+		[
+			'```bar-chart',
+			'titolo: Deploy & attese',
+			'unità: min',
+			'Un deploy | 12,5',
+			'Due deploy | 25',
+			'```'
+		].join('\n')
+	);
+	const rendered = renderBarCharts(html);
+	assert.match(rendered, /<figure class="rich-bar-chart yr-panel">/);
+	assert.match(rendered, /Deploy &amp; attese/);
+	assert.match(rendered, /<strong>12,5 min<\/strong>/);
+	assert.match(rendered, /--bar-width:50\.000%/);
+	assert.match(rendered, /--bar-width:100\.000%/);
+});
+
+test('bar-chart leaves invalid or unrelated code alone and escapes labels and units', () => {
+	const invalid = '<pre><code class="language-bar-chart">titolo: Prova\nDato | -1</code></pre>';
+	const unrelated = '<pre><code class="language-mermaid">flowchart LR\nA --&gt; B</code></pre>';
+	assert.equal(renderBarCharts(invalid + unrelated), invalid + unrelated);
+	const safe = renderBarCharts(
+		'<pre><code class="language-bar-chart">titolo: &lt;script&gt;\nunita: &lt;b&gt;\n&lt;svg&gt; | 0</code></pre>'
+	);
+	assert.match(safe, /&lt;script&gt;/);
+	assert.match(safe, /&lt;svg&gt;/);
+	assert.match(safe, /0 &lt;b&gt;/);
+	assert.match(safe, /--bar-width:0\.000%/);
+	assert.doesNotMatch(safe, /<(?:script|svg|b)>/);
+});
+
+test('chart studio settings survive CMS sanitation for columns, horizontal bars and lines', () => {
+	const settings = {
+		title: 'Deploy < & attese',
+		unit: 'min',
+		thickness: 20,
+		color: '#345b78',
+		data: 'Tipo: un deploy | 15\nDue deploy | 30\nTre deploy | 45'
+	};
+	for (const type of ['colonne', 'barre', 'linea']) {
+		const source = chartSource({ ...settings, type });
+		const { rows, ...reopened } = parseChart(source);
+		assert.deepEqual(reopened, { ...settings, type });
+		assert.equal(rows[2].amount, 45);
+		assert.equal(rows[2].value, '45');
+		const rendered = renderBarCharts(sanitizeContentHtml(chartCodeBlock(source)));
+		assert.match(rendered, /Deploy &lt; &amp; attese/);
+		assert.match(rendered, /--chart-weight:20%/);
+		assert.match(rendered, /--chart-color:#345b78/);
+		assert.match(rendered, /<strong>45 min<\/strong>/);
+		if (type === 'linea') {
+			assert.match(rendered, /points="50,66\.667 150,33\.333 250,0\.000"/);
+		} else {
+			assert.match(rendered, /--bar-width:33\.333%/);
+		}
+	}
+});
+
+test('each datum can use a YoRHa palette colour or a custom hex colour', () => {
+	const data = [
+		{ label: 'Primo', value: '15', color: 'rosso' },
+		{ label: 'Secondo', value: '30', color: 'bianco' },
+		{ label: 'Terzo', value: '45', color: 'giallo' },
+		{ label: 'Quarto', value: '10', color: 'nero' },
+		{ label: 'Quinto', value: '20', color: '#345b78' }
+	];
+	const source = chartSource({
+		title: 'Colori',
+		unit: '',
+		type: 'colonne',
+		thickness: 60,
+		color: '',
+		data: chartDataSource(data)
+	});
+	const parsed = parseChart(source);
+	assert.deepEqual(
+		parsed.rows.map(({ label, value, color }) => ({ label, value, color })),
+		data
+	);
+	const rendered = renderBarCharts(sanitizeContentHtml(chartCodeBlock(source)));
+	assert.match(rendered, /--chart-item-color:var\(--automataRed\)/);
+	assert.match(rendered, /--chart-item-color:var\(--automataWhite\)/);
+	assert.match(rendered, /--chart-item-color:var\(--automataYellow\)/);
+	assert.match(rendered, /--chart-item-color:var\(--automataBlackO\)/);
+	assert.match(rendered, /--chart-item-color:#345b78/);
+	assert.doesNotMatch(rendered, /--chart-item-color:[^;"]*(?:url|expression|javascript)/i);
+});
+
+test('legacy reviews restore grading, galleries and known broken media', async () => {
+	const { readFile } = await import('node:fs/promises');
+	const source = await readFile(
+		new URL('./fixtures/outer-wilds-legacy.txt', import.meta.url),
+		'utf8'
+	);
+	const html = sanitizeContentHtml(restoreArticleHtml(source, { ratingValue: 9 }));
+	assert.match(html, /data-rich-block="grading"/);
+	assert.match(html, /data-pros="\[&quot;Enigmi ben progettati&quot;/);
+	assert.match(html, /Un viaggio indimenticabile/);
+	assert.match(html, /data-rich-block="gallery"/);
+	assert.doesNotMatch(html, /&lt;Grading/);
+	assert.doesNotMatch(html, /thumbs\.gfycat\.com/);
+	assert.match(html, /src="https:\/\/i\.imgur\.com\/j47Rjyr\.png"/);
+	const linked = linkGalleryImages(html);
+	assert.equal([...linked.matchAll(/<a href=/g)].length, 5);
+	assert.match(linked, /<a href="https:\/\/i\.imgur\.com\/3MWKU42\.png"><img/);
+	assert.doesNotMatch(linked, /<a href=""><img/);
+});
+
+test('chart studio options reject injected CSS and out-of-range thickness', () => {
+	for (const option of [
+		'colore: #345b78;display:none',
+		'spessore: 101',
+		'tipo: sconosciuto',
+		'titolo: Prova'
+	]) {
+		const source = `titolo: Prova\n${option}\nDato | 10 | rosso`;
+		const block = chartCodeBlock(source);
+		assert.equal(parseChart(source), null);
+		assert.equal(renderBarCharts(block), block);
+	}
 });
 
 function database(rows, error = null) {

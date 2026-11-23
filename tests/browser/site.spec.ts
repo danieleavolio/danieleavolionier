@@ -1,4 +1,5 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 
 test('home is compact, crawlable and does not eagerly fetch search or diagram engines', async ({
 	page,
@@ -90,23 +91,42 @@ test('search can retry a transient failure', async ({ page }) => {
 	await expect(page.getByPlaceholder('Cerca articoli, progetti, appunti')).toBeVisible();
 });
 
+async function scrollToArticleDiagram(page: Page) {
+	await page.goto('/pagine/opencode-e-le-balene');
+	const source = page.locator('.rich-content pre').filter({ hasText: 'Client (quello che vedi)' });
+	await source.or(page.locator('.rich-mermaid')).first().scrollIntoViewIfNeeded();
+}
+
 test('diagrams render near the viewport and retain the NieR theme', async ({ page }) => {
 	const errors: string[] = [];
 	page.on('pageerror', (error) => errors.push(error.message));
-	await page.goto('/pagine/opencode-e-le-balene');
-	await expect(page.locator('.rich-content pre, .rich-mermaid').first()).toBeVisible({
-		timeout: 20_000
+	await scrollToArticleDiagram(page);
+	const diagram = page.locator('.rich-mermaid[data-renderer="pele"]').first();
+	await expect(diagram.locator('svg.pele-flowchart')).toBeVisible({ timeout: 30_000 });
+	await expect(diagram).toHaveCSS('--pele-radius', '0px');
+	await diagram.evaluate((element) => {
+		// The admin's preview is inside a section, whose SVG icons default to fill:none.
+		const section = document.createElement('section');
+		element.replaceWith(section);
+		section.append(element);
 	});
-	await page.evaluate(() => {
-		const blocks = Array.from(
-			document.querySelectorAll<HTMLElement>('.rich-content pre, .rich-content .rich-mermaid')
-		);
-		const target = blocks.find((block) => /flowchart|graph\s/i.test(block.textContent ?? ''));
-		(target ?? blocks[0])?.scrollIntoView({ block: 'center' });
-	});
-	const diagram = page.locator('.rich-mermaid').first();
-	await expect(diagram.locator('svg').first()).toBeVisible({ timeout: 30_000 });
+	const label = diagram.locator('svg.pele-flowchart text').first();
+	await expect(label).toBeVisible();
+	await expect(label).not.toHaveCSS('fill', 'none');
 	expect(errors).toEqual([]);
+});
+
+test('diagrams fall back to Mermaid when Pele fails to load', async ({ page }) => {
+	test.skip(Boolean(process.env.SITE_URL), 'The local Vite manifest identifies the Pele chunk');
+	const manifest = JSON.parse(
+		await readFile('.svelte-kit/output/client/.vite/manifest.json', 'utf8')
+	);
+	const { file } = manifest['node_modules/pele/dist/esm/lazy.js'];
+	await page.route(`**/${file}`, (route) => route.abort());
+	await scrollToArticleDiagram(page);
+	await expect(page.locator('.rich-mermaid[data-renderer="mermaid"] svg').first()).toBeVisible({
+		timeout: 30_000
+	});
 });
 
 test('admin remains private, missing articles remain real 404s', async ({ request, baseURL }) => {

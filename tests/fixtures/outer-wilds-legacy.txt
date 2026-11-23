@@ -1,0 +1,13 @@
+<p><img src="https://i.imgur.com/uvbEnwH.png" alt="Copertina"></p>
+<p><img src="https://imgur.com/a/3I6SYtt" alt="Il mio Pixel 7 Pro"></p>
+<p><img src="https://thumbs.gfycat.com/ArcticEasyAfricanpiedkingfisher-size_restricted.gif" alt="Tempo di attesa"></p>
+<div data-rich-block="gallery" class="rich-gallery" data-images="https://i.imgur.com/3MWKU42.png|https://i.imgur.com/fWHEd2P.png|https://i.imgur.com/2UQIgKG.png|https://i.imgur.com/Mq9Ulhh.png|https://i.imgur.com/KsfxRl3.png"><img src="https://i.imgur.com/3MWKU42.png" alt="Immagine della galleria"><img src="https://i.imgur.com/fWHEd2P.png" alt="Immagine della galleria"><img src="https://i.imgur.com/2UQIgKG.png" alt="Immagine della galleria"><img src="https://i.imgur.com/Mq9Ulhh.png" alt="Immagine della galleria"><img src="https://i.imgur.com/KsfxRl3.png" alt="Immagine della galleria"></div>
+<p>&lt;Grading grade={ratingValue}
+pros={[
+    "Enigmi ben progettati",
+    "Colonna sonora coinvolgente"
+]}
+cons={["Difficoltà elevata"]}
+title="Un viaggio indimenticabile"</p>
+<blockquote></blockquote>
+<p>Outer Wilds è un'esperienza unica.</p>

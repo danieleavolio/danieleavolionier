@@ -1,6 +1,11 @@
 # danieleavolionier
 
-Sito personale basato su SvelteKit.
+Sito personale in italiano per articoli, progetti, appunti e CV, con un CMS privato
+e una grafica YoRHa ispirata a NieR:Automata.
+
+Per il flusso di lavoro vedi [CONTRIBUTING.md](CONTRIBUTING.md); per capire dove
+intervenire, vedi [l’architettura](docs/ARCHITECTURE.md). Lo stato di ripartenza è
+in [docs/HANDOFF.md](docs/HANDOFF.md).
 
 ## Setup
 
@@ -63,14 +68,8 @@ Data, Appunti e Privacy sono prerenderizzate. L'admin e gli upload restano priva
 e senza cache condivisa. Le modifiche ai contenuti possono essere visibili dopo
 la successiva rigenerazione, non necessariamente subito dopo il salvataggio.
 
-```bash
-npm run lint
-npm run check
-npm test
-npm run build
-npx playwright install chromium
-npm run test:e2e
-```
+Usa `npm run check:quick` per tipi e test unitari e `npm run check:full` prima
+di pubblicare. Per i prerequisiti e i controlli mirati vedi [CONTRIBUTING.md](CONTRIBUTING.md).
 
 I test browser usano letture pubbliche del CMS, senza salvare o eliminare contenuti.
 Per rigenerare le immagini ottimizzate e le risorse grafiche locali:

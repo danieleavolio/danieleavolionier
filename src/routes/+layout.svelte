@@ -106,6 +106,20 @@
 		padding-block: var(--size-9);
 	}
 
+	/* The editor toolbar, rather than the site navigation, sticks in the writing view. */
+	.layout:has(:global(.zen-frame)) > :global(nav) {
+		position: static;
+	}
+
+	/* Keep Zen in the same DOM so the editor and its unsaved state stay mounted. */
+	.layout:has(:global(.zen-frame.active)) {
+		visibility: hidden;
+	}
+
+	:global(html:has(.zen-frame.active)) {
+		overflow: hidden;
+	}
+
 	@media (min-width: 1440px) {
 		.layout {
 			padding-inline: 0;

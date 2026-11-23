@@ -7,6 +7,8 @@
 	export let data;
 	export let form;
 
+	$: categoryOptions = data.items.flatMap((item: EditableContent) => item.categories);
+
 	let selected: EditableContent = data.empty;
 	let itemToDelete: EditableContent | null = null;
 	let deleteForm: HTMLFormElement;
@@ -56,7 +58,7 @@
 	</aside>
 	<section class="editor-panel">
 		{#key selected.slug || selected}
-			<AdminContentEditor item={selected} {form} />
+			<AdminContentEditor item={selected} {form} {categoryOptions} />
 		{/key}
 	</section>
 </div>

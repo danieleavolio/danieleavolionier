@@ -5,8 +5,7 @@ import {
 	referencedPostImagePaths,
 	storedPostImagePaths
 } from '#lib/server/media-cleanup.ts';
-import { convertGradingTags } from '#lib/rich-grading.ts';
-import { repairPlainMarkdownHtml } from '#lib/server/markdown-repair.ts';
+import { restoreArticleHtml } from '#lib/server/article-repairs.ts';
 import type { RichTextDocument } from '#lib/types.ts';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { ContentRow } from './content-row';
@@ -29,6 +28,8 @@ export type EditableContent = {
 
 function normalizeRow(row: ContentRow): EditableContent {
 	const metadata = row.metadata && typeof row.metadata === 'object' ? row.metadata : {};
+	const storedHtml = row.content_html ?? '';
+	const contentHtml = restoreArticleHtml(storedHtml, metadata);
 	return {
 		slug: row.slug ?? '',
 		title: row.title ?? '',
@@ -37,8 +38,8 @@ function normalizeRow(row: ContentRow): EditableContent {
 		categories: Array.isArray(row.categories) ? row.categories : [],
 		image: row.image ?? '',
 		published: row.published !== false,
-		contentHtml: repairPlainMarkdownHtml(row.content_html ?? ''),
-		contentJson: row.content_json ?? null,
+		contentHtml,
+		contentJson: contentHtml === storedHtml ? (row.content_json ?? null) : null,
 		legacyContent: row.legacy_content ?? row.content ?? null,
 		metadata
 	};
@@ -96,12 +97,9 @@ export async function saveContent(
 	}
 
 	const metadata = parseJson(form.get('metadata')) ?? {};
-	const contentHtml = sanitizeContentHtml(
-		convertGradingTags(
-			repairPlainMarkdownHtml(form.get('content_html')?.toString() ?? ''),
-			metadata
-		)
-	);
+	const submittedHtml = form.get('content_html')?.toString() ?? '';
+	const restoredHtml = restoreArticleHtml(submittedHtml, metadata);
+	const contentHtml = sanitizeContentHtml(restoredHtml);
 	const stripped = contentHtml.replace(/<p><\/p>/g, '').trim();
 	if (!contentHtml || !stripped) throw error(400, 'Il contenuto non può essere vuoto.');
 
@@ -109,7 +107,10 @@ export async function saveContent(
 		.split(',')
 		.map((category) => category.trim())
 		.filter(Boolean);
-	const contentJson = parseJson(form.get('content_json')) as RichTextDocument | null;
+	const contentJson =
+		restoredHtml === submittedHtml
+			? (parseJson(form.get('content_json')) as RichTextDocument | null)
+			: null;
 	const date = form.get('date')?.toString() || new Date().toISOString().slice(0, 10);
 	const originalSlug = form.get('original_slug')?.toString().trim();
 

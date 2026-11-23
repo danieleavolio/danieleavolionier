@@ -1,8 +1,10 @@
 const MERMAID_SOURCE_PATTERN =
-	/^\s*(?:flowchart|graph|sequenceDiagram|classDiagram|stateDiagram(-v2)?|erDiagram|journey|gantt|pie|mindmap|timeline|gitGraph|quadrantChart|block-beta)\b/;
+	/^\s*(?:flowchart|graph|sequenceDiagram|classDiagram|stateDiagram(-v2)?|erDiagram|journey|gantt|pie|mindmap|timeline|gitGraph|quadrantChart|block-beta|xychart(-beta)?)\b/;
 
 const MERMAID_LABEL_PATTERN = /\bmermaid\b/i;
+const DIAGRAM_FONT = "'JetBrains Mono', ui-monospace, monospace";
 let diagramSequence = 0;
+let legacyMermaid: ReturnType<typeof loadLegacyMermaid> | undefined;
 
 /**
  * NieR:Automata-styled theme: flat dark plates with the beige page palette,
@@ -138,21 +140,14 @@ function fitEdgeLabelPlates(holder: HTMLElement): void {
 	});
 }
 
-/**
- * Replaces every mermaid code block inside [container] with a rendered SVG
- * diagram, lazily importing the mermaid bundle only when at least one block is
- * found. Blocks that fail to render are left as code.
- */
-export async function renderMermaidBlocks(container: HTMLElement): Promise<void> {
-	const candidates = Array.from(container.querySelectorAll('pre > code')).filter(isMermaidCode);
-	if (candidates.length === 0) return;
-
+async function loadLegacyMermaid() {
 	const mermaid = (await import('mermaid')).default;
 	mermaid.initialize({
 		startOnLoad: false,
 		securityLevel: 'strict',
+		suppressErrorRendering: true,
 		theme: 'base',
-		fontFamily: "'JetBrains Mono', ui-monospace, monospace",
+		fontFamily: DIAGRAM_FONT,
 		themeCSS: NIER_THEME_CSS,
 		themeVariables: {
 			background: '#d3d0c4',
@@ -170,26 +165,70 @@ export async function renderMermaidBlocks(container: HTMLElement): Promise<void>
 			fontSize: '14px',
 			clusterBkg: '#1d1d1a',
 			clusterBorder: '#8f8b7d',
-			titleColor: '#22221d'
+			titleColor: '#22221d',
+			xyChart: {
+				backgroundColor: 'var(--automataBg)',
+				titleColor: 'var(--automataColor)',
+				dataLabelColor: 'var(--automataColor)',
+				legendTextColor: 'var(--automataColor)',
+				xAxisLabelColor: 'var(--automataColor)',
+				xAxisTitleColor: 'var(--automataColor)',
+				xAxisTickColor: 'var(--yr-accent)',
+				xAxisLineColor: 'var(--yr-accent)',
+				yAxisLabelColor: 'var(--automataColor)',
+				yAxisTitleColor: 'var(--automataColor)',
+				yAxisTickColor: 'var(--yr-accent)',
+				yAxisLineColor: 'var(--yr-accent)',
+				plotColorPalette: 'var(--yr-accent),var(--automataRed)'
+			}
 		},
 		flowchart: { curve: 'stepBefore', padding: 12, nodeSpacing: 38, rankSpacing: 48 }
 	});
+	return mermaid;
+}
 
-	// Plates are measured against the real font, so the webfont must be ready
-	// before the first render.
+/** Render Mermaid source with Pele first; keep the code visible if neither renderer succeeds. */
+export async function renderMermaidBlocks(container: HTMLElement): Promise<void> {
+	const candidates = Array.from(container.querySelectorAll('pre > code')).filter(isMermaidCode);
+	if (candidates.length === 0) return;
+
+	// Both renderers measure labels against the loaded font.
 	await document.fonts?.ready;
 
 	for (const code of candidates) {
+		const pre = code.parentElement;
+		if (!pre?.isConnected) continue;
 		const source = (code.textContent ?? '').trim();
+		const id = `rich-diagram-${diagramSequence++}`;
 		const holder = document.createElement('div');
 		holder.className = 'rich-mermaid';
+
 		try {
-			const { svg } = await mermaid.render(
-				`rich-mermaid-${Date.now()}-${diagramSequence++}`,
-				source
-			);
+			const { renderAsync } = await import('pele/lazy');
+			const rem = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
+			const width = pre.clientWidth - 2 * rem - 2; // Frame padding and border
+			const { svg } = await renderAsync(source, {
+				idPrefix: id,
+				fontFamily: DIAGRAM_FONT,
+				maxWidth: width > 0 ? width : undefined,
+				images: false
+			});
+			holder.dataset.renderer = 'pele';
 			holder.innerHTML = svg;
-			code.parentElement?.replaceWith(holder);
+			pre.replaceWith(holder);
+			continue;
+		} catch (cause) {
+			// Do not bypass Pele's size/complexity limits by trying another renderer.
+			if (cause instanceof Error && 'code' in cause && cause.code === 'limit') continue;
+		}
+
+		try {
+			if (!pre.isConnected) continue;
+			const mermaid = await (legacyMermaid ??= loadLegacyMermaid());
+			const { svg } = await mermaid.render(id, source);
+			holder.dataset.renderer = 'mermaid';
+			holder.innerHTML = svg;
+			pre.replaceWith(holder);
 			flattenGeometry(holder);
 			fitEdgeLabelPlates(holder);
 		} catch (cause) {

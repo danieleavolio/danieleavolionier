@@ -44,7 +44,9 @@ export function parseArrayLiteral(raw: string | null | undefined): string[] {
 		const parsed = JSON.parse(raw);
 		return Array.isArray(parsed) ? parsed.map((item) => String(item)) : [];
 	} catch {
-		return [...raw.matchAll(/["']((?:[^"\\]|\\.)*)["']/g)].map((match) => match[1]);
+		return [...raw.matchAll(/"((?:[^"\\]|\\.)*)"|'((?:[^'\\]|\\.)*)'/g)].map(
+			(match) => match[1] ?? match[2]
+		);
 	}
 }
 
@@ -74,10 +76,10 @@ export function buildGradingBlockHtml(input: Partial<GradingInfo>): string {
 		`<div class="rich-grading rg-${gradingRange(info.grade, info.max)}" data-rich-block="grading"`,
 		` data-grade="${info.grade}" data-max="${info.max}"`,
 		info.title ? ` data-title="${escapeHtmlText(info.title)}"` : '',
-		` data-pros="${JSON.stringify(info.pros).replace(/"/g, '&quot;')}"`,
-		` data-cons="${JSON.stringify(info.cons).replace(/"/g, '&quot;')}"`,
+		` data-pros="${escapeHtmlText(JSON.stringify(info.pros))}"`,
+		` data-cons="${escapeHtmlText(JSON.stringify(info.cons))}"`,
 		'>',
-		`<div class="rg-grade"><span>${info.grade}</span></div>`,
+		`<div class="rg-grade"><span>${info.grade}</span><span class="rg-max">/${info.max}</span></div>`,
 		`<div class="rg-list rg-pros"><h3>Pros</h3>${items(info.pros)}</div>`,
 		`<div class="rg-list rg-cons"><h3>Cons</h3>${items(info.cons)}</div>`,
 		info.title ? `<h2 class="rg-title">${escapeHtmlText(info.title)}</h2>` : '',
@@ -98,14 +100,20 @@ export function gradingFromLegacyTag(
 	const quote = (name: string): string =>
 		tag.match(new RegExp(`${name}\\s*=\\s*"([^"]*)"`, 'i'))?.[1] ?? '';
 
-	const gradeExpression = attr('grade');
-	if (gradeExpression == null) return null;
-	const resolved = variables[gradeExpression.trim()];
-	const value = Number(String(resolved ?? gradeExpression).replace(/[^0-9.]/g, ''));
+	const gradeExpression = attr('grade')?.trim();
+	if (!gradeExpression) return null;
+	const resolved = Object.hasOwn(variables, gradeExpression)
+		? variables[gradeExpression]
+		: gradeExpression;
+	const value =
+		typeof resolved === 'number' || typeof resolved === 'string'
+			? Number(String(resolved).trim().replace(',', '.'))
+			: NaN;
+	if (!Number.isFinite(value)) return null;
 
 	return normalizeGradingInfo({
-		grade: Number.isFinite(value) ? value : 0,
-		max: GRADING_DEFAULT_MAX,
+		grade: value,
+		max: Number(attr('max')) || GRADING_DEFAULT_MAX,
 		title: quote('title').replace(/&quot;/g, '"'),
 		pros: parseArrayLiteral(attr('pros')),
 		cons: parseArrayLiteral(attr('cons'))
@@ -119,16 +127,29 @@ export function gradingFromLegacyTag(
 export function convertGradingTags(html: string, variables: Record<string, unknown> = {}): string {
 	if (!html) return '';
 
-	const converted = html.replace(
-		/(?:<Grading\b[\s\S]*?(?:\/>|<\/Grading\s*>)|&lt;Grading\b[\s\S]*?(?:\/&gt;|&lt;\/Grading\s*&gt;))/gi,
-		(tag) => {
-			const info = gradingFromLegacyTag(
-				tag.includes('&lt;') ? unescapeHtmlText(tag) : tag,
-				variables
-			);
-			return info ? buildGradingBlockHtml(info) : '';
-		}
-	);
+	function render(opening: string): string | null {
+		const info = gradingFromLegacyTag(
+			opening.startsWith('&lt;') ? unescapeHtmlText(opening) : opening,
+			variables
+		);
+		return info ? buildGradingBlockHtml(info) : null;
+	}
 
-	return converted;
+	return html
+		.replace(
+			// The old migration parsed the lone closing `>` as an empty blockquote.
+			/<p>\s*(&lt;Grading\b[^<]*)<\/p>\s*<blockquote>\s*<\/blockquote>/gi,
+			(block, opening: string) => render(opening) ?? block
+		)
+		.replace(
+			/(<(?:pre|code)\b[^>]*>[\s\S]*?<\/(?:pre|code)>)|(<Grading\b[^>]*?>)(?:([\s\S]*?)<\/Grading\s*>)?|(&lt;Grading\b(?:(?!&gt;)[\s\S])*?&gt;)(?:([\s\S]*?)&lt;\/Grading\s*&gt;)?/gi,
+			(block, code, raw, rawBody, escaped, escapedBody) => {
+				if (code) return block;
+				const opening = raw ?? escaped;
+				const body = rawBody ?? escapedBody;
+				if (body == null && !/\/(?:>|&gt;)$/.test(opening)) return block;
+				const grading = render(opening);
+				return grading ? `\n\n${grading}\n\n${body?.trim() ?? ''}` : block;
+			}
+		);
 }

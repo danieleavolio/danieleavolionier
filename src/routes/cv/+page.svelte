@@ -165,7 +165,7 @@
 
 		<section>
 			<h2>Competenze</h2>
-			{#each Object.entries(skills) as [label, value]}
+			{#each Object.entries(skills) as [label, value] (label)}
 				<div class="entry compact">
 					<h3>{label}</h3>
 					<p>{value}</p>

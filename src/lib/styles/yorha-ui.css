@@ -261,7 +261,7 @@ a.yr-button--danger:focus-visible {
 }
 
 .yr-field::placeholder,
-:where(input):placeholder,
+:where(input)::placeholder,
 :where(textarea)::placeholder {
 	color: var(--automataColor);
 	opacity: 0.45;
