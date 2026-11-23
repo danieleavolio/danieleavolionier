@@ -72,6 +72,43 @@
 		overflow-x: auto;
 	}
 
+	.rich-content :global(th),
+	.rich-content :global(td) {
+		padding: 0.4rem 0.7rem;
+		border: 1px solid var(--yr-line-strong);
+		text-align: left;
+		vertical-align: top;
+	}
+
+	.rich-content :global(th) {
+		font-weight: 700;
+		background: var(--automataBgRGBA);
+	}
+
+	.rich-content :global(.rich-callout) {
+		margin-block: 1.25rem;
+		padding: 0.75rem 1rem;
+		border: 1px solid var(--yr-line-strong);
+		border-left-width: 5px;
+		background: var(--automataBgRGBA);
+	}
+
+	.rich-content :global(.rich-callout > :first-child) {
+		margin-top: 0;
+	}
+
+	.rich-content :global(.rich-callout > :last-child) {
+		margin-bottom: 0;
+	}
+
+	.rich-content :global(.callout-warning) {
+		border-left-color: var(--automataRed);
+	}
+
+	.rich-content :global(.callout-tip) {
+		border-left-color: var(--automataYellow);
+	}
+
 	.rich-content :global(img),
 	.rich-content :global(video),
 	.rich-content :global(iframe) {

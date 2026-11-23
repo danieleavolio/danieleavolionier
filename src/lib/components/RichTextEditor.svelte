@@ -1,12 +1,19 @@
 <script lang="ts">
 	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
-	import { Editor } from '@tiptap/core';
+	import { Editor, type Range } from '@tiptap/core';
 	import StarterKit from '@tiptap/starter-kit';
 	import Link from '@tiptap/extension-link';
 	import Image from '@tiptap/extension-image';
 	import Underline from '@tiptap/extension-underline';
 	import Placeholder from '@tiptap/extension-placeholder';
-	import { codeBlockEditButtons, createRichExtensions } from '#lib/editor/extensions.ts';
+	import { Table, TableRow, TableCell, TableHeader } from '@tiptap/extension-table';
+	import {
+		codeBlockEditButtons,
+		createRichExtensions,
+		slashMenu,
+		type CalloutTone,
+		type SlashItem
+	} from '#lib/editor/extensions.ts';
 	import { findImageFiles, uploadImage } from '#lib/media.ts';
 	import { parseChart, type ChartSettings } from '#lib/bar-chart.ts';
 	import { isGalleryUrl } from '#lib/rich-gallery.ts';
@@ -181,6 +188,97 @@
 		if (initial) chartStudio = { initial, at: { from: position, to: position + node.nodeSize } };
 	}
 
+	const insertTable = () =>
+		editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run();
+
+	const TONE_LABELS: Record<CalloutTone, string> = {
+		info: 'Nota',
+		warning: 'Attenzione',
+		tip: 'Consiglio'
+	};
+
+	const slashItems: SlashItem[] = [
+		{
+			title: 'Titolo 2',
+			hint: 'Sezione principale',
+			keywords: 'h2 heading titolo',
+			run: (e, range) => e.chain().focus().deleteRange(range).setNode('heading', { level: 2 }).run()
+		},
+		{
+			title: 'Titolo 3',
+			hint: 'Sottosezione',
+			keywords: 'h3 heading titolo',
+			run: (e, range) => e.chain().focus().deleteRange(range).setNode('heading', { level: 3 }).run()
+		},
+		{
+			title: 'Lista',
+			hint: 'Elenco puntato',
+			keywords: 'bullet elenco',
+			run: (e, range) => e.chain().focus().deleteRange(range).toggleBulletList().run()
+		},
+		{
+			title: 'Lista numerata',
+			hint: 'Elenco con numeri',
+			keywords: 'ordered numeri',
+			run: (e, range) => e.chain().focus().deleteRange(range).toggleOrderedList().run()
+		},
+		{
+			title: 'Citazione',
+			hint: 'Blocco di citazione',
+			keywords: 'quote blockquote',
+			run: (e, range) => e.chain().focus().deleteRange(range).toggleBlockquote().run()
+		},
+		...(Object.keys(TONE_LABELS) as CalloutTone[]).map((tone) => ({
+			title: `Box: ${TONE_LABELS[tone].toLowerCase()}`,
+			hint: 'Riquadro evidenziato',
+			keywords: `callout nota box ${tone}`,
+			run: (e: Editor, range: Range) =>
+				e.chain().focus().deleteRange(range).wrapIn('callout', { tone }).run()
+		})),
+		{
+			title: 'Tabella',
+			hint: '3 righe per 3 colonne',
+			keywords: 'table righe colonne',
+			run: (e, range) =>
+				e
+					.chain()
+					.focus()
+					.deleteRange(range)
+					.insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+					.run()
+		},
+		{
+			title: 'Codice',
+			hint: 'Blocco di codice',
+			keywords: 'code pre',
+			run: (e, range) => e.chain().focus().deleteRange(range).toggleCodeBlock().run()
+		},
+		{
+			title: 'Divisore',
+			hint: 'Linea orizzontale',
+			keywords: 'hr separatore linea',
+			run: (e, range) => e.chain().focus().deleteRange(range).setHorizontalRule().run()
+		},
+		{
+			title: 'Diagramma Mermaid',
+			hint: 'Apre lo Studio Mermaid',
+			keywords: 'mermaid grafico flusso diagramma',
+			run: (e, range) => {
+				e.chain().focus().deleteRange(range).run();
+				openMermaidStudio();
+			}
+		},
+		{
+			title: 'Grafico a barre',
+			hint: 'Apre lo Studio grafici',
+			keywords: 'chart barre grafico',
+			run: (e, range) => {
+				e.chain().focus().deleteRange(range).run();
+				openChartStudio();
+			}
+		}
+	];
+
 	function insertBlock(kind: string) {
 		if (!editor) return;
 		const src = promptForUrl(
@@ -220,7 +318,12 @@
 				Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true }),
 				Image.configure({ allowBase64: false }),
 				Placeholder.configure({ placeholder }),
+				Table.configure({ resizable: false }),
+				TableRow,
+				TableHeader,
+				TableCell,
 				...createRichExtensions(),
+				slashMenu(() => slashItems),
 				codeBlockEditButtons([
 					{
 						language: 'bar-chart',
@@ -328,6 +431,31 @@
 				title="Scrivi un diagramma Mermaid con anteprima o posiziona il cursore in un diagramma esistente per modificarlo"
 				on:click={openMermaidStudio}>Studio Mermaid</button
 			>
+			<button
+				type="button"
+				title="Racchiude il paragrafo in un box di nota; un secondo clic lo toglie"
+				on:click={() => editor?.chain().focus().toggleCallout('info').run()}
+				class:active={editor.isActive('callout')}>Box</button
+			>
+			<button type="button" title="Inserisce una tabella 3x3" on:click={insertTable}>Tabella</button
+			>
+			{#if editor.isActive('table')}
+				<button type="button" on:click={() => editor?.chain().focus().addRowAfter().run()}
+					>+ Riga</button
+				>
+				<button type="button" on:click={() => editor?.chain().focus().addColumnAfter().run()}
+					>+ Colonna</button
+				>
+				<button type="button" on:click={() => editor?.chain().focus().deleteRow().run()}
+					>- Riga</button
+				>
+				<button type="button" on:click={() => editor?.chain().focus().deleteColumn().run()}
+					>- Colonna</button
+				>
+				<button type="button" on:click={() => editor?.chain().focus().deleteTable().run()}
+					>Elimina tabella</button
+				>
+			{/if}
 		</div>
 	{/if}
 
@@ -433,6 +561,82 @@
 		background: var(--automataBg);
 		font-family: var(--font-mono);
 		font-size: 0.85rem;
+	}
+
+	.editor :global(table) {
+		border-collapse: collapse;
+		margin-block: 1rem;
+	}
+
+	.editor :global(th),
+	.editor :global(td) {
+		min-width: 4rem;
+		padding: 0.4rem 0.7rem;
+		border: 1px solid var(--yr-line-strong);
+		vertical-align: top;
+	}
+
+	.editor :global(th) {
+		background: var(--automataBgRGBA);
+		text-align: left;
+	}
+
+	.editor :global(.selectedCell) {
+		background: var(--automataBgRGBA);
+	}
+
+	.editor :global(.rich-callout) {
+		margin-block: 1rem;
+		padding: 0.6rem 1rem;
+		border: 1px solid var(--yr-line-strong);
+		border-left-width: 5px;
+		background: var(--automataBgRGBA);
+	}
+
+	.editor :global(.callout-warning) {
+		border-left-color: var(--automataRed);
+	}
+
+	.editor :global(.callout-tip) {
+		border-left-color: var(--automataYellow);
+	}
+
+	:global(.slash-menu) {
+		position: fixed;
+		z-index: 50;
+		display: grid;
+		width: 17rem;
+		max-height: 18rem;
+		overflow-y: auto;
+		border: 1px solid var(--automataColor);
+		background: var(--automataBg);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+	}
+
+	:global(.slash-option) {
+		display: grid;
+		gap: 0.1rem;
+		margin: 0;
+		padding: 0.45rem 0.7rem;
+		border: 0;
+		border-radius: 0;
+		box-shadow: none;
+		text-align: left;
+		font-family: var(--font-mono);
+		font-size: 0.85rem;
+		color: var(--automataColor);
+		background: var(--automataBg);
+		cursor: pointer;
+	}
+
+	:global(.slash-option span) {
+		font-size: 0.75rem;
+		opacity: 0.7;
+	}
+
+	:global(.slash-option[aria-selected='true']) {
+		background: var(--automataColor);
+		color: var(--automataBg);
 	}
 
 	.editor :global(.ProseMirror p.is-editor-empty:first-child::before) {

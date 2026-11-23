@@ -51,7 +51,8 @@ const ALLOWED_ATTRS: Record<string, Set<string>> = {
 		'data-max',
 		'data-title',
 		'data-pros',
-		'data-cons'
+		'data-cons',
+		'data-callout'
 	]),
 	figcaption: new Set(['class']),
 	iframe: new Set([
@@ -69,6 +70,8 @@ const ALLOWED_ATTRS: Record<string, Set<string>> = {
 	source: new Set(['src', 'type']),
 	span: new Set(['class']),
 	table: new Set(['class']),
+	td: new Set(['colspan', 'rowspan']),
+	th: new Set(['colspan', 'rowspan']),
 	video: new Set(['src', 'controls', 'width', 'height', 'poster', 'preload'])
 };
 

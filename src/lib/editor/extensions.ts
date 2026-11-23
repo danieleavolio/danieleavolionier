@@ -1,5 +1,7 @@
 import { Extension, Node, mergeAttributes } from '@tiptap/core';
 import { Plugin } from '@tiptap/pm/state';
+import Suggestion from '@tiptap/suggestion';
+import type { Editor, Range } from '@tiptap/core';
 import { Decoration, DecorationSet } from '@tiptap/pm/view';
 import { gradingRange, parseArrayLiteral } from '#lib/rich-grading.ts';
 import { isGalleryUrl, isGalleryVideo } from '#lib/rich-gallery.ts';
@@ -155,8 +157,169 @@ export const RichBlock = Node.create({
 	}
 });
 
+export const CALLOUT_TONES = ['info', 'warning', 'tip'] as const;
+export type CalloutTone = (typeof CALLOUT_TONES)[number];
+
+declare module '@tiptap/core' {
+	interface Commands<ReturnType> {
+		callout: {
+			/** Wraps the selected blocks in a note box, or unwraps them when already inside one. */
+			toggleCallout: (tone?: CalloutTone) => ReturnType;
+		};
+	}
+}
+
+/** A note box with a tone (info, warning, tip) that can hold any block content. */
+export const Callout = Node.create({
+	name: 'callout',
+	group: 'block',
+	content: 'block+',
+	defining: true,
+	addAttributes() {
+		return { tone: { default: 'info' } };
+	},
+	parseHTML() {
+		return [
+			{
+				tag: 'div[data-callout]',
+				getAttrs: (element) => {
+					const tone = nodeToElement(element).getAttribute('data-callout') ?? 'info';
+					return { tone: CALLOUT_TONES.includes(tone as CalloutTone) ? tone : 'info' };
+				}
+			}
+		];
+	},
+	renderHTML({ HTMLAttributes }) {
+		const { tone, ...rest } = HTMLAttributes;
+		return [
+			'div',
+			mergeAttributes(rest, { 'data-callout': tone, class: `rich-callout callout-${tone}` }),
+			0
+		];
+	},
+	addCommands() {
+		return {
+			toggleCallout:
+				(tone = 'info') =>
+				({ commands, editor }) =>
+					editor.isActive('callout')
+						? commands.lift('callout')
+						: commands.wrapIn('callout', { tone })
+		};
+	}
+});
+
 export function createRichExtensions() {
-	return [RichBlock];
+	return [RichBlock, Callout];
+}
+
+export type SlashItem = {
+	title: string;
+	hint: string;
+	keywords: string;
+	run: (editor: Editor, range: Range) => void;
+};
+
+/**
+ * A "/" menu that lists block types while typing. The items are supplied by
+ * the editor component because some of them open the studios.
+ */
+export function slashMenu(getItems: () => SlashItem[]) {
+	return Extension.create({
+		name: 'slashMenu',
+		addProseMirrorPlugins() {
+			return [
+				Suggestion<SlashItem, SlashItem>({
+					editor: this.editor,
+					char: '/',
+					allow: ({ state, range }) => !state.doc.resolve(range.from).parent.type.spec.code,
+					items: ({ query }) => {
+						const needle = query.trim().toLowerCase();
+						return getItems().filter(
+							(item) => !needle || `${item.title} ${item.keywords}`.toLowerCase().includes(needle)
+						);
+					},
+					command: ({ editor, range, props }) => props.run(editor, range),
+					render: () => {
+						let menu: HTMLDivElement | null = null;
+						let selected = 0;
+						let current: { items: SlashItem[]; command: (item: SlashItem) => void } | null = null;
+
+						const paint = () => {
+							if (!menu || !current) return;
+							menu.replaceChildren(
+								...current.items.map((item, index) => {
+									const option = document.createElement('button');
+									option.type = 'button';
+									option.className = 'slash-option';
+									option.setAttribute('role', 'option');
+									option.setAttribute('aria-selected', String(index === selected));
+									const title = document.createElement('strong');
+									title.textContent = item.title;
+									const hint = document.createElement('span');
+									hint.textContent = item.hint;
+									option.append(title, hint);
+									option.addEventListener('mousedown', (event) => {
+										event.preventDefault();
+										current?.command(item);
+									});
+									return option;
+								})
+							);
+						};
+
+						const place = (rect: (() => DOMRect | null) | null | undefined) => {
+							const box = rect?.();
+							if (!menu || !box) return;
+							menu.style.left = `${Math.max(8, Math.min(box.left, window.innerWidth - 280))}px`;
+							menu.style.top = `${box.bottom + 6}px`;
+						};
+
+						const update = (props: {
+							items: SlashItem[];
+							command: (item: SlashItem) => void;
+							clientRect?: (() => DOMRect | null) | null;
+						}) => {
+							current = props;
+							selected = Math.min(selected, Math.max(0, props.items.length - 1));
+							if (!menu) return;
+							menu.hidden = props.items.length === 0;
+							paint();
+							place(props.clientRect);
+						};
+
+						return {
+							onStart: (props) => {
+								menu = document.createElement('div');
+								menu.className = 'slash-menu';
+								menu.setAttribute('role', 'listbox');
+								menu.setAttribute('aria-label', 'Blocchi disponibili');
+								document.body.append(menu);
+								selected = 0;
+								update(props);
+							},
+							onUpdate: (props) => update(props),
+							onKeyDown: ({ event }) => {
+								if (!current || current.items.length === 0) return false;
+								const count = current.items.length;
+								if (event.key === 'ArrowDown') selected = (selected + 1) % count;
+								else if (event.key === 'ArrowUp') selected = (selected - 1 + count) % count;
+								else if (event.key === 'Enter') current.command(current.items[selected]);
+								else return false;
+								paint();
+								return true;
+							},
+							onExit: () => {
+								menu?.remove();
+								menu = null;
+								current = null;
+							}
+						};
+					}
+				})
+			];
+		}
+	});
 }
 
 export type CodeBlockEditButton = {

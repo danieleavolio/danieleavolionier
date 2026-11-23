@@ -471,3 +471,14 @@ test('optional recommendation failures leave the requested article available', a
 	assert.equal(result.contentHtml, row.content_html);
 	assert.deepEqual(result.relatedPosts, []);
 });
+
+test('sanitizer keeps tables with spans and note boxes but drops unknown attributes', () => {
+	const html = sanitizeContentHtml(
+		'<div data-callout="warning" class="rich-callout callout-warning" onclick="x()"><p>Nota</p></div>' +
+			'<table><tbody><tr><th colspan="2" style="color:red">A</th></tr><tr><td rowspan="2">1</td></tr></tbody></table>'
+	);
+	assert.match(html, /<div data-callout="warning" class="rich-callout callout-warning">/);
+	assert.match(html, /<th colspan="2">A<\/th>/);
+	assert.match(html, /<td rowspan="2">1<\/td>/);
+	assert.doesNotMatch(html, /onclick|style=/);
+});
