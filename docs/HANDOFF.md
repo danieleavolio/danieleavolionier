@@ -1,41 +1,24 @@
-# Ripartenza: editor, grafici e contenuti storici
+# Ripartenza: Studio Mermaid
 
-Le modifiche sono nel working tree, non pubblicate. Parti da `git status --short`
-e leggi solo i file che ti servono.
+Il lavoro della fase 0 (Studio grafici, galleria, grading, categorie, copertina)
+è pubblicato nel commit `75c2ab8`. Il piano delle fasi successive è nel progetto
+Claude "Sito Web Daniele Avolio", in `claude/piano-editor-e-seo.md`.
 
-## Cosa c'è di nuovo
+## Fase 1, non ancora committata
 
-- **Studio grafici:** si apre dalla barra dell'editor o con **Modifica grafico**
-  sopra un blocco esistente. Ogni dato ha campi separati per etichetta, valore e
-  colore. I colori predefiniti sono rosso, bianco, giallo e nero YoRHa; in più ci
-  sono un colore personalizzato per dato e un colore base per tutto il grafico.
-  Il salvataggio resta un blocco Markdown `bar-chart`, leggibile anche senza
-  JavaScript. La sintassi è in [AGENTS.md](../AGENTS.md).
-- **Contenuti storici:** `src/lib/server/article-repairs.ts` riscrive in lettura
-  i vecchi blocchi galleria e grading delle recensioni e sostituisce gli URL di
-  immagini recuperabili. Due sorgenti non esistono più (Gfycat e GameUIDatabase)
-  e quei media vengono tolti. Su Supabase non è stato scritto niente.
-- **Galleria:** apertura a schermo intero con navigazione (`GalleryLightbox.svelte`).
-- **Grading:** mostra voto, titolo, pro e contro.
-- **Categorie:** in Articoli e Progetti, **Categorie esistenti** elenca le voci
-  della sezione. Un click seleziona o deseleziona, e la voce attiva diventa rossa.
-- **Copertina:** si può trascinare o incollare un'immagine nel campo. Usa lo
-  stesso caricamento su Supabase Storage delle immagini dell'editor.
+- **Studio Mermaid:** si apre dalla barra dell'editor oppure con **Modifica
+  diagramma** sopra un blocco ```mermaid. Il codice sta a sinistra e l'anteprima
+  si aggiorna 300 ms dopo l'ultima modifica. Se il codice non è valido lo Studio
+  dice la riga, mostra il messaggio di Mermaid e disattiva il pulsante. Con il
+  blocco vuoto propone tre modelli (flusso, sequenza, stati).
+- `src/lib/mermaid.ts` espone `renderMermaidSource` e `mountMermaidRender`;
+  `renderMermaidBlocks` li usa per gli articoli, con lo stesso comportamento di
+  prima (Pele, poi Mermaid.js, niente fallback quando Pele rifiuta per i limiti).
+- `codeBlockEditButtons` in `src/lib/editor/extensions.ts` sostituisce
+  `chartEditButtons` e gestisce i pulsanti di grafici e diagrammi.
 
-## Verifiche fatte il 23 novembre
-
-`npm run check:quick` passa (tipi e 23 test unitari). In Chrome, con dati
-fittizi e senza scritture remote, funzionano: modifica di un grafico e colori
-per dato (desktop e mobile), galleria, grading, selezione delle categorie,
-trascinamento e incolla della copertina. Gli script e la route usati per queste
-prove sono in `_to_delete/`, esclusa da Git tramite `.git/info/exclude`.
-
-## Cosa manca
-
-- `npm run check:full` va eseguito prima di pubblicare. Ricorda che il
-  post-commit può fare push.
-- Corretti anche due problemi che c'erano già prima: le estensioni TipTap
-  duplicate (`link`, `underline` disattivate in StarterKit) e il selettore
-  `:where(input)::placeholder` in `yorha-ui.css`.
-- Resta un chunk JS da circa 1,5 MB (465 kB gzip) da analizzare.
-- Dopo il deploy aggiorna o rimuovi questo file.
+Verificati in Chrome, desktop e mobile, con dati fittizi: modifica di un
+diagramma, errore di sintassi, tipo non riconosciuto, inserimento da modello,
+annullamento, convivenza con lo Studio grafici e anteprima dell'articolo.
+Prima del commit vanno rilanciati gli e2e in locale, perché toccano il rendering
+pubblico dei diagrammi.

@@ -1,7 +1,6 @@
 import { Extension, Node, mergeAttributes } from '@tiptap/core';
 import { Plugin } from '@tiptap/pm/state';
 import { Decoration, DecorationSet } from '@tiptap/pm/view';
-import { parseChart } from '#lib/bar-chart.ts';
 import { gradingRange, parseArrayLiteral } from '#lib/rich-grading.ts';
 import { isGalleryUrl, isGalleryVideo } from '#lib/rich-gallery.ts';
 
@@ -160,9 +159,17 @@ export function createRichExtensions() {
 	return [RichBlock];
 }
 
-export function chartEditButtons(open: (position: number) => void) {
+export type CodeBlockEditButton = {
+	language: string;
+	label: string;
+	accepts: (source: string) => boolean;
+	open: (position: number) => void;
+};
+
+/** An edit button above each code block that one of the studios can reopen. */
+export function codeBlockEditButtons(kinds: CodeBlockEditButton[]) {
 	return Extension.create({
-		name: 'chartEditButtons',
+		name: 'codeBlockEditButtons',
 		addProseMirrorPlugins() {
 			return [
 				new Plugin({
@@ -171,24 +178,24 @@ export function chartEditButtons(open: (position: number) => void) {
 							const buttons: Decoration[] = [];
 							state.doc.descendants((node, position) => {
 								if (node.type.name !== 'codeBlock') return;
-								if (node.attrs.language !== 'bar-chart' || !parseChart(node.textContent))
-									return false;
+								const kind = kinds.find(({ language }) => language === node.attrs.language);
+								if (!kind || !kind.accepts(node.textContent)) return false;
 								buttons.push(
 									Decoration.widget(
 										position,
 										(_view, getPosition) => {
 											const button = document.createElement('button');
 											button.type = 'button';
-											button.className = 'chart-edit-button';
-											button.textContent = 'Modifica grafico';
+											button.className = 'block-edit-button';
+											button.textContent = kind.label;
 											button.setAttribute('aria-haspopup', 'dialog');
 											button.addEventListener('click', () => {
 												const at = getPosition();
-												if (at !== undefined) open(at);
+												if (at !== undefined) kind.open(at);
 											});
 											return button;
 										},
-										{ side: -1, key: `chart-edit-${position}` }
+										{ side: -1, key: `${kind.language}-edit-${position}` }
 									)
 								);
 								return false;

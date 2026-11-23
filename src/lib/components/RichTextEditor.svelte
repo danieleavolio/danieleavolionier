@@ -6,12 +6,13 @@
 	import Image from '@tiptap/extension-image';
 	import Underline from '@tiptap/extension-underline';
 	import Placeholder from '@tiptap/extension-placeholder';
-	import { chartEditButtons, createRichExtensions } from '#lib/editor/extensions.ts';
+	import { codeBlockEditButtons, createRichExtensions } from '#lib/editor/extensions.ts';
 	import { findImageFiles, uploadImage } from '#lib/media.ts';
 	import { parseChart, type ChartSettings } from '#lib/bar-chart.ts';
 	import { isGalleryUrl } from '#lib/rich-gallery.ts';
 	import type { RichTextDocument } from '#lib/types.ts';
 	import ChartStudio from '#lib/components/ChartStudio.svelte';
+	import MermaidStudio from '#lib/components/MermaidStudio.svelte';
 
 	export let html = '';
 	export let json: RichTextDocument | null = null;
@@ -21,10 +22,9 @@
 	let editorElement: HTMLDivElement;
 	let editor: Editor | null = null;
 	let pendingUploads = 0;
-	let chartStudio: {
-		initial: ChartSettings | null;
-		at: number | { from: number; to: number };
-	} | null = null;
+	type BlockTarget = number | { from: number; to: number };
+	let chartStudio: { initial: ChartSettings | null; at: BlockTarget } | null = null;
+	let mermaidStudio: { initial: string | null; at: BlockTarget } | null = null;
 
 	function emitChange() {
 		if (!editor) return;
@@ -129,17 +129,49 @@
 		};
 	}
 
-	function applyChart(source: string) {
-		if (!editor || !chartStudio) return;
+	function insertCodeBlock(at: BlockTarget, language: string, source: string) {
 		editor
-			.chain()
+			?.chain()
 			.focus()
-			.insertContentAt(chartStudio.at, {
+			.insertContentAt(at, {
 				type: 'codeBlock',
-				attrs: { language: 'bar-chart' },
+				attrs: { language },
 				content: [{ type: 'text', text: source }]
 			})
 			.run();
+	}
+
+	function applyChart(source: string) {
+		if (chartStudio) insertCodeBlock(chartStudio.at, 'bar-chart', source);
+	}
+
+	function openMermaidStudio() {
+		if (!editor) return;
+		const { $from, $to } = editor.state.selection;
+		const block = $from.parent;
+		if (block.type.name !== 'codeBlock') {
+			mermaidStudio = { initial: null, at: $from.pos };
+		} else if (block === $to.parent && block.attrs.language === 'mermaid') {
+			mermaidStudio = {
+				initial: block.textContent,
+				at: { from: $from.before(), to: $from.after() }
+			};
+		} else {
+			mermaidStudio = { initial: null, at: $from.after() };
+		}
+	}
+
+	function applyMermaid(source: string) {
+		if (mermaidStudio) insertCodeBlock(mermaidStudio.at, 'mermaid', source);
+	}
+
+	function editDiagramAt(position: number) {
+		const node = editor?.state.doc.nodeAt(position);
+		if (node?.type.name !== 'codeBlock' || node.attrs.language !== 'mermaid') return;
+		mermaidStudio = {
+			initial: node.textContent,
+			at: { from: position, to: position + node.nodeSize }
+		};
 	}
 
 	function editChartAt(position: number) {
@@ -189,7 +221,20 @@
 				Image.configure({ allowBase64: false }),
 				Placeholder.configure({ placeholder }),
 				...createRichExtensions(),
-				chartEditButtons(editChartAt)
+				codeBlockEditButtons([
+					{
+						language: 'bar-chart',
+						label: 'Modifica grafico',
+						accepts: (source) => Boolean(parseChart(source)),
+						open: editChartAt
+					},
+					{
+						language: 'mermaid',
+						label: 'Modifica diagramma',
+						accepts: (source) => source.trim().length > 0,
+						open: editDiagramAt
+					}
+				])
 			],
 			content: json ?? html ?? '',
 			editorProps: mediaEditorProps,
@@ -277,6 +322,12 @@
 				title="Inserisci un grafico o posiziona il cursore in un grafico esistente per modificarlo"
 				on:click={openChartStudio}>Studio grafici</button
 			>
+			<button
+				type="button"
+				aria-haspopup="dialog"
+				title="Scrivi un diagramma Mermaid con anteprima o posiziona il cursore in un diagramma esistente per modificarlo"
+				on:click={openMermaidStudio}>Studio Mermaid</button
+			>
 		</div>
 	{/if}
 
@@ -292,6 +343,14 @@
 		initial={chartStudio.initial}
 		apply={applyChart}
 		dismiss={() => (chartStudio = null)}
+	/>
+{/if}
+
+{#if mermaidStudio}
+	<MermaidStudio
+		initial={mermaidStudio.initial}
+		apply={applyMermaid}
+		dismiss={() => (mermaidStudio = null)}
 	/>
 {/if}
 
@@ -363,7 +422,7 @@
 		color: var(--automataColor);
 	}
 
-	.editor :global(.chart-edit-button) {
+	.editor :global(.block-edit-button) {
 		display: block;
 		margin-block: 0.75rem 0.25rem;
 		padding: 0.3rem 0.55rem;

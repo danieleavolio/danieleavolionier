@@ -187,6 +187,50 @@ async function loadLegacyMermaid() {
 	return mermaid;
 }
 
+export type MermaidRender = { svg: string; renderer: 'pele' | 'mermaid' };
+
+/** Pele refused the diagram because of its size/complexity limits: no fallback for these. */
+export function isMermaidLimitError(cause: unknown): boolean {
+	return cause instanceof Error && 'code' in cause && cause.code === 'limit';
+}
+
+/**
+ * Render one Mermaid source with Pele first and Mermaid.js as fallback.
+ * Throws the Mermaid.js error (it names the line) when neither renderer accepts it.
+ */
+export async function renderMermaidSource(
+	source: string,
+	id: string,
+	maxWidth?: number
+): Promise<MermaidRender> {
+	try {
+		const { renderAsync } = await import('pele/lazy');
+		const { svg } = await renderAsync(source, {
+			idPrefix: id,
+			fontFamily: DIAGRAM_FONT,
+			maxWidth: maxWidth && maxWidth > 0 ? maxWidth : undefined,
+			images: false
+		});
+		return { svg, renderer: 'pele' };
+	} catch (cause) {
+		// Do not bypass Pele's size/complexity limits by trying another renderer.
+		if (isMermaidLimitError(cause)) throw cause;
+	}
+	const mermaid = await (legacyMermaid ??= loadLegacyMermaid());
+	const { svg } = await mermaid.render(id, source);
+	return { svg, renderer: 'mermaid' };
+}
+
+/** Put a rendered diagram in a connected holder and apply the Mermaid.js geometry fixes. */
+export function mountMermaidRender(holder: HTMLElement, { svg, renderer }: MermaidRender): void {
+	holder.dataset.renderer = renderer;
+	holder.innerHTML = svg;
+	if (renderer === 'mermaid') {
+		flattenGeometry(holder);
+		fitEdgeLabelPlates(holder);
+	}
+}
+
 /** Render Mermaid source with Pele first; keep the code visible if neither renderer succeeds. */
 export async function renderMermaidBlocks(container: HTMLElement): Promise<void> {
 	const candidates = Array.from(container.querySelectorAll('pre > code')).filter(isMermaidCode);
@@ -199,40 +243,23 @@ export async function renderMermaidBlocks(container: HTMLElement): Promise<void>
 		const pre = code.parentElement;
 		if (!pre?.isConnected) continue;
 		const source = (code.textContent ?? '').trim();
-		const id = `rich-diagram-${diagramSequence++}`;
-		const holder = document.createElement('div');
-		holder.className = 'rich-mermaid';
-
+		const rem = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
+		const width = pre.clientWidth - 2 * rem - 2; // Frame padding and border
 		try {
-			const { renderAsync } = await import('pele/lazy');
-			const rem = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
-			const width = pre.clientWidth - 2 * rem - 2; // Frame padding and border
-			const { svg } = await renderAsync(source, {
-				idPrefix: id,
-				fontFamily: DIAGRAM_FONT,
-				maxWidth: width > 0 ? width : undefined,
-				images: false
-			});
-			holder.dataset.renderer = 'pele';
-			holder.innerHTML = svg;
-			pre.replaceWith(holder);
-			continue;
-		} catch (cause) {
-			// Do not bypass Pele's size/complexity limits by trying another renderer.
-			if (cause instanceof Error && 'code' in cause && cause.code === 'limit') continue;
-		}
-
-		try {
+			const result = await renderMermaidSource(source, `rich-diagram-${diagramSequence++}`, width);
 			if (!pre.isConnected) continue;
-			const mermaid = await (legacyMermaid ??= loadLegacyMermaid());
-			const { svg } = await mermaid.render(id, source);
-			holder.dataset.renderer = 'mermaid';
-			holder.innerHTML = svg;
+			const holder = document.createElement('div');
+			holder.className = 'rich-mermaid';
 			pre.replaceWith(holder);
-			flattenGeometry(holder);
-			fitEdgeLabelPlates(holder);
+			mountMermaidRender(holder, result);
 		} catch (cause) {
-			console.error('Mermaid rendering failed:', cause);
+			if (!isMermaidLimitError(cause)) console.error('Mermaid rendering failed:', cause);
 		}
 	}
+}
+
+let studioSequence = 0;
+/** Unique ids for diagrams rendered outside an article (e.g. the editor studio). */
+export function nextMermaidId(prefix = 'studio-diagram'): string {
+	return `${prefix}-${studioSequence++}`;
 }
