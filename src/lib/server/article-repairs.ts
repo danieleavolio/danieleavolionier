@@ -12,6 +12,17 @@ const repairedMedia = new Map<string, string | null>([
 	['https://www.gameuidatabase.com/uploads/video/Nier-Automata08062024-110330-5395.mp4', null]
 ]);
 
+// The September 2026 Supabase migration touched every row at once. Those timestamps are not
+// edits, so sitemap lastmod and dateModified fall back to the publication date.
+const bulkMigrationUpdates = ['2026-09-09T14:48:14', '2026-09-09T14:48:15'];
+
+export function realUpdatedAt(updatedAt: string | null | undefined): string | undefined {
+	if (!updatedAt) return undefined;
+	return bulkMigrationUpdates.some((prefix) => updatedAt.startsWith(prefix))
+		? undefined
+		: updatedAt;
+}
+
 function repairMedia(source: string): string {
 	return source
 		.replace(/(<div\b[^>]*\bdata-images=)(["'])(.*?)\2/gi, (block, prefix, quote, images) => {

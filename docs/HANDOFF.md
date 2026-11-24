@@ -1,24 +1,68 @@
-# Ripartenza: Studio Mermaid
+# Ripartenza: editor e SEO
 
-Il lavoro della fase 0 (Studio grafici, galleria, grading, categorie, copertina)
-è pubblicato nel commit `75c2ab8`. Il piano delle fasi successive è nel progetto
-Claude "Sito Web Daniele Avolio", in `claude/piano-editor-e-seo.md`.
+Il piano completo sta nel progetto Claude "Sito Web Daniele Avolio", in
+`claude/piano-editor-e-seo.md`. Qui c'è solo lo stato al 24 novembre 2026.
 
-## Fase 1, non ancora committata
+## Già online
 
-- **Studio Mermaid:** si apre dalla barra dell'editor oppure con **Modifica
-  diagramma** sopra un blocco ```mermaid. Il codice sta a sinistra e l'anteprima
-  si aggiorna 300 ms dopo l'ultima modifica. Se il codice non è valido lo Studio
-  dice la riga, mostra il messaggio di Mermaid e disattiva il pulsante. Con il
-  blocco vuoto propone tre modelli (flusso, sequenza, stati).
-- `src/lib/mermaid.ts` espone `renderMermaidSource` e `mountMermaidRender`;
-  `renderMermaidBlocks` li usa per gli articoli, con lo stesso comportamento di
-  prima (Pele, poi Mermaid.js, niente fallback quando Pele rifiuta per i limiti).
-- `codeBlockEditButtons` in `src/lib/editor/extensions.ts` sostituisce
-  `chartEditButtons` e gestisce i pulsanti di grafici e diagrammi.
+| Commit | Fase |
+|---|---|
+| `75c2ab8` | 0: Studio grafici, galleria, grading, categorie, copertina |
+| `af20a93` | 1: Studio Mermaid con anteprima ed errori con il numero di riga |
+| `6b97519` | 2 e 3: tabelle, box di nota (`info`, `warning`, `tip`), menu `/` |
 
-Verificati in Chrome, desktop e mobile, con dati fittizi: modifica di un
-diagramma, errore di sintassi, tipo non riconosciuto, inserimento da modello,
-annullamento, convivenza con lo Studio grafici e anteprima dell'articolo.
-Prima del commit vanno rilanciati gli e2e in locale, perché toccano il rendering
-pubblico dei diagrammi.
+`main` è allineato con `origin/main`.
+
+## Editor: cosa manca
+
+Nessuna nuova dipendenza. Ogni fase si chiude con una verifica in Chrome, desktop
+e mobile, con dati fittizi, e con un commit fatto solo dopo l'ok di Daniele.
+
+4. **Salvataggio automatico.** La bozza va in `localStorage`, con una chiave per
+   slug, e non viene mai scritta su Supabase in automatico. Alla riapertura compare
+   "Hai una bozza non salvata del …: ripristina o scarta". La bozza locale si
+   cancella dopo un salvataggio riuscito. File: `AdminContentEditor.svelte`, nuovo
+   `src/lib/editor/draft-storage.ts`.
+5. **Anteprima affiancata.** Editor a sinistra e articolo renderizzato a destra,
+   aggiornato 500 ms dopo l'ultima modifica. Su telefono diventa due schede,
+   Scrittura e Anteprima. Usa lo stesso rendering delle pagine pubbliche. File:
+   `AdminContentEditor.svelte`, `PostPreview.svelte`.
+
+## SEO: cosa manca
+
+Lato tecnico il sito è a posto. Il 24/11 le 29 URL della sitemap rispondevano
+tutte 200 con HTML renderizzato lato server, `canonical` corretto e nessun
+`noindex`. Anche i link interni di home, `/pagine`, `/progetti`, `/appunti`,
+`/data` e `/now` rispondevano tutti 200. Il problema è che Google conosce gli
+articoli ma non li considera abbastanza da indicizzarli.
+
+Search Console riporta 14 URL "Rilevata, ma non indicizzata" e 3 "Scansionata, ma
+non indicizzata".
+
+Gli interventi, dal più sicuro:
+
+1. ~~`noindex` su `/end-of-the-lova`~~: c'era già, è l'header `X-Robots-Tag` in
+   `src/hooks.server.ts`.
+2. ~~Header `Link: rel="canonical"` da `CV-DA.pdf` a `/cv`~~: fatto. Il PDF sta in
+   `src/lib/assets/` e lo serve `src/routes/CV-DA.pdf/+server.ts`. Per aggiornare
+   il CV sostituisci quel file.
+3. Link interni dalla home e da `/progetti` verso gli articoli, con i testi
+   scritti nella voce di Daniele.
+4. Daniele chiede a mano l'indicizzazione delle 5 pagine principali.
+5. Per le 3 pagine scartate (probabilmente `first-website`, `second-website` e
+   `youtube-downloader`): ampliarle, unirle o metterle in `noindex`. Decide Daniele.
+6. Titolo e description della home per le ricerche senza il nome.
+7. ~~Togliere editor e Mermaid dal bundle pubblico~~: non serviva. Il chunk da
+   1,5 MB è `elk` di Mermaid, caricato solo su richiesta. Mermaid si carica solo
+   se l'articolo contiene un diagramma, e l'editor solo nelle route admin.
+
+Fatto anche: i `lastmod` e i `dateModified` non usano più gli `updated_at` della
+migrazione del 9 settembre 2026 (`realUpdatedAt` in
+`src/lib/server/article-repairs.ts`). Per quegli articoli si usa la data di
+pubblicazione.
+
+## Scrittura
+
+Per gli articoli c'è la skill Claude personale `articolo-daniele` in
+`~/.claude/skills/`, fuori dal repository. Contiene la voce, brani veri presi
+dagli articoli e la sintassi dei blocchi del CMS.

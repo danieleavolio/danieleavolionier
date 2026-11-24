@@ -1,5 +1,5 @@
 import type { Element, NowItem } from '#lib/types.ts';
-import { restoreArticleHtml } from '#lib/server/article-repairs.ts';
+import { realUpdatedAt, restoreArticleHtml } from '#lib/server/article-repairs.ts';
 import { repairPlainMarkdownHtml } from '#lib/server/markdown-repair.ts';
 import { calculateReadingTime } from '#lib/utils.ts';
 import type { SupabaseClient } from '@supabase/supabase-js';
@@ -29,7 +29,7 @@ function toElement(row: ContentRow, contentType: PublicContentTable): Element {
 		date: row.date ?? row.created_at ?? new Date().toISOString(),
 		categories: Array.isArray(row.categories) ? row.categories : [],
 		published: row.published !== false,
-		updatedAt: row.updated_at ?? undefined,
+		updatedAt: realUpdatedAt(row.updated_at),
 		image: row.image ?? undefined,
 		contentHtml: prepareMedia(restoreArticleHtml(row.content_html, metadata)),
 		metadata: publicMetadata,
@@ -81,7 +81,7 @@ export async function listPublishedContent(
 		date: row.date,
 		categories: Array.isArray(row.categories) ? row.categories : [],
 		image: row.image || undefined,
-		updatedAt: row.updated_at ?? undefined,
+		updatedAt: realUpdatedAt(row.updated_at),
 		published: true,
 		...(options.readingTime
 			? {
@@ -139,6 +139,6 @@ export async function listContentMetadata(
 		title: row.title ?? row.slug,
 		description: row.description ?? '',
 		date: row.date,
-		updatedAt: row.updated_at ?? undefined
+		updatedAt: realUpdatedAt(row.updated_at)
 	}));
 }
