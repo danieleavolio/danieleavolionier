@@ -125,4 +125,20 @@
 			padding-inline: 0;
 		}
 	}
+
+	/* Very wide screens: a wider frame and less dead space under the header. */
+	@media (min-width: 1800px) {
+		.layout {
+			max-inline-size: 1680px;
+		}
+
+		main {
+			padding-block: var(--size-7) var(--size-9);
+		}
+	}
+
+	/* The admin needs room for the editor and its panels. */
+	.layout:has(:global(.admin-layout)) {
+		max-inline-size: min(1900px, 100%);
+	}
 </style>

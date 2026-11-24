@@ -192,7 +192,9 @@ test('static pages work without JavaScript, sitemap excludes non-indexable pages
 	const context = await browser.newContext({ javaScriptEnabled: false });
 	const page = await context.newPage();
 	await page.goto('/data');
-	await expect(page.locator('nav a[href="/now"]')).toBeAttached();
+	await expect(
+		page.locator('nav[aria-label="Navigazione principale"] a[href="/now"]')
+	).toBeAttached();
 	await expect(page.getByText('Daniele Avolio: DATI')).toBeVisible();
 	await context.close();
 	const response = await request.get('/sitemap.xml');

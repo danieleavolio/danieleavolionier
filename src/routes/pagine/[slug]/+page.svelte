@@ -89,7 +89,7 @@
 
 <style>
 	article {
-		max-inline-size: 160cqh;
+		max-inline-size: 64rem;
 		margin-inline: auto;
 	}
 
@@ -105,14 +105,15 @@
 	.tags {
 		display: flex;
 		gap: var(--size-3);
-		margin-top: clamp(2.5rem, 6vw, 4rem);
+		margin-top: 0;
+		margin-bottom: var(--size-8);
 		flex-wrap: wrap;
 		justify-content: center;
 		align-items: center;
 	}
 
 	hgroup {
-		margin-bottom: var(--size-7);
+		margin-bottom: var(--size-5);
 		text-align: center;
 		position: relative;
 	}
@@ -124,8 +125,11 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		min-height: 300px;
 		overflow: hidden;
+	}
+
+	.review-banner:has(.banner-image) {
+		min-height: 300px;
 	}
 
 	.banner-image {

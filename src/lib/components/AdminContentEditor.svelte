@@ -129,6 +129,9 @@
 		slugManuallyEdited = true;
 	}
 
+	const formId = 'content-form';
+	const isNewItem = !item.slug;
+
 	let mode: 'edit' | 'preview' = 'edit';
 	let zen = false;
 	let zenButton: HTMLButtonElement;
@@ -165,192 +168,312 @@
 <svelte:window on:keydown={handleKeydown} />
 
 <div class="zen-frame" class:active={zen}>
-	<div class="mode-bar">
-		<button type="button" on:click={toggleMode}>
-			{mode === 'edit' ? 'Anteprima' : 'Torna alla scrittura'}
-		</button>
-		<button type="button" bind:this={zenButton} on:click={toggleZen}
-			>{zen ? 'Esci da Zen' : 'Zen'}</button
-		>
+	<div class="action-bar">
+		<div class="action-title">
+			<span class="yr-badge" class:yr-badge--alert={isNewItem} class:yr-badge--solid={!isNewItem}
+				>{isNewItem ? 'Nuovo' : 'Modifica'}</span
+			>
+			<span class="action-name" title={item.title}>{item.title || 'Senza titolo'}</span>
+		</div>
+		<div class="action-buttons">
+			<button type="button" class="yr-button yr-button--ghost" on:click={toggleMode}>
+				{mode === 'edit' ? 'Anteprima' : 'Torna alla scrittura'}
+			</button>
+			<button
+				type="button"
+				class="yr-button yr-button--ghost"
+				bind:this={zenButton}
+				on:click={toggleZen}>{zen ? 'Esci da Zen' : 'Zen'}</button
+			>
+			<button type="submit" form={formId} class="yr-button yr-button--primary">Salva</button>
+		</div>
 	</div>
 
 	<div class="workspace">
+		{#if form?.message}<p class="status-bar" role="status">{form.message}</p>{/if}
+
 		{#if mode === 'preview'}
 			<div class="preview-pane">
 				<PostPreview {item} />
 			</div>
-		{:else}
-			<form method="POST" action="?/save" use:enhance class="editor-form" on:submit={syncForm}>
-				<h1>{originalSlug ? 'Modifica contenuto' : 'Nuovo contenuto'}</h1>
-				<input type="hidden" name="original_slug" value={originalSlug} />
-				<input type="hidden" name="content_html" value={item.contentHtml} />
-				<input type="hidden" name="content_json" value={JSON.stringify(item.contentJson ?? null)} />
-				<input type="hidden" name="metadata" value={JSON.stringify(item.metadata ?? {})} />
-				<input type="hidden" name="legacy_content" value={item.legacyContent ?? ''} />
+		{/if}
 
-				<label for="title">Titolo</label>
-				<input
-					id="title"
-					name="title"
-					bind:value={item.title}
-					on:input={handleTitleInput}
-					required
-				/>
+		<form
+			id={formId}
+			method="POST"
+			action="?/save"
+			use:enhance
+			class="editor-form"
+			class:is-hidden={mode === 'preview'}
+			on:submit={syncForm}
+		>
+			<input type="hidden" name="original_slug" value={originalSlug} />
+			<input type="hidden" name="content_html" value={item.contentHtml} />
+			<input type="hidden" name="content_json" value={JSON.stringify(item.contentJson ?? null)} />
+			<input type="hidden" name="metadata" value={JSON.stringify(item.metadata ?? {})} />
+			<input type="hidden" name="legacy_content" value={item.legacyContent ?? ''} />
 
-				<label for="slug">Slug</label>
-				<input
-					id="slug"
-					name="slug"
-					bind:value={item.slug}
-					on:input={handleSlugInput}
-					pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
-					required
-				/>
-
-				<label for="description">Descrizione</label>
-				<textarea id="description" name="description" bind:value={item.description} required
-				></textarea>
-
-				<label for="date">Data</label>
-				<input id="date" name="date" type="date" bind:value={item.date} required />
-
-				<label for="categories">Categorie separate da virgola</label>
-				<input
-					id="categories"
-					name="categories"
-					value={categoryText}
-					on:input={(event) => setCategories(event.currentTarget.value)}
-				/>
-				{#if existingCategories.length}
-					<details class="category-picker">
-						<summary>Categorie esistenti ({existingCategories.length})</summary>
+			<section class="yr-panel" aria-labelledby="sec-main">
+				<h2 id="sec-main" class="yr-panel__head">
+					<span class="yr-panel__square"></span>01 // Dati principali
+				</h2>
+				<div class="yr-panel__body main-grid">
+					<div class="f-title">
+						<label class="yr-label" for="title">Titolo</label>
 						<input
-							type="search"
-							aria-label="Filtra le categorie esistenti"
-							placeholder="Filtra le categorie"
-							bind:value={categoryFilter}
-							on:keydown={(event) => {
-								if (event.key === 'Enter') event.preventDefault();
-							}}
+							id="title"
+							name="title"
+							bind:value={item.title}
+							on:input={handleTitleInput}
+							required
 						/>
-						<div class="category-options">
-							{#each matchingCategories as category (category)}
-								<button
-									type="button"
-									class:selected={selectedCategories.has(categoryKey(category))}
-									aria-pressed={selectedCategories.has(categoryKey(category))}
-									on:click={() => toggleCategory(category)}>{category}</button
-								>
-							{:else}
-								<p role="status">Nessuna categoria corrispondente.</p>
-							{/each}
-						</div>
-					</details>
-				{/if}
-
-				<label for="image">Immagine di copertina (URL o percorso)</label>
-				<div class="cover-field" class:dragging={coverDragging}>
-					<input
-						id="image"
-						name="image"
-						type="text"
-						placeholder="https://... oppure /images/..."
-						bind:value={item.image}
-						on:dragover={(event) => {
-							event.preventDefault();
-							coverDragging = true;
-						}}
-						on:dragleave={() => (coverDragging = false)}
-						on:drop={handleCoverDrop}
-						on:paste={handleCoverPaste}
-					/>
-					{#if coverUploading}<span class="cover-status" role="status">Caricamento…</span>{/if}
+					</div>
+					<div class="f-slug">
+						<label class="yr-label" for="slug">Slug</label>
+						<input
+							id="slug"
+							name="slug"
+							bind:value={item.slug}
+							on:input={handleSlugInput}
+							pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
+							required
+						/>
+					</div>
+					<div class="f-date">
+						<label class="yr-label" for="date">Data</label>
+						<input id="date" name="date" type="date" bind:value={item.date} required />
+					</div>
+					<div class="f-desc">
+						<label class="yr-label" for="description">Descrizione</label>
+						<textarea id="description" name="description" bind:value={item.description} required
+						></textarea>
+					</div>
 				</div>
-				{#if coverError}<p class="cover-error" role="alert">{coverError}</p>{/if}
-				<p class="cover-hint">Puoi anche trascinare o incollare un’immagine qui.</p>
+			</section>
 
-				<Switch name="published" bind:checked={item.published} label="Pubblicato" />
-
-				{#if item.metadata.contentType === 'posts'}
-					<fieldset>
-						<legend>Metadati recensione</legend>
-						<label class="checkbox"
-							><input
-								type="checkbox"
-								checked={review.isReview}
-								on:change={(event) => updateReview('isReview', event.currentTarget.checked)}
-							/> È una recensione</label
-						>
-						{#if review.isReview}
-							<label for="gameName">Nome gioco</label>
+			<div class="panel-row">
+				<section class="yr-panel" aria-labelledby="sec-cat">
+					<h2 id="sec-cat" class="yr-panel__head">
+						<span class="yr-panel__square"></span>02 // Categorie
+					</h2>
+					<div class="yr-panel__body stack">
+						<div>
+							<label class="yr-label" for="categories">Categorie separate da virgola</label>
 							<input
-								id="gameName"
-								value={review.gameName}
-								on:input={(event) => updateReview('gameName', event.currentTarget.value)}
+								id="categories"
+								name="categories"
+								value={categoryText}
+								on:input={(event) => setCategories(event.currentTarget.value)}
 							/>
-							<label for="gameImage">Immagine gioco (URL o percorso)</label>
+						</div>
+						{#if existingCategories.length}
+							<div class="category-picker">
+								<div class="picker-head">
+									<span class="yr-label">Esistenti ({existingCategories.length})</span>
+									<input
+										type="search"
+										aria-label="Filtra le categorie esistenti"
+										placeholder="Filtra le categorie"
+										bind:value={categoryFilter}
+										on:keydown={(event) => {
+											if (event.key === 'Enter') event.preventDefault();
+										}}
+									/>
+								</div>
+								<div class="category-options">
+									{#each matchingCategories as category (category)}
+										<button
+											type="button"
+											class="chip"
+											class:selected={selectedCategories.has(categoryKey(category))}
+											aria-pressed={selectedCategories.has(categoryKey(category))}
+											on:click={() => toggleCategory(category)}>{category}</button
+										>
+									{:else}
+										<p class="muted" role="status">Nessuna categoria corrispondente.</p>
+									{/each}
+								</div>
+							</div>
+						{/if}
+					</div>
+				</section>
+
+				<section class="yr-panel" aria-labelledby="sec-cover">
+					<h2 id="sec-cover" class="yr-panel__head">
+						<span class="yr-panel__square"></span>03 // Copertina
+					</h2>
+					<div class="yr-panel__body stack">
+						<div class="cover-field" class:dragging={coverDragging}>
+							<label class="yr-label" for="image">URL o percorso</label>
 							<input
-								id="gameImage"
+								id="image"
+								name="image"
 								type="text"
 								placeholder="https://... oppure /images/..."
-								value={review.gameImage}
-								on:input={(event) => updateReview('gameImage', event.currentTarget.value)}
+								bind:value={item.image}
+								on:dragover={(event) => {
+									event.preventDefault();
+									coverDragging = true;
+								}}
+								on:dragleave={() => (coverDragging = false)}
+								on:drop={handleCoverDrop}
+								on:paste={handleCoverPaste}
 							/>
-							<label for="ratingValue">Voto</label>
-							<input
-								id="ratingValue"
-								type="number"
-								min="0"
-								max="10"
-								step="0.1"
-								value={review.ratingValue}
-								on:input={(event) => updateReview('ratingValue', event.currentTarget.value)}
-							/>
-							<label for="developer">Sviluppatore</label>
-							<input
-								id="developer"
-								value={review.developer}
-								on:input={(event) => updateReview('developer', event.currentTarget.value)}
-							/>
+							<div
+								class="dropzone"
+								role="button"
+								tabindex="0"
+								aria-label="Trascina o incolla un’immagine di copertina"
+								on:dragover={(event) => {
+									event.preventDefault();
+									coverDragging = true;
+								}}
+								on:dragleave={() => (coverDragging = false)}
+								on:drop={handleCoverDrop}
+								on:paste={handleCoverPaste}
+							>
+								{#if coverUploading}
+									<span role="status">Caricamento…</span>
+								{:else}
+									Trascina o incolla un’immagine qui
+								{/if}
+							</div>
+						</div>
+						{#if coverError}<p class="cover-error" role="alert">{coverError}</p>{/if}
+						{#if item.image}
+							<img class="cover-preview" src={item.image} alt="Anteprima della copertina" />
 						{/if}
-					</fieldset>
-				{/if}
+					</div>
+				</section>
 
-				<p class="field-label">Contenuto</p>
-				<RichTextEditor bind:html={item.contentHtml} bind:json={item.contentJson} />
-				<button type="submit">Salva</button>
-				{#if form?.message}<p class="message">{form.message}</p>{/if}
-			</form>
-		{/if}
+				<section class="yr-panel" aria-labelledby="sec-pub">
+					<h2 id="sec-pub" class="yr-panel__head">
+						<span class="yr-panel__square"></span>04 // Pubblicazione
+					</h2>
+					<div class="yr-panel__body stack">
+						<Switch name="published" bind:checked={item.published} label="Pubblicato" />
+
+						{#if item.metadata.contentType === 'posts'}
+							<fieldset>
+								<legend class="yr-label">Metadati recensione</legend>
+								<label class="checkbox"
+									><input
+										type="checkbox"
+										checked={review.isReview}
+										on:change={(event) => updateReview('isReview', event.currentTarget.checked)}
+									/> È una recensione</label
+								>
+								{#if review.isReview}
+									<div>
+										<label class="yr-label" for="gameName">Nome gioco</label>
+										<input
+											id="gameName"
+											value={review.gameName}
+											on:input={(event) => updateReview('gameName', event.currentTarget.value)}
+										/>
+									</div>
+									<div>
+										<label class="yr-label" for="gameImage">Immagine gioco (URL o percorso)</label>
+										<input
+											id="gameImage"
+											type="text"
+											placeholder="https://... oppure /images/..."
+											value={review.gameImage}
+											on:input={(event) => updateReview('gameImage', event.currentTarget.value)}
+										/>
+									</div>
+									<div class="pair">
+										<div>
+											<label class="yr-label" for="ratingValue">Voto</label>
+											<input
+												id="ratingValue"
+												type="number"
+												min="0"
+												max="10"
+												step="0.1"
+												value={review.ratingValue}
+												on:input={(event) => updateReview('ratingValue', event.currentTarget.value)}
+											/>
+										</div>
+										<div>
+											<label class="yr-label" for="developer">Sviluppatore</label>
+											<input
+												id="developer"
+												value={review.developer}
+												on:input={(event) => updateReview('developer', event.currentTarget.value)}
+											/>
+										</div>
+									</div>
+								{/if}
+							</fieldset>
+						{/if}
+					</div>
+				</section>
+			</div>
+
+			<section class="yr-panel" aria-labelledby="sec-content">
+				<h2 id="sec-content" class="yr-panel__head">
+					<span class="yr-panel__square"></span>05 // Contenuto
+				</h2>
+				<div class="yr-panel__body">
+					<RichTextEditor bind:html={item.contentHtml} bind:json={item.contentJson} />
+				</div>
+			</section>
+		</form>
 	</div>
 </div>
 
 <style>
-	.mode-bar {
+	.action-bar {
+		position: sticky;
+		inset-block-start: 0;
+		z-index: 10;
 		display: flex;
-		gap: 0.5rem;
-		margin: 0 0 1rem;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.6rem 1rem;
+		margin: 0 0 1.25rem;
+		padding: 0.55rem 0.8rem;
+		border: 1px solid var(--yr-line);
+		border-inline-start: 4px solid var(--yr-accent);
+		background-color: var(--yr-surface);
+		box-shadow: var(--yr-shadow);
 	}
-	.mode-bar button {
-		font-family: var(--font-mono);
-		font-size: 0.8rem;
+	.action-title {
+		display: flex;
+		align-items: center;
+		flex: 1 1 14rem;
+		gap: 0.7rem;
+		min-width: 0;
+	}
+	.action-name {
+		min-width: 0;
+		overflow: hidden;
 		font-weight: 600;
-		text-transform: uppercase;
-		letter-spacing: 0.15rem;
-		padding: 0.45rem 1rem;
-		background: var(--automataBgRGBA);
-		color: var(--automataColor);
-		border: 1px solid var(--automataColor);
-		border-radius: 0;
-		box-shadow: none;
-		cursor: pointer;
-		transition: all 0.2s ease-in-out;
+		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
-	.mode-bar button:hover {
-		background: var(--automataColor);
-		color: var(--automataBg);
+	.action-buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
 	}
+	.action-buttons :global(.yr-button) {
+		min-height: 2.2rem;
+		padding-block: 0.25rem;
+	}
+
+	.status-bar {
+		margin: 0 0 1.25rem;
+		padding: 0.7rem 0.9rem;
+		border: 1px solid var(--automataRed);
+		border-inline-start-width: 4px;
+		background-color: var(--yr-surface);
+		font-family: var(--font-mono);
+		font-size: 0.9rem;
+	}
+
 	.zen-frame.active {
 		position: fixed;
 		inset: 0;
@@ -360,15 +483,15 @@
 		grid-template-rows: auto minmax(0, 1fr);
 		background: var(--automataBg);
 	}
-	.zen-frame.active .mode-bar {
+	.zen-frame.active .action-bar {
 		margin: 0;
-		padding: 0.75rem 1rem;
-		border-bottom: 1px solid var(--automataColor);
+		border-width: 0 0 1px;
+		box-shadow: none;
 	}
 	.zen-frame.active .workspace {
 		overflow-y: auto;
 		overscroll-behavior: contain;
-		padding: 0 1rem 3rem;
+		padding: 1.25rem 1rem 3rem;
 	}
 	.zen-frame.active form {
 		max-width: min(72rem, 94vw);
@@ -384,105 +507,154 @@
 	}
 	.preview-pane {
 		padding: 1.5rem;
-		border: 1px solid var(--automataColor);
+		border: 1px solid var(--yr-line);
 		background: var(--automataBg);
+		box-shadow: var(--yr-shadow);
 	}
 
 	.editor-form {
 		display: grid;
-		gap: 0.6rem;
+		gap: 1.25rem;
+		min-width: 0;
+	}
+	.editor-form.is-hidden {
+		display: none;
 	}
 
-	.category-picker {
-		border: 1px solid var(--automataColor);
-		padding: 0.65rem;
+	.main-grid {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		gap: 0.9rem 1rem;
+	}
+	.f-title,
+	.f-desc {
+		grid-column: 1 / -1;
+	}
+	.f-slug {
+		grid-column: span 8;
+	}
+	.f-date {
+		grid-column: span 4;
+	}
+	@media (min-width: 1100px) {
+		.f-title {
+			grid-column: span 6;
+		}
+		.f-slug {
+			grid-column: span 4;
+		}
+		.f-date {
+			grid-column: span 2;
+		}
+	}
+	@media (max-width: 560px) {
+		.f-slug,
+		.f-date {
+			grid-column: 1 / -1;
+		}
 	}
 
-	.category-picker summary {
-		cursor: pointer;
+	.panel-row {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 21rem), 1fr));
+		gap: 1.25rem;
+		align-items: start;
 	}
 
-	.category-picker input {
-		inline-size: 100%;
-		margin-block: 0.6rem;
+	.stack {
+		display: grid;
+		gap: 0.9rem;
+	}
+
+	.picker-head {
+		display: grid;
+		gap: 0.3rem;
+		margin-bottom: 0.6rem;
+	}
+	.picker-head .yr-label {
+		margin: 0;
 	}
 
 	.category-options {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.35rem;
+		max-height: 11rem;
+		overflow-y: auto;
+		scrollbar-width: thin;
 	}
-
-	.category-options button {
-		padding: 0.35rem 0.6rem;
-		font: inherit;
+	.chip {
+		padding: 0.25rem 0.6rem;
+		border: 1px solid var(--yr-line);
 		border-radius: 0;
-		border: 1px solid var(--automataColor);
 		background: var(--automataBg);
-		color: var(--automataColor);
 		box-shadow: none;
+		color: var(--automataColor);
+		font: inherit;
+		font-size: 0.82rem;
+		cursor: pointer;
 	}
-
-	.category-options button.selected {
+	.chip:hover {
+		border-color: var(--automataColor);
+	}
+	.chip.selected {
 		background: var(--automataRed);
 		border-color: var(--automataRed);
-		color: #fff;
+		color: var(--automataWhite);
+	}
+	.muted {
+		margin: 0;
+		opacity: 0.7;
+		font-size: 0.9rem;
 	}
 
 	.cover-field {
-		position: relative;
 		display: grid;
+		gap: 0.5rem;
 	}
-
+	.cover-field .yr-label {
+		margin: 0;
+	}
+	.dropzone {
+		display: grid;
+		place-items: center;
+		min-height: 4.5rem;
+		padding: 0.75rem;
+		border: 2px dashed var(--yr-line);
+		background: var(--automataBg);
+		font-family: var(--font-mono);
+		font-size: 0.82rem;
+		text-align: center;
+		cursor: copy;
+	}
+	.dropzone:focus-visible,
+	.cover-field.dragging .dropzone {
+		border-color: var(--automataRed);
+		outline: none;
+	}
 	.cover-field.dragging input {
 		border-color: var(--automataRed);
-		outline: 2px dashed var(--automataRed);
-		outline-offset: 2px;
 	}
-
-	.cover-status,
 	.cover-error {
 		margin: 0;
+		color: var(--automataRed);
 		font-family: var(--font-mono);
 		font-size: 0.85rem;
 	}
-
-	.cover-status {
-		position: absolute;
-		inset-inline-end: 0.6rem;
-		inset-block-start: 0.75rem;
-		background: var(--automataBg);
-		color: var(--automataRed);
-	}
-
-	.cover-error {
-		color: var(--automataRed);
-	}
-
-	.cover-hint {
-		margin: -0.2rem 0 0;
-		font-size: 0.85rem;
-		opacity: 0.75;
-	}
-
-	label,
-	legend,
-	.field-label {
-		font-weight: 700;
+	.cover-preview {
+		display: block;
+		width: 100%;
+		max-height: 11rem;
+		border: 1px solid var(--yr-line);
+		object-fit: cover;
 	}
 
 	input:not([type='checkbox']),
 	textarea {
-		padding: 0.65rem;
-		border: 1px solid var(--automataColor);
-		background: var(--automataBg);
-		color: var(--automataColor);
-		border-radius: 0;
+		background-color: var(--automataBg);
 	}
-
 	textarea {
 		min-height: 6rem;
-		resize: vertical;
 	}
 
 	.checkbox {
@@ -491,44 +663,23 @@
 		gap: 0.5rem;
 		font-weight: 400;
 	}
-
 	fieldset {
 		display: grid;
-		gap: 0.6rem;
-		margin-block: 1rem;
-		padding: 1rem;
-		border: 1px solid var(--automataColor);
+		gap: 0.75rem;
+		min-width: 0;
+		margin: 0;
+		padding: 0.8rem;
+		border: 1px solid var(--yr-line);
 	}
-
-	button[type='submit'] {
-		margin-top: 1.25rem;
-		padding: 0.85rem 1.5rem;
-		font-family: var(--font-mono);
-		font-size: 0.95rem;
-		font-weight: 700;
-		text-transform: uppercase;
-		letter-spacing: 0.25rem;
-		background: var(--automataBgRGBA);
-		color: var(--automataColor);
-		border: 1px solid var(--automataColor);
-		border-radius: 0;
-		box-shadow: none;
-		cursor: pointer;
-		transition: all 0.2s ease-in-out;
+	legend {
+		padding-inline: 0.4rem;
 	}
-
-	button[type='submit']:hover {
-		background: var(--automataColor);
-		color: var(--automataBg);
+	fieldset .yr-label {
+		margin-bottom: 0.3rem;
 	}
-
-	button[type='submit']:active {
-		transform: translateY(1px);
-	}
-
-	.message {
-		padding: 0.75rem;
-		background: var(--automataBgRGBA);
-		border: 1px solid var(--automataColor);
+	.pair {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+		gap: 0.75rem;
 	}
 </style>

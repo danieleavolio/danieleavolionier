@@ -1,48 +1,84 @@
-<h1>Admin Dashboard</h1>
-<p>Benvenuto nel pannello di gestione dei contenuti. Seleziona una sezione per iniziare:</p>
+<svelte:head><title>Admin | Daniele Avolio</title></svelte:head>
 
-<div class="dashboard-links">
-	<a class="dashboard-card" href="/admin/posts">
-		<h2>📝 Posts</h2>
-		<p>Crea e modifica articoli con l'editor visuale.</p>
-	</a>
-	<a class="dashboard-card" href="/admin/projects">
-		<h2>💼 Progetti</h2>
-		<p>Gestisci i progetti del portfolio.</p>
-	</a>
-	<a class="dashboard-card" href="/admin/now">
-		<h2>⚡ Now</h2>
-		<p>Aggiorna le attività correnti.</p>
-	</a>
+<div class="dashboard">
+	<header class="intro">
+		<p class="yr-eyebrow">Pannello di gestione</p>
+		<h1>Dashboard</h1>
+		<p>Scegli la sezione da modificare.</p>
+	</header>
+
+	<div class="sections">
+		<section class="yr-panel">
+			<h2 class="yr-panel__head"><span class="yr-panel__square"></span>01 // Posts</h2>
+			<div class="yr-panel__body">
+				<p>Scrivi e aggiorna gli articoli con l'editor visuale, le categorie e la copertina.</p>
+				<a class="yr-button yr-button--primary" href="/admin/posts">Apri i post</a>
+			</div>
+		</section>
+		<section class="yr-panel">
+			<h2 class="yr-panel__head"><span class="yr-panel__square"></span>02 // Progetti</h2>
+			<div class="yr-panel__body">
+				<p>Gestisci le schede del portfolio: testo, immagini e stato di pubblicazione.</p>
+				<a class="yr-button yr-button--primary" href="/admin/projects">Apri i progetti</a>
+			</div>
+		</section>
+		<section class="yr-panel">
+			<h2 class="yr-panel__head"><span class="yr-panel__square"></span>03 // Now</h2>
+			<div class="yr-panel__body">
+				<p>Tieni aggiornate le attività in corso, con stato, link e ordine.</p>
+				<a class="yr-button yr-button--primary" href="/admin/now">Apri Now</a>
+			</div>
+		</section>
+	</div>
+
+	<section class="yr-panel">
+		<h2 class="yr-panel__head"><span class="yr-panel__square"></span>Scorciatoie</h2>
+		<div class="yr-panel__body shortcuts">
+			<a class="yr-button yr-button--ghost" href="/">Home</a>
+			<a class="yr-button yr-button--ghost" href="/sitemap.xml">Sitemap</a>
+			<a class="yr-button yr-button--ghost" href="/rss.xml">RSS</a>
+		</div>
+	</section>
 </div>
 
 <style>
-	.dashboard-links {
+	.dashboard {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-		gap: 1.5rem;
-		margin-top: 1.5rem;
+		gap: 1.25rem;
 	}
-	.dashboard-card {
-		display: block;
-		padding: 1.5rem;
-		border: 1px solid var(--automataColor);
-		text-decoration: none;
-		color: inherit;
-		background: var(--automataBgRGBA);
-		transition: transform 0.15s ease;
+	.intro h1 {
+		margin: 0.15rem 0 0.25rem;
+		font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+		letter-spacing: 0.15rem;
 	}
-	.dashboard-card:hover {
-		transform: translateY(-2px);
-		background: var(--automataBg);
+	.intro p:last-child {
+		margin: 0;
+		opacity: 0.8;
 	}
-	.dashboard-card h2 {
-		margin-top: 0;
-		font-size: 1.25rem;
+	.sections {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+		gap: 1.25rem;
 	}
-	.dashboard-card p {
-		margin-bottom: 0;
-		font-size: 0.9rem;
-		opacity: 0.85;
+	.sections .yr-panel {
+		display: flex;
+		flex-direction: column;
+	}
+	.sections .yr-panel__body {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1rem;
+		padding: 1.1rem;
+	}
+	.sections p {
+		flex: 1;
+		margin: 0;
+	}
+	.shortcuts {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
 	}
 </style>

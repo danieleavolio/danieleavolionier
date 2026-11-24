@@ -264,4 +264,36 @@
 			width: 240px;
 		}
 	}
+
+	@media (min-width: 1500px) {
+		.posts {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 1rem;
+			align-items: stretch;
+		}
+
+		.post {
+			margin: 0;
+			gap: 0.6rem;
+			padding: 1rem 1.2rem;
+			align-content: start;
+		}
+
+		.post:not(:last-child) {
+			padding-bottom: 1rem;
+		}
+
+		.title {
+			font-size: 1.6rem;
+		}
+
+		.description,
+		.tags {
+			margin-top: 0;
+		}
+
+		.posts > h1 {
+			grid-column: 1 / -1;
+		}
+	}
 </style>
