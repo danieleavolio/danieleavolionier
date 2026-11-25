@@ -81,6 +81,7 @@ test('chart studio settings survive CMS sanitation for columns, horizontal bars 
 		unit: 'min',
 		thickness: 20,
 		color: '#345b78',
+		wide: false,
 		data: 'Tipo: un deploy | 15\nDue deploy | 30\nTre deploy | 45'
 	};
 	for (const type of ['colonne', 'barre', 'linea']) {

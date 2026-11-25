@@ -4,6 +4,7 @@
 	import { untrack } from 'svelte';
 	import CoverIconPicker from '#lib/components/CoverIconPicker.svelte';
 	import CoverColorPicker from '#lib/components/CoverColorPicker.svelte';
+	import { embedCoverSpec } from '#lib/editor/cover-meta.ts';
 	import {
 		coverTemplates,
 		defaultCoverSpec,
@@ -18,8 +19,11 @@
 		description = '',
 		categories = [],
 		mode = 'cover',
+		initialSpec = null,
 		onuse
 	}: {
+		/** Settings read from an existing studio cover, to edit it instead of starting over. */
+		initialSpec?: CoverSpec | null;
 		open?: boolean;
 		title?: string;
 		description?: string;
@@ -52,7 +56,9 @@
 	$effect(() => {
 		if (open && !dialog.open) {
 			untrack(() => {
-				spec = defaultCoverSpec({ title, description, categories });
+				spec = initialSpec
+					? { ...defaultCoverSpec(), ...structuredClone($state.snapshot(initialSpec)) }
+					: defaultCoverSpec({ title, description, categories });
 				error = '';
 				busy = false;
 			});
@@ -86,8 +92,9 @@
 			renderCover(canvas, $state.snapshot(spec));
 			const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'));
 			if (!blob) throw new Error('Impossibile generare l’immagine.');
+			const png = mode === 'cover' ? await embedCoverSpec(blob, $state.snapshot(spec)) : blob;
 			await onuse(
-				new File([blob], `${mode === 'cover' ? 'copertina' : 'immagine'}-${slug}.png`, {
+				new File([png], `${mode === 'cover' ? 'copertina' : 'immagine'}-${slug}.png`, {
 					type: 'image/png'
 				})
 			);

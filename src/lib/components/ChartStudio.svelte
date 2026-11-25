@@ -31,6 +31,7 @@
 		type: 'colonne',
 		thickness: defaultChartThickness,
 		color: '',
+		wide: false,
 		data: ''
 	};
 	const startingSettings = untrack(() => initial ?? defaults);
@@ -153,6 +154,10 @@
 			<label>
 				Spessore: {settings.thickness}%
 				<input form="" type="range" min="10" max="100" step="1" bind:value={settings.thickness} />
+			</label>
+			<label class="check">
+				<input form="" type="checkbox" bind:checked={settings.wide} />
+				Larghezza piena (occupa tutta la colonna)
 			</label>
 			<div class="data-rows">
 				{#each rows as row, index (row.id)}

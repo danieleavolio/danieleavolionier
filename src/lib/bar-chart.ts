@@ -38,6 +38,7 @@ export type ChartSettings = {
 	type: (typeof chartTypes)[number];
 	thickness: number;
 	color: string;
+	wide: boolean;
 	data: string;
 };
 
@@ -53,13 +54,22 @@ export function chartDataSource(data: ChartDatum[]): string {
 		.join('\n');
 }
 
-export function chartSource({ title, unit, type, thickness, color, data }: ChartSettings): string {
+export function chartSource({
+	title,
+	unit,
+	type,
+	thickness,
+	color,
+	wide,
+	data
+}: ChartSettings): string {
 	return [
 		`titolo: ${title.trim()}`,
 		unit.trim() && `unità: ${unit.trim()}`,
 		type !== 'barre' && `tipo: ${type}`,
 		thickness !== defaultChartThickness && `spessore: ${thickness}`,
 		color && `colore: ${color}`,
+		wide && 'larghezza: ampia',
 		data.trim()
 	]
 		.filter(Boolean)
@@ -83,10 +93,11 @@ export function parseChart(source: string): (ChartSettings & { rows: ChartRow[] 
 	let type: ChartSettings['type'] = 'barre';
 	let thickness = defaultChartThickness;
 	let color = '';
+	let wide = false;
 	const settings = new Set<string>();
 	while (lines.length) {
 		if (chartRow.test(lines[0])) break;
-		const option = lines[0].match(/^(unit[àa]|tipo|spessore|colore)\s*:\s*(.*)$/i);
+		const option = lines[0].match(/^(unit[àa]|tipo|spessore|colore|larghezza)\s*:\s*(.*)$/i);
 		if (!option) break;
 		const key = option[1].toLowerCase().replace('à', 'a');
 		const value = option[2];
@@ -104,6 +115,10 @@ export function parseChart(source: string): (ChartSettings & { rows: ChartRow[] 
 			case 'spessore':
 				thickness = Number(value);
 				if (!/^\d{2,3}$/.test(value) || thickness < 10 || thickness > 100) return null;
+				break;
+			case 'larghezza':
+				if (value !== 'ampia') return null;
+				wide = true;
 				break;
 			case 'colore':
 				if (!colorPattern.test(value)) return null;
@@ -128,13 +143,13 @@ export function parseChart(source: string): (ChartSettings & { rows: ChartRow[] 
 		rows.push({ label, value, color, amount, display });
 	}
 
-	return { title, unit, type, thickness, color, data: lines.join('\n'), rows };
+	return { title, unit, type, thickness, color, wide, data: lines.join('\n'), rows };
 }
 
 function renderChart(source: string): string | null {
 	const chart = parseChart(source);
 	if (!chart) return null;
-	const { title, type, thickness, color, rows } = chart;
+	const { title, type, thickness, color, wide, rows } = chart;
 	const max = Math.max(...rows.map(({ amount }) => amount)) || 1;
 	const percentages = rows.map(({ amount }) => (amount / max) * 100);
 	const list = rows
@@ -157,7 +172,8 @@ function renderChart(source: string): string | null {
 		type === 'barre'
 			? labels
 			: `<div class="rich-bar-chart__scroll" tabindex="0" role="region" aria-label="Area del grafico"><div class="rich-bar-chart__plot" style="--chart-count:${rows.length}">${line}${labels}</div></div>`;
-	const variant = type === 'barre' ? '' : ` rich-bar-chart--${type}`;
+	const variant =
+		(type === 'barre' ? '' : ` rich-bar-chart--${type}`) + (wide ? ' rich-bar-chart--wide' : '');
 	const style = [
 		thickness !== defaultChartThickness &&
 			`--chart-weight:${thickness}%;--chart-track:${((thickness / defaultChartThickness) * 0.65).toFixed(3)}rem;--chart-stroke:${(thickness / 20).toFixed(2)}px`,

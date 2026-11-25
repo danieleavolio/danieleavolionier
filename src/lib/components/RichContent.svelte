@@ -286,6 +286,19 @@
 		color: var(--automataColor);
 	}
 
+	/* Compact by default: the frame hugs its content instead of leaving empty space. */
+	.rich-content :global(.rich-bar-chart:not(.rich-bar-chart--wide)) {
+		inline-size: fit-content;
+		min-inline-size: min(100%, 24rem);
+		max-inline-size: 100%;
+	}
+
+	.rich-content :global(.rich-bar-chart--wide),
+	.rich-content :global(.rich-bar-chart--wide .rich-bar-chart__rows) {
+		inline-size: 100%;
+		max-inline-size: none;
+	}
+
 	.rich-content :global(.rich-bar-chart__title) {
 		font-family: var(--font-mono);
 		font-size: 1rem;

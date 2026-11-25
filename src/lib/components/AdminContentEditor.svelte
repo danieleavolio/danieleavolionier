@@ -4,6 +4,8 @@
 	import Switch from '#lib/components/ui/Switch.svelte';
 	import PostPreview from '#lib/components/PostPreview.svelte';
 	import CoverStudio from '#lib/components/CoverStudio.svelte';
+	import { readCoverSpec } from '#lib/editor/cover-meta.ts';
+	import type { CoverSpec } from '#lib/editor/cover-render.ts';
 	import { onDestroy, onMount } from 'svelte';
 	import { findImageFiles, uploadImage } from '#lib/media.ts';
 	import {
@@ -69,6 +71,31 @@
 	}
 
 	let coverStudioOpen = false;
+	// Settings stored in covers made with the studio; plain uploads have none.
+	let coverSpec: CoverSpec | null = null;
+	let coverSpecFor = '';
+	let coverEditing = false;
+
+	async function loadCoverSpec(url: string) {
+		if (url === coverSpecFor) return;
+		coverSpecFor = url;
+		coverSpec = null;
+		if (!url) return;
+		try {
+			const response = await fetch(url);
+			if (!response.ok) return;
+			const spec = readCoverSpec(await response.arrayBuffer());
+			if (url === coverSpecFor) coverSpec = spec;
+		} catch {
+			// Unreachable or cross-origin image: it just stays a plain image.
+		}
+	}
+	$: void loadCoverSpec(item.image ?? '');
+
+	function openCoverStudio(edit: boolean) {
+		coverEditing = edit && Boolean(coverSpec);
+		coverStudioOpen = true;
+	}
 
 	// Errors propagate so the studio stays open and shows them.
 	async function useGeneratedCover(file: File) {
@@ -341,6 +368,7 @@
 		title={item.title}
 		description={item.description}
 		categories={item.categories}
+		initialSpec={coverEditing ? coverSpec : null}
 		onuse={useGeneratedCover}
 	/>
 {/if}
@@ -549,8 +577,16 @@
 							<button
 								type="button"
 								class="yr-button cover-studio-open"
-								on:click={() => (coverStudioOpen = true)}>Crea copertina</button
+								on:click={() => openCoverStudio(false)}
+								>{coverSpec ? 'Nuova copertina' : 'Crea copertina'}</button
 							>
+							{#if coverSpec}
+								<button
+									type="button"
+									class="yr-button cover-studio-open"
+									on:click={() => openCoverStudio(true)}>Modifica copertina</button
+								>
+							{/if}
 							{#if coverError}<p class="cover-error" role="alert">{coverError}</p>{/if}
 							{#if item.image}
 								<img class="cover-preview" src={item.image} alt="Anteprima della copertina" />

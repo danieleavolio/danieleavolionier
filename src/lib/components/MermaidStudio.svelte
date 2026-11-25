@@ -71,7 +71,23 @@
 	];
 	const arrows = ['->>', '-->>', '->', '-->', '-x', '--x', '-)', '--)'];
 	const positions = ['right of', 'left of', 'over'];
-	type FormNode = { id: number; label: string; shape: string };
+	/** Noir palette for coloured boxes: plate colour, border and a legible text colour. */
+	const boxColors = [
+		{ value: '', label: 'Scuro (predefinito)', fill: '', stroke: '', text: '' },
+		{
+			value: 'inchiostro',
+			label: 'Inchiostro',
+			fill: '#4d493e',
+			stroke: '#2e2c26',
+			text: '#e8e5da'
+		},
+		{ value: 'rosso', label: 'Rosso', fill: '#cd674d', stroke: '#8a3d2b', text: '#26241e' },
+		{ value: 'ocra', label: 'Ocra', fill: '#e1d8aa', stroke: '#a9822f', text: '#26241e' },
+		{ value: 'oliva', label: 'Oliva', fill: '#69753f', stroke: '#3f4825', text: '#ece7d5' },
+		{ value: 'blu', label: 'Blu', fill: '#47697a', stroke: '#2a4350', text: '#ece7d5' },
+		{ value: 'chiaro', label: 'Chiaro', fill: '#ece7d5', stroke: '#8f8b7d', text: '#26241e' }
+	];
+	type FormNode = { id: number; label: string; shape: string; color: string };
 	type FormEdge = { id: number; from: number; to: number; label: string };
 	type Participant = { id: number; key: string; name: string };
 	type Step = {
@@ -90,8 +106,8 @@
 	let steps = $state<Step[]>([]);
 	let direction = $state('LR');
 	let nodes = $state<FormNode[]>([
-		{ id: 1, label: 'Inizio', shape: 'rect' },
-		{ id: 2, label: 'Fine', shape: 'rect' }
+		{ id: 1, label: 'Inizio', shape: 'rect', color: '' },
+		{ id: 2, label: 'Fine', shape: 'rect', color: '' }
 	]);
 	let edges = $state<FormEdge[]>([{ id: 1, from: 1, to: 2, label: '' }]);
 	let counter = 2;
@@ -105,6 +121,13 @@
 			lines.push(
 				`  n${node.id}${shape.open}${quote(node.label.trim() || `Nodo ${node.id}`)}${shape.close}`
 			);
+		}
+		for (const node of nodes) {
+			const color = boxColors.find((c) => c.value && c.value === node.color);
+			if (color)
+				lines.push(
+					`  style n${node.id} fill:${color.fill},stroke:${color.stroke},color:${color.text}`
+				);
 		}
 		for (const edge of edges) {
 			if (!nodes.some((n) => n.id === edge.from) || !nodes.some((n) => n.id === edge.to)) continue;
@@ -161,7 +184,7 @@
 			if (m[2] && !shape) return null;
 			let node = ids.get(m[1]);
 			if (!node) {
-				node = { id: ++n, label: m[1], shape: 'rect' };
+				node = { id: ++n, label: m[1], shape: 'rect', color: '' };
 				ids.set(m[1], node);
 				nextNodes.push(node);
 			}
@@ -171,7 +194,13 @@
 			}
 			return [node, rest.slice(m[0].length)];
 		};
+		const fills: [string, string][] = [];
 		for (const line of lines) {
+			const paint = line.match(/^style\s+([A-Za-z_]\w*)\s+fill:(#[0-9a-f]{6}),/i);
+			if (paint) {
+				fills.push([paint[1], paint[2].toLowerCase()]);
+				continue;
+			}
 			const first = take(line.replace(/;$/, ''));
 			if (!first) return false;
 			let [prev, rest] = first;
@@ -190,6 +219,12 @@
 			}
 		}
 		if (!nextNodes.length) return false;
+		for (const [key, fill] of fills) {
+			const color = boxColors.find((c) => c.fill === fill);
+			const node = ids.get(key);
+			if (!color || !node) return false;
+			node.color = color.value;
+		}
 		const dir = head[1].toUpperCase();
 		direction = dir === 'TB' ? 'TD' : dir;
 		nodes = nextNodes;
@@ -270,7 +305,7 @@
 	}
 
 	function addNode() {
-		nodes.push({ id: ++counter, label: '', shape: 'rect' });
+		nodes.push({ id: ++counter, label: '', shape: 'rect', color: '' });
 	}
 
 	function removeNode(id: number) {
@@ -427,6 +462,11 @@
 							<select aria-label={`Forma del nodo ${index + 1}`} bind:value={node.shape}>
 								{#each shapes as shape (shape.value)}
 									<option value={shape.value}>{shape.label}</option>
+								{/each}
+							</select>
+							<select aria-label={`Colore del nodo ${index + 1}`} bind:value={node.color}>
+								{#each boxColors as color (color.value)}
+									<option value={color.value}>{color.label}</option>
 								{/each}
 							</select>
 							<button
