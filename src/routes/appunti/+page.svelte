@@ -8,7 +8,6 @@
 <Seo
 	title="Appunti Universitari Informatica Unical"
 	description="Raccolta gratuita di appunti universitari per il corso di laurea in Informatica (Triennale e Magistrale) all'Università della Calabria: Machine Learning, Statistica, Big Data e molto altro."
-	image="https://i.imgur.com/juSgfgF.png"
 />
 
 <div class="page">

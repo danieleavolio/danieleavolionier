@@ -66,7 +66,6 @@
 <Seo
 	title="Blog & Articoli Tecnici"
 	description="Articoli, tutorial e approfondimenti su sviluppo web, frontend, intelligenza artificiale e programmazione scritti da Daniele Avolio."
-	image="https://i.imgur.com/juSgfgF.png"
 />
 
 <h1 class="sr-only">Blog e articoli tecnici</h1>

@@ -56,7 +56,6 @@
 <Seo
 	title="Daniele Avolio — Data Engineer, progetti e articoli"
 	description="Daniele Avolio, Data Engineer ad AgileLab. Articoli su SvelteKit, AI e sviluppo web, progetti con Apache Spark, Databricks e GCP, CV e contatti."
-	image="https://i.imgur.com/juSgfgF.png"
 />
 
 <h1 class="sr-only">Daniele Avolio - Data Engineer @ AgileLab</h1>

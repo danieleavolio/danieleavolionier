@@ -22,7 +22,6 @@
 <Seo
 	title="Dati di Sistema, Competenze & Esperienze"
 	description="Panoramica su competenze tecniche, stack tecnologico ed esperienze lavorative di Daniele Avolio, sviluppatore web e AI specialist."
-	image="https://i.imgur.com/juSgfgF.png"
 />
 <h1 class="sr-only">Competenze ed esperienze di Daniele Avolio</h1>
 <div class="data">

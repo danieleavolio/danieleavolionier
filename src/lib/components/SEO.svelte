@@ -62,7 +62,19 @@
 	let safeDescription = $derived(
 		((isReview ? reviewBody || description : description) || '').trim()
 	);
-	let seoImageInput = $derived((isReview ? gameImage : image) || fallbackImage);
+	const siteCards: Record<string, string> = {
+		'/': 'home',
+		'/pagine': 'blog',
+		'/progetti': 'progetti',
+		'/appunti': 'appunti',
+		'/cv': 'cv',
+		'/data': 'data',
+		'/now': 'now',
+		'/end-of-the-lova': 'end-of-the-lova',
+		'/privacy-policy': 'privacy'
+	};
+	let pageCard = $derived(`${siteBaseUrl}/og/site/${siteCards[rawPath] ?? 'home'}.png`);
+	let seoImageInput = $derived((isReview ? gameImage : image) || pageCard);
 	let seoImage = $derived(
 		seoImageInput.startsWith('http') ? seoImageInput : new URL(seoImageInput, siteBaseUrl).href
 	);
@@ -268,6 +280,8 @@
 	<meta property="og:type" content={isArticle || isReview ? 'article' : 'website'} />
 	<meta property="og:url" content={canonicalUrl} />
 	<meta property="og:image" content={seoImage} />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
 	<meta property="og:image:alt" content={fullTitle} />
 
 	<meta name="twitter:card" content="summary_large_image" />

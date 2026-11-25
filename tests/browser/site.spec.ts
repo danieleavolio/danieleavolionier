@@ -206,9 +206,9 @@ test('static pages work without JavaScript, sitemap excludes non-indexable pages
 	expect(xml).not.toContain('/rss.xml');
 	const secret = await request.get('/end-of-the-lova');
 	expect(secret.headers()['x-robots-tag']).toContain('noindex');
-	const og = await request.get('/og/pagine/opencode-e-le-balene.svg');
+	const og = await request.get('/og/pagine/opencode-e-le-balene.png');
 	expect(og.status()).toBe(200);
-	expect(og.headers()['content-type']).toContain('image/svg+xml');
+	expect(og.headers()['content-type']).toContain('image/png');
 });
 
 test('mobile menu opens and navigates without duplicate headers', async ({ page, isMobile }) => {

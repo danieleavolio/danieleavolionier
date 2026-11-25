@@ -19,7 +19,7 @@
 	const siteUrl = config.url.replace(/\/$/, '');
 	let metadata = $derived(data.meta);
 	let metadataCategories = $derived(Array.isArray(metadata.categories) ? metadata.categories : []);
-	let fallbackOg = $derived(`${siteUrl}/og/pagine/${data.slug}.svg`);
+	let fallbackOg = $derived(`${siteUrl}/og/pagine/${data.slug}.png`);
 	let seoImage = $derived(metadata.image || fallbackOg);
 </script>
 

@@ -103,7 +103,7 @@ export async function getContentBySlug(
 		.from(table)
 		.select(
 			options.metadataOnly
-				? 'slug,title,description,date,updated_at'
+				? 'slug,title,description,date,categories,updated_at'
 				: 'slug,title,description,date,categories,image,published,content_html,metadata,updated_at'
 		)
 		.eq('slug', slug)
@@ -130,7 +130,7 @@ export async function listContentMetadata(
 ): Promise<Pick<Element, 'slug' | 'title' | 'description' | 'date' | 'updatedAt'>[]> {
 	const { data, error } = await supabase
 		.from(table)
-		.select('slug,title,description,date,updated_at')
+		.select('slug,title,description,date,categories,updated_at')
 		.eq('published', true)
 		.order('date', { ascending: false });
 	if (error) throw error;

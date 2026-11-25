@@ -67,7 +67,6 @@
 <Seo
 	title="Progetti & Portfolio Software"
 	description="Raccolta dei progetti software, web app, esperimenti AI e videogiochi realizzati da Daniele Avolio."
-	image="https://i.imgur.com/juSgfgF.png"
 />
 
 <h1 class="sr-only">Progetti e portfolio software</h1>

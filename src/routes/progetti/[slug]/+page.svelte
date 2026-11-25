@@ -17,7 +17,7 @@
 			answer: string;
 		}>) ?? [];
 	$: metadataCategories = Array.isArray(metadata.categories) ? metadata.categories : [];
-	$: fallbackOg = `${siteUrl}/og/progetti/${data.slug}.svg`;
+	$: fallbackOg = `${siteUrl}/og/progetti/${data.slug}.png`;
 	$: seoImage = metadata.image || fallbackOg;
 </script>
 

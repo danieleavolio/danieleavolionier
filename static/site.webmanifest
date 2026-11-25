@@ -2,7 +2,7 @@
 	"name": "Daniele Avolio - Website",
 	"short_name": "Daniele Avolio",
 	"description": "Daniele Avolio - Website",
-	"lang": "en",
+	"lang": "it",
 	"icons": [
 		{
 			"src": "/android-chrome-192x192.png",
@@ -30,8 +30,8 @@
 			"type": "image/png"
 		}
 	],
-	"theme_color": "#ffffff",
-	"background_color": "#ffffff",
+	"theme_color": "#c8c2aa",
+	"background_color": "#2e2c26",
 	"display": "standalone",
 	"scope": "/",
 	"start_url": "/",
