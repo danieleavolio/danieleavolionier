@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { renderBarCharts } from '#lib/bar-chart.ts';
+	import { highlightCodeBlocks } from '#lib/highlight.ts';
 	import { renderMermaidBlocks } from '#lib/mermaid.ts';
 	import { linkGalleryImages } from '#lib/rich-gallery.ts';
 	import GalleryLightbox from './GalleryLightbox.svelte';
@@ -9,7 +10,7 @@
 
 	let container: HTMLElement;
 	let gallery: { items: { src: string; alt: string }[]; start: number } | null = null;
-	$: renderedHtml = linkGalleryImages(renderBarCharts(html));
+	$: renderedHtml = linkGalleryImages(highlightCodeBlocks(renderBarCharts(html)));
 
 	function openGallery(event: MouseEvent) {
 		if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey)

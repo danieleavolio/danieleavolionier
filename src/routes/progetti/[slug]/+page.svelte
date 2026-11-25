@@ -5,6 +5,7 @@
 	import * as config from '#lib/config.ts';
 	import Tag from '#lib/components/Tag.svelte';
 	import RichContent from '#lib/components/RichContent.svelte';
+	import ReadingWidth from '#lib/components/ReadingWidth.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -50,6 +51,8 @@
 		<img class="cover-image" src={metadata.image} alt={metadata.title} />
 	{/if}
 
+	<ReadingWidth />
+
 	<RichContent html={data.contentHtml} />
 
 	<Author
@@ -72,7 +75,7 @@
 	}
 
 	article {
-		max-inline-size: 64rem;
+		max-inline-size: var(--reading-width, 100%);
 		margin-inline: auto;
 	}
 

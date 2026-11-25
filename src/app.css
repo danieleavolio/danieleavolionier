@@ -488,14 +488,85 @@ hgroup h1 {
 	padding-inline-start: var(--size-2);
 }
 
+/* Code blocks invert the theme: dark on the light page, light on the dark page. */
+html {
+	--code-bg: #2e2c26;
+	--code-fg: #d1cdb7;
+	--code-border: #4e4b42;
+	--tok-c: #8a8573;
+	--tok-s: #a3b88a;
+	--tok-k: #e07a5f;
+	--tok-n: #e1b86a;
+	--tok-f: #8fb4c9;
+	--tok-v: #d9a6c8;
+	--tok-o: #e1d8aa;
+	--tok-h: #e07a5f;
+	--tok-a: #a3b88a;
+	--tok-d: #e07a5f;
+}
+
+html[data-theme='dark'] {
+	--code-bg: #e4dfc8;
+	--code-fg: #3f3d36;
+	--code-border: #b4af9a;
+	--tok-c: #7a7560;
+	--tok-s: #4f6b2c;
+	--tok-k: #a8402a;
+	--tok-n: #8a5a10;
+	--tok-f: #2f5d7c;
+	--tok-v: #8a3d73;
+	--tok-o: #6b5a1c;
+	--tok-h: #a8402a;
+	--tok-a: #4f6b2c;
+	--tok-d: #a8402a;
+}
+
+html[data-reading='narrow'] {
+	--reading-width: 44rem;
+}
+
 .prose pre {
 	max-inline-size: 100%;
 	padding: 1rem;
 	border-radius: 8px;
 	tab-size: 2;
-	background: var(--surface-2);
-	border: 1px solid var(--border);
-	box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+	background: var(--code-bg);
+	color: var(--code-fg);
+	border: 1px solid var(--code-border);
+}
+
+.tok-c {
+	color: var(--tok-c);
+	font-style: italic;
+}
+.tok-s {
+	color: var(--tok-s);
+}
+.tok-k {
+	color: var(--tok-k);
+	font-weight: 600;
+}
+.tok-n {
+	color: var(--tok-n);
+}
+.tok-f {
+	color: var(--tok-f);
+}
+.tok-v {
+	color: var(--tok-v);
+}
+.tok-o {
+	color: var(--tok-o);
+}
+.tok-h {
+	color: var(--tok-h);
+	font-weight: 600;
+}
+.tok-a {
+	color: var(--tok-a);
+}
+.tok-d {
+	color: var(--tok-d);
 }
 
 .prose h3 {
@@ -705,7 +776,7 @@ code {
 pre code,
 .prose pre code {
 	background: transparent;
-	color: var(--automataColor);
+	color: inherit;
 }
 
 .prose pre code {

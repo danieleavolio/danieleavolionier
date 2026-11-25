@@ -14,6 +14,9 @@
 							.querySelector('meta[name="theme-color"]')
 							?.setAttribute('content', stored === 'dark' ? '#2e2c26' : '#c8c2aa');
 					}
+					if (localStorage.getItem('reading-width') === 'narrow') {
+						document.documentElement.dataset.reading = 'narrow';
+					}
 				} catch {
 					/* localStorage can be unavailable; keep the default light theme. */
 				}

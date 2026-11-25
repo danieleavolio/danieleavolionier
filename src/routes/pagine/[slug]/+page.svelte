@@ -6,6 +6,7 @@
 	import Tag from '#lib/components/Tag.svelte';
 	import ShareComponent from '#lib/components/ShareComponent.svelte';
 	import RichContent from '#lib/components/RichContent.svelte';
+	import ReadingWidth from '#lib/components/ReadingWidth.svelte';
 	import RelatedPosts from '#lib/components/RelatedPosts.svelte';
 	import { page } from '$app/state';
 	import type { PageData } from './$types';
@@ -73,6 +74,8 @@
 		<img class="cover-image" src={metadata.image} alt={metadata.title} />
 	{/if}
 
+	<ReadingWidth />
+
 	<RichContent html={data.contentHtml} />
 
 	<RelatedPosts posts={data.relatedPosts} />
@@ -89,7 +92,7 @@
 
 <style>
 	article {
-		max-inline-size: 64rem;
+		max-inline-size: var(--reading-width, 100%);
 		margin-inline: auto;
 	}
 
