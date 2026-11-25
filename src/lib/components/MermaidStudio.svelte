@@ -20,6 +20,24 @@
 	const id = $props.id();
 	let dialog: HTMLDialogElement;
 	let preview: HTMLDivElement;
+	let controlsPane: HTMLDivElement;
+	let previewPane: HTMLElement;
+	let lock: HTMLElement | null = null;
+
+	// I due riquadri scorrono in modo indipendente e si allineano in proporzione.
+	function sync(from: HTMLElement, to: HTMLElement) {
+		if (lock === from) {
+			lock = null;
+			return;
+		}
+		const max = from.scrollHeight - from.clientHeight;
+		const toMax = to.scrollHeight - to.clientHeight;
+		if (max <= 0 || toMax <= 0) return;
+		const target = (from.scrollTop / max) * toMax;
+		if (Math.abs(to.scrollTop - target) < 1) return;
+		lock = to;
+		to.scrollTop = target;
+	}
 	let source = $state(untrack(() => initial ?? ''));
 	let rendered = $state('');
 	let rendering = $state(false);
@@ -44,17 +62,32 @@
 		}
 	];
 
-	// Modulo guidato: solo flowchart. Con un diagramma esistente si parte dal codice.
+	// Modulo guidato: flowchart e diagrammi di sequenza. Un diagramma esistente viene letto nel modulo.
 	const shapes = [
 		{ value: 'rect', label: 'Rettangolo', open: '[', close: ']' },
 		{ value: 'round', label: 'Arrotondato', open: '(', close: ')' },
 		{ value: 'rhombus', label: 'Decisione', open: '{', close: '}' },
 		{ value: 'circle', label: 'Cerchio', open: '((', close: '))' }
 	];
+	const arrows = ['->>', '-->>', '->', '-->', '-x', '--x', '-)', '--)'];
+	const positions = ['right of', 'left of', 'over'];
 	type FormNode = { id: number; label: string; shape: string };
 	type FormEdge = { id: number; from: number; to: number; label: string };
+	type Participant = { id: number; key: string; name: string };
+	type Step = {
+		id: number;
+		kind: 'msg' | 'note' | 'raw';
+		a: string;
+		arrow: string;
+		b: string;
+		text: string;
+	};
+	type FormKind = 'flowchart' | 'sequence' | null;
 
 	let mode = $state<'form' | 'code'>(untrack(() => (initial ? 'code' : 'form')));
+	let formKind = $state<FormKind>('flowchart');
+	let participants = $state<Participant[]>([]);
+	let steps = $state<Step[]>([]);
 	let direction = $state('LR');
 	let nodes = $state<FormNode[]>([
 		{ id: 1, label: 'Inizio', shape: 'rect' },
@@ -81,6 +114,160 @@
 		return lines.join('\n');
 	}
 
+	const unquote = (text: string) =>
+		text
+			.trim()
+			.replace(/^"(.*)"$/s, '$1')
+			.replaceAll('#quot;', '"');
+
+	function buildSequence(): string {
+		const lines = ['sequenceDiagram'];
+		for (const p of participants) {
+			const key = p.key.trim();
+			if (!key) continue;
+			const name = p.name.trim();
+			lines.push(`    participant ${key}${name && name !== key ? ` as ${name}` : ''}`);
+		}
+		for (const s of steps) {
+			if (s.kind === 'raw') {
+				if (s.text.trim()) lines.push(`    ${s.text.trim()}`);
+			} else if (s.kind === 'note') {
+				lines.push(`    Note ${s.arrow} ${s.a.trim()}: ${s.text}`);
+			} else {
+				lines.push(`    ${s.a.trim()}${s.arrow}${s.b.trim()}: ${s.text}`);
+			}
+		}
+		return lines.join('\n');
+	}
+
+	function parseFlowchart(text: string): boolean {
+		const lines = text
+			.split('\n')
+			.map((l) => l.trim())
+			.filter((l) => l && !l.startsWith('%%'));
+		const head = lines.shift()?.match(/^(?:flowchart|graph)\s+(LR|RL|TD|TB|BT)\s*;?$/i);
+		if (!head) return false;
+		const ids = new Map<string, FormNode>();
+		const nextNodes: FormNode[] = [];
+		const nextEdges: FormEdge[] = [];
+		let n = 0;
+		const nodeRe = /^([A-Za-z_]\w*)(?:(\(\(|\[|\(|\{)("[^"]*"|[^\])}"]*?)(\)\)|\]|\)|\}))?/;
+		const edgeRes = [/^\s*--\s+(.+?)\s+-->\s*/, /^\s*-->\|([^|]*)\|\s*/, /^\s*-->\s*/];
+		const take = (rest: string): [FormNode, string] | null => {
+			const m = rest.match(nodeRe);
+			if (!m) return null;
+			const shape = m[2] ? shapes.find((s) => s.open === m[2] && s.close === m[4]) : undefined;
+			if (m[2] && !shape) return null;
+			let node = ids.get(m[1]);
+			if (!node) {
+				node = { id: ++n, label: m[1], shape: 'rect' };
+				ids.set(m[1], node);
+				nextNodes.push(node);
+			}
+			if (shape) {
+				node.label = unquote(m[3]);
+				node.shape = shape.value;
+			}
+			return [node, rest.slice(m[0].length)];
+		};
+		for (const line of lines) {
+			const first = take(line.replace(/;$/, ''));
+			if (!first) return false;
+			let [prev, rest] = first;
+			while (rest.trim()) {
+				const hit = edgeRes.map((re) => rest.match(re)).find(Boolean);
+				if (!hit) return false;
+				const next = take(rest.slice(hit[0].length));
+				if (!next) return false;
+				nextEdges.push({
+					id: ++n + 1000,
+					from: prev.id,
+					to: next[0].id,
+					label: hit[1] ? unquote(hit[1]) : ''
+				});
+				[prev, rest] = next;
+			}
+		}
+		if (!nextNodes.length) return false;
+		const dir = head[1].toUpperCase();
+		direction = dir === 'TB' ? 'TD' : dir;
+		nodes = nextNodes;
+		edges = nextEdges;
+		counter = n + 1000;
+		return true;
+	}
+
+	function parseSequence(text: string): boolean {
+		const lines = text
+			.split('\n')
+			.map((l) => l.trim())
+			.filter((l) => l && !l.startsWith('%%'));
+		if (lines.shift() !== 'sequenceDiagram') return false;
+		const nextP: Participant[] = [];
+		const nextS: Step[] = [];
+		let n = 0;
+		const ensure = (key: string, name = '') => {
+			let p = nextP.find((x) => x.key === key);
+			if (!p) nextP.push((p = { id: ++n, key, name: '' }));
+			if (name) p.name = name;
+		};
+		for (const line of lines) {
+			let m = line.match(/^(?:participant|actor)\s+(\S+?)(?:\s+as\s+(.+))?$/);
+			if (m) {
+				ensure(m[1], m[2]?.trim());
+				continue;
+			}
+			m = line.match(/^note\s+(right of|left of|over)\s+([^:]+?)\s*:\s*(.*)$/i);
+			if (m) {
+				m[2].split(',').forEach((k) => ensure(k.trim()));
+				nextS.push({
+					id: ++n,
+					kind: 'note',
+					a: m[2],
+					arrow: m[1].toLowerCase(),
+					b: '',
+					text: m[3]
+				});
+				continue;
+			}
+			m = line.match(/^([^\s:>-]+?)\s*(-->>|->>|--x|-x|--\)|-\)|-->|->)\s*([^\s:]+?)\s*:\s*(.*)$/);
+			if (m) {
+				ensure(m[1]);
+				ensure(m[3]);
+				nextS.push({ id: ++n, kind: 'msg', a: m[1], arrow: m[2], b: m[3], text: m[4] });
+				continue;
+			}
+			nextS.push({ id: ++n, kind: 'raw', a: '', arrow: '', b: '', text: line });
+		}
+		participants = nextP;
+		steps = nextS;
+		counter = n;
+		return true;
+	}
+
+	const detectKind = (text: string): FormKind =>
+		/^\s*(?:flowchart|graph)\b/i.test(text)
+			? 'flowchart'
+			: /^\s*sequenceDiagram\b/.test(text)
+				? 'sequence'
+				: null;
+
+	const build = () => (formKind === 'sequence' ? buildSequence() : buildFlowchart());
+
+	function addParticipant() {
+		participants.push({ id: ++counter, key: `P${participants.length + 1}`, name: '' });
+	}
+
+	function addStep(kind: 'msg' | 'note') {
+		const first = participants[0]?.key ?? '';
+		const second = participants[1]?.key ?? first;
+		steps.push(
+			kind === 'msg'
+				? { id: ++counter, kind, a: first, arrow: '->>', b: second, text: '' }
+				: { id: ++counter, kind, a: first, arrow: 'right of', b: '', text: '' }
+		);
+	}
+
 	function addNode() {
 		nodes.push({ id: ++counter, label: '', shape: 'rect' });
 	}
@@ -97,21 +284,31 @@
 		edges.push({ id: Date.now(), from: prev.id, to: last.id, label: '' });
 	}
 
-	// Il modulo riscrive il codice solo se è partito da vuoto o dal suo stesso output.
+	// Il modulo riscrive il codice solo se è partito da vuoto, dal suo output o da un diagramma che ha saputo leggere.
 	let adopted = $state(untrack(() => !initial));
 	let generated = '';
 
 	$effect(() => {
-		if (mode === 'form' && adopted) {
-			source = buildFlowchart();
+		if (mode === 'form' && adopted && formKind) {
+			source = build();
 			generated = source.trim();
 		}
 	});
 
 	function openForm() {
 		const current = source.trim();
-		adopted = !current || current === generated;
 		mode = 'form';
+		if (!current || current === generated) {
+			adopted = true;
+			return;
+		}
+		const kind = detectKind(current);
+		const ok =
+			kind === 'flowchart'
+				? parseFlowchart(current)
+				: kind === 'sequence' && parseSequence(current);
+		formKind = ok ? kind : null;
+		adopted = ok;
 	}
 
 	const trimmed = $derived(source.trim());
@@ -199,19 +396,21 @@
 	</header>
 
 	<div class="studio-grid">
-		<div class="controls">
+		<div class="controls" bind:this={controlsPane} onscroll={() => sync(controlsPane, previewPane)}>
 			<div class="modes" role="group" aria-label="Modalità di modifica">
 				<button type="button" aria-pressed={mode === 'form'} onclick={openForm}>Guidato</button>
 				<button type="button" aria-pressed={mode === 'code'} onclick={() => (mode = 'code')}
 					>Codice</button
 				>
 			</div>
-			{#if mode === 'form'}
+			{#if mode === 'form' && formKind === 'flowchart'}
 				<p>Flowchart: aggiungi i nodi e collegali. Il codice si genera da solo.</p>
 				<label for={`${id}-direction`}>Direzione</label>
 				<select id={`${id}-direction`} bind:value={direction}>
 					<option value="LR">Da sinistra a destra</option>
 					<option value="TD">Dall’alto in basso</option>
+					<option value="RL">Da destra a sinistra</option>
+					<option value="BT">Dal basso in alto</option>
 				</select>
 
 				<fieldset>
@@ -270,6 +469,89 @@
 					{/each}
 					<button type="button" onclick={addEdge}>+ Collegamento</button>
 				</fieldset>
+			{:else if mode === 'form' && formKind === 'sequence'}
+				<p>Diagramma di sequenza: partecipanti e passaggi, nell’ordine in cui compaiono.</p>
+				<fieldset>
+					<legend>Partecipanti</legend>
+					{#each participants as p, index (p.id)}
+						<div class="row">
+							<input
+								class="short"
+								type="text"
+								aria-label={`Sigla del partecipante ${index + 1}`}
+								bind:value={p.key}
+							/>
+							<input
+								type="text"
+								aria-label={`Nome del partecipante ${index + 1}`}
+								placeholder="Nome (facoltativo)"
+								bind:value={p.name}
+							/>
+							<button
+								type="button"
+								aria-label={`Rimuovi il partecipante ${index + 1}`}
+								onclick={() => (participants = participants.filter((x) => x.id !== p.id))}>✕</button
+							>
+						</div>
+					{/each}
+					<button type="button" onclick={addParticipant}>+ Partecipante</button>
+				</fieldset>
+				<fieldset>
+					<legend>Passaggi</legend>
+					{#each steps as step, index (step.id)}
+						<div class="row">
+							{#if step.kind === 'msg'}
+								<input
+									class="short"
+									type="text"
+									aria-label={`Da, passaggio ${index + 1}`}
+									bind:value={step.a}
+								/>
+								<select aria-label={`Freccia, passaggio ${index + 1}`} bind:value={step.arrow}>
+									{#each arrows as arrow (arrow)}<option value={arrow}>{arrow}</option>{/each}
+								</select>
+								<input
+									class="short"
+									type="text"
+									aria-label={`A, passaggio ${index + 1}`}
+									bind:value={step.b}
+								/>
+							{:else if step.kind === 'note'}
+								<span>Nota</span>
+								<select aria-label={`Posizione, passaggio ${index + 1}`} bind:value={step.arrow}>
+									{#each positions as position (position)}<option value={position}
+											>{position}</option
+										>{/each}
+								</select>
+								<input
+									class="short"
+									type="text"
+									aria-label={`Partecipante, passaggio ${index + 1}`}
+									bind:value={step.a}
+								/>
+							{/if}
+							<input
+								type="text"
+								aria-label={`Testo, passaggio ${index + 1}`}
+								bind:value={step.text}
+							/>
+							<button
+								type="button"
+								aria-label={`Rimuovi il passaggio ${index + 1}`}
+								onclick={() => (steps = steps.filter((x) => x.id !== step.id))}>✕</button
+							>
+						</div>
+					{/each}
+					<div class="row">
+						<button type="button" onclick={() => addStep('msg')}>+ Messaggio</button>
+						<button type="button" onclick={() => addStep('note')}>+ Nota</button>
+					</div>
+				</fieldset>
+			{:else if mode === 'form'}
+				<p>
+					Il modulo guidato legge solo flowchart e diagrammi di sequenza. Per questo diagramma usa
+					«Codice».
+				</p>
 			{:else}
 				<label for={`${id}-source`}>Codice del diagramma</label>
 				<textarea
@@ -303,7 +585,12 @@
 			{/if}
 		</div>
 
-		<section class="studio-preview" aria-label="Anteprima del diagramma">
+		<section
+			class="studio-preview"
+			aria-label="Anteprima del diagramma"
+			bind:this={previewPane}
+			onscroll={() => sync(previewPane, controlsPane)}
+		>
 			<h3>Anteprima in tempo reale</h3>
 			<p class="status" role="status">
 				{#if !trimmed}
@@ -348,6 +635,12 @@
 		background: var(--automataBg);
 	}
 
+	dialog[open] {
+		display: flex;
+		flex-direction: column;
+		block-size: calc(100dvh - 1.5rem);
+	}
+
 	dialog::backdrop {
 		background: rgb(21 21 18 / 65%);
 	}
@@ -369,7 +662,10 @@
 	.studio-grid {
 		display: grid;
 		grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+		grid-template-rows: minmax(0, 1fr);
 		gap: 1rem;
+		flex: 1 1 auto;
+		min-block-size: 0;
 		margin-block: 1rem;
 	}
 
@@ -378,6 +674,14 @@
 		gap: 0.5rem;
 		align-content: start;
 		min-inline-size: 0;
+		min-block-size: 0;
+		max-block-size: 100%;
+		overflow-y: auto;
+		padding-inline-end: 0.25rem;
+	}
+
+	.row input.short {
+		flex: 0 1 5rem;
 	}
 
 	label {
@@ -470,9 +774,10 @@
 	}
 
 	.studio-preview {
-		position: sticky;
-		inset-block-start: 0;
-		align-self: start;
+		align-content: start;
+		min-block-size: 0;
+		max-block-size: 100%;
+		overflow-y: auto;
 		display: grid;
 		gap: 0.6rem;
 		min-inline-size: 0;
@@ -551,8 +856,15 @@
 		.studio-grid {
 			grid-template-columns: minmax(0, 1fr);
 		}
+		dialog[open] {
+			display: block;
+			block-size: auto;
+			overflow-y: auto;
+		}
+		.controls,
 		.studio-preview {
-			position: static;
+			max-block-size: none;
+			overflow: visible;
 		}
 		textarea {
 			min-block-size: 12rem;
