@@ -3,25 +3,15 @@
 
 	const year = new Date().getFullYear();
 
-	const navigate = [
-		{ href: '/pagine', label: 'Blog' },
-		{ href: '/progetti', label: 'Progetti' },
-		{ href: '/now', label: 'Now' },
-		{ href: '/data', label: 'Data' },
-		{ href: '/appunti', label: 'Appunti' },
-		{ href: '/cv', label: 'CV' }
-	];
-
-	const contacts = [
+	// Only links the header does not already show.
+	const links = [
+		{ href: '/cv', label: 'CV', external: false },
 		{ href: 'https://www.linkedin.com/in/danieleavolio/', label: 'LinkedIn', external: true },
 		{ href: 'https://github.com/danieleavolio', label: 'GitHub', external: true },
 		{ href: 'https://twitter.com/avolio_daniele', label: 'Twitter', external: true },
-		{ href: 'mailto:daniele.avolio14@gmail.com', label: 'Email', external: false }
-	];
-
-	const feed = [
-		{ href: '/rss.xml', label: 'RSS' },
-		{ href: '/privacy-policy', label: 'Privacy' }
+		{ href: 'mailto:daniele.avolio14@gmail.com', label: 'Email', external: false },
+		{ href: '/rss.xml', label: 'RSS', external: false },
+		{ href: '/privacy-policy', label: 'Privacy', external: false }
 	];
 
 	function scrollToTop() {
@@ -30,32 +20,15 @@
 	}
 </script>
 
-<footer class="site-footer yr-panel">
-	<div class="yr-panel__head">
-		<span class="yr-panel__square" aria-hidden="true"></span>
-		<span>YoRHa // Info</span>
-	</div>
-
-	<div class="grid">
-		<section class="identity" aria-label="Chi sono">
-			<p class="name">{config.title}</p>
-			<p class="role"><span class="yr-badge yr-badge--solid">{config.role}</span></p>
-			<p class="tagline">Scrivo di dati, codice e videogiochi.</p>
-		</section>
-
-		<nav aria-label="Naviga">
-			<p class="yr-eyebrow">Naviga</p>
+<footer class="site-footer">
+	<div class="main">
+		<p class="identity">
+			<span class="name">{config.title}</span>
+			<span class="yr-badge yr-badge--muted">{config.role}</span>
+		</p>
+		<nav aria-label="Link utili">
 			<ul>
-				{#each navigate as item (item.href)}
-					<li><a href={item.href}>{item.label}</a></li>
-				{/each}
-			</ul>
-		</nav>
-
-		<nav aria-label="Contatti">
-			<p class="yr-eyebrow">Contatti</p>
-			<ul>
-				{#each contacts as item (item.href)}
+				{#each links as item (item.href)}
 					<li>
 						<a
 							href={item.href}
@@ -66,75 +39,66 @@
 				{/each}
 			</ul>
 		</nav>
-
-		<nav aria-label="Feed e note legali">
-			<p class="yr-eyebrow">Feed</p>
-			<ul>
-				{#each feed as item (item.href)}
-					<li><a href={item.href}>{item.label}</a></li>
-				{/each}
-			</ul>
-		</nav>
 	</div>
 
 	<div class="strip">
-		<p class="copy">&copy; {year} Daniele Avolio</p>
-		<p class="status yr-mono">
-			<span class="blink" aria-hidden="true"></span>YoRHa // SISTEMA ONLINE
-		</p>
-		<button type="button" class="yr-button" onclick={scrollToTop}>Torna su</button>
+		<p>&copy; {year} Daniele Avolio</p>
+		<p class="status yr-mono"><span class="blink" aria-hidden="true"></span>Sistema online</p>
+		<button type="button" class="top" onclick={scrollToTop}>Torna su ↑</button>
 	</div>
 </footer>
 
 <style>
 	.site-footer {
-		margin-block: var(--size-7, 3rem) var(--size-4, 1.5rem);
+		margin-block: var(--size-8, 3rem) var(--size-4, 1.5rem);
+		padding-top: 1rem;
+		border-top: 2px solid var(--automataColor);
 		color: var(--automataColor);
+		font-size: 0.85rem;
 	}
 
-	.grid {
-		display: grid;
-		grid-template-columns: repeat(4, minmax(0, 1fr));
-		gap: 1.5rem 2rem;
-		padding: 1.25rem 1.1rem;
+	p,
+	a,
+	.top {
+		margin: 0;
+		font-size: 0.85rem;
+		line-height: 1.5;
+	}
+
+	.site-footer nav ul li a {
+		font-size: 0.85rem;
+	}
+
+	.strip p,
+	.strip .top {
+		font-size: 0.75rem;
+	}
+
+	.main,
+	.strip {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.6rem 1.5rem;
 	}
 
 	.identity {
 		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		gap: 0.5rem;
-	}
-
-	.identity p,
-	nav p {
-		margin: 0;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.6rem;
 	}
 
 	.name {
-		font-size: 1.15rem;
-		font-weight: 500;
+		font-size: 1rem;
 		letter-spacing: 0.08rem;
-	}
-
-	.tagline {
-		font-size: 0.9rem;
-		line-height: 1.5;
-		max-inline-size: 28ch;
-	}
-
-	nav .yr-eyebrow {
-		padding-bottom: 0.45rem;
-		margin-bottom: 0.55rem;
-		border-bottom: 1px solid var(--yr-line);
-		opacity: 1;
-		color: var(--automataColor);
 	}
 
 	ul {
 		display: flex;
-		flex-direction: column;
-		gap: 0.15rem;
+		flex-wrap: wrap;
+		gap: 0.25rem;
 		margin: 0;
 		padding: 0;
 		list-style: none;
@@ -147,85 +111,67 @@
 		max-inline-size: none;
 	}
 
-	li a {
+	a,
+	.top {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.5rem;
 		min-height: 1.8rem;
-		padding: 0 0.35rem;
+		padding: 0 0.5rem;
 		border: 0;
-		background-color: transparent;
+		border-radius: 0;
+		background: transparent;
+		box-shadow: none;
 		color: var(--automataColor);
-		font-size: 0.9rem;
-		letter-spacing: 0.04rem;
+		font: inherit;
+		letter-spacing: 0.06rem;
 		text-transform: none;
 		text-decoration: none;
 		text-shadow: none;
+		cursor: pointer;
 	}
 
-	li a::before {
-		content: '';
-		position: static;
-		display: block;
-		inset: auto;
-		width: 0.35rem;
-		height: 0.35rem;
-		background-color: currentColor;
-		opacity: 0.45;
-		transition: none;
-	}
-
-	li a::after {
+	a::before,
+	a::after {
 		display: none;
 	}
 
-	li a:hover,
-	li a:focus-visible {
+	a:hover,
+	a:focus-visible,
+	.top:hover,
+	.top:focus-visible {
 		background-color: var(--yr-accent);
 		color: var(--automataBg);
 	}
 
-	li a:hover::before,
-	li a:focus-visible::before {
-		opacity: 1;
-	}
-
 	a:focus-visible,
-	button:focus-visible {
+	.top:focus-visible {
 		outline: 2px solid var(--yr-focus);
 		outline-offset: 2px;
 	}
 
 	.strip {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		justify-content: space-between;
-		gap: 0.75rem 1.5rem;
-		padding: 0.75rem 1.1rem;
-		border-top: 1px solid var(--yr-line);
+		margin-top: 0.75rem;
+		padding-top: 0.6rem;
+		border-top: 1px dashed var(--yr-line);
+		font-size: 0.78rem;
+		opacity: 0.85;
 	}
 
 	:global(html[data-theme='dark']) .strip {
 		border-top-color: var(--automataColor);
 	}
 
-	.strip p {
-		margin: 0;
-		font-size: 0.82rem;
-	}
-
 	.status {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.55rem;
+		gap: 0.5rem;
 		letter-spacing: 0.12rem;
 		text-transform: uppercase;
 	}
 
 	.blink {
-		width: 0.5rem;
-		height: 0.5rem;
+		width: 0.45rem;
+		height: 0.45rem;
 		background-color: var(--automataRed);
 		animation: footer-blink 1.4s steps(2, start) infinite;
 	}
@@ -242,31 +188,15 @@
 		}
 	}
 
-	@media (max-width: 960px) {
-		.grid {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-		}
-	}
-
 	@media (max-width: 560px) {
-		.grid {
-			grid-template-columns: minmax(0, 1fr);
-			gap: 1.25rem;
-		}
-
-		.grid ul {
-			display: grid;
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-			column-gap: 1rem;
-		}
-
+		.main,
 		.strip {
 			flex-direction: column;
 			align-items: flex-start;
 		}
 
-		.strip .yr-button {
-			width: 100%;
+		ul {
+			margin-left: -0.5rem;
 		}
 	}
 </style>
