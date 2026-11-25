@@ -3,8 +3,20 @@
 	import RichTextEditor from '#lib/components/RichTextEditor.svelte';
 	import Switch from '#lib/components/ui/Switch.svelte';
 	import PostPreview from '#lib/components/PostPreview.svelte';
+	import CoverStudio from '#lib/components/CoverStudio.svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { findImageFiles, uploadImage } from '#lib/media.ts';
+	import {
+		clearDraft,
+		draftFields,
+		draftKey,
+		loadDraft,
+		saveDraft,
+		serializeFields,
+		type StoredDraft
+	} from '#lib/editor/draft-storage.ts';
 	import type { EditableContent } from '#lib/server/admin-content.ts';
+	import type { SubmitFunction } from '$app/forms';
 
 	export let item: EditableContent;
 	export let form;
@@ -54,6 +66,15 @@
 		} finally {
 			coverUploading = false;
 		}
+	}
+
+	let coverStudioOpen = false;
+
+	// Errors propagate so the studio stays open and shows them.
+	async function useGeneratedCover(file: File) {
+		const { url } = await uploadImage(file);
+		item.image = url;
+		coverError = '';
 	}
 
 	function handleCoverDrop(event: DragEvent) {
@@ -132,20 +153,125 @@
 	const formId = 'content-form';
 	const isNewItem = !item.slug;
 
-	let mode: 'edit' | 'preview' = 'edit';
+	// ---------- Autosave (local only) ----------
+	const storageKey = draftKey(item.metadata?.contentType, originalSlug);
+	let baseline = serializeFields(draftFields(item));
+	let pendingDraft: StoredDraft | null = null;
+	let draftReady = false;
+	let draftTimer: ReturnType<typeof setTimeout> | undefined;
+	let editorKey = 0;
+
+	onMount(() => {
+		const stored = loadDraft(storageKey);
+		if (stored && serializeFields(stored.fields) !== baseline) pendingDraft = stored;
+		else if (stored) clearDraft(storageKey);
+		draftReady = true;
+	});
+
+	$: currentSnapshot = serializeFields(draftFields(item));
+	$: if (draftReady && !pendingDraft) scheduleDraft(currentSnapshot);
+
+	function scheduleDraft(snapshot: string) {
+		clearTimeout(draftTimer);
+		draftTimer = setTimeout(() => {
+			if (snapshot === baseline) clearDraft(storageKey);
+			else saveDraft(storageKey, draftFields(item));
+		}, 1000);
+	}
+
+	function restoreDraft() {
+		if (!pendingDraft) return;
+		const { fields } = pendingDraft;
+		item = { ...item, ...fields, categories: [...fields.categories] };
+		categoryText = item.categories.join(', ');
+		slugManuallyEdited = true;
+		editorKey += 1; // remount the rich text editor on the restored content
+		pendingDraft = null;
+	}
+
+	function discardDraft() {
+		clearDraft(storageKey);
+		pendingDraft = null;
+	}
+
+	function formatDraftDate(timestamp: number): string {
+		return new Intl.DateTimeFormat('it-IT', {
+			day: 'numeric',
+			month: 'short',
+			hour: '2-digit',
+			minute: '2-digit'
+		}).format(timestamp);
+	}
+
+	// enhance collects the form data before on:submit handlers run, so sync it here explicitly.
+	const handleSave: SubmitFunction = ({ formData }) => {
+		const metadata = buildMetadata();
+		item.metadata = metadata;
+		formData.set('content_html', item.contentHtml);
+		formData.set('content_json', JSON.stringify(item.contentJson ?? null));
+		formData.set('metadata', JSON.stringify(metadata));
+		formData.set('legacy_content', item.legacyContent ?? '');
+		const savedSnapshot = serializeFields(draftFields(item));
+		return async ({ result, update }) => {
+			if (result.type === 'success') {
+				baseline = savedSnapshot;
+				clearDraft(storageKey);
+			}
+			await update({ reset: false });
+		};
+	};
+
+	onDestroy(() => clearTimeout(draftTimer));
+
+	// ---------- Modes ----------
+	type Mode = 'edit' | 'preview' | 'split';
+	const SPLIT_KEY = 'da-editor-split';
+	let mode: Mode = 'edit';
 	let zen = false;
 	let zenButton: HTMLButtonElement;
 
+	onMount(() => {
+		try {
+			if (localStorage.getItem(SPLIT_KEY) === '1' && matchMedia('(min-width: 1200px)').matches)
+				mode = 'split';
+		} catch {
+			// Preference unavailable.
+		}
+	});
+
 	function toggleMode() {
-		mode = mode === 'edit' ? 'preview' : 'edit';
+		mode = mode === 'preview' ? 'edit' : 'preview';
 	}
+
+	function toggleSplit() {
+		mode = mode === 'split' ? 'edit' : 'split';
+		try {
+			localStorage.setItem(SPLIT_KEY, mode === 'split' ? '1' : '0');
+		} catch {
+			// Preference unavailable.
+		}
+	}
+
+	// The side preview follows the editor half a second after the last change.
+	let previewItem: EditableContent = item;
+	let previewTimer: ReturnType<typeof setTimeout> | undefined;
+	$: if (mode === 'split') schedulePreview(currentSnapshot);
+	$: if (mode === 'preview') previewItem = { ...item };
+
+	function schedulePreview(snapshot: string) {
+		void snapshot; // reactive trigger only
+		clearTimeout(previewTimer);
+		previewTimer = setTimeout(() => (previewItem = { ...item }), 500);
+	}
+
+	onDestroy(() => clearTimeout(previewTimer));
 
 	function toggleZen() {
 		zen = !zen;
 	}
 
 	function handleKeydown(event: KeyboardEvent) {
-		if (zen && event.key === 'Escape') {
+		if (zen && !coverStudioOpen && event.key === 'Escape') {
 			zen = false;
 			zenButton.focus({ preventScroll: true });
 		}
@@ -167,6 +293,16 @@
 
 <svelte:window on:keydown={handleKeydown} />
 
+{#if coverStudioOpen}
+	<CoverStudio
+		bind:open={coverStudioOpen}
+		title={item.title}
+		description={item.description}
+		categories={item.categories}
+		onuse={useGeneratedCover}
+	/>
+{/if}
+
 <div class="zen-frame" class:active={zen}>
 	<div class="action-bar">
 		<div class="action-title">
@@ -176,8 +312,14 @@
 			<span class="action-name" title={item.title}>{item.title || 'Senza titolo'}</span>
 		</div>
 		<div class="action-buttons">
+			<button
+				type="button"
+				class="yr-button yr-button--ghost split-toggle"
+				aria-pressed={mode === 'split'}
+				on:click={toggleSplit}>{mode === 'split' ? 'Solo editor' : 'Affiancata'}</button
+			>
 			<button type="button" class="yr-button yr-button--ghost" on:click={toggleMode}>
-				{mode === 'edit' ? 'Anteprima' : 'Torna alla scrittura'}
+				{mode === 'preview' ? 'Torna alla scrittura' : 'Anteprima'}
 			</button>
 			<button
 				type="button"
@@ -192,234 +334,265 @@
 	<div class="workspace">
 		{#if form?.message}<p class="status-bar" role="status">{form.message}</p>{/if}
 
-		{#if mode === 'preview'}
-			<div class="preview-pane">
-				<PostPreview {item} />
+		{#if pendingDraft}
+			<div class="draft-bar" role="alert">
+				<p>
+					Hai una bozza non salvata del <strong>{formatDraftDate(pendingDraft.savedAt)}</strong>.
+				</p>
+				<div class="draft-actions">
+					<button type="button" class="yr-button yr-button--primary" on:click={restoreDraft}
+						>Ripristina</button
+					>
+					<button type="button" class="yr-button yr-button--danger" on:click={discardDraft}
+						>Scarta</button
+					>
+				</div>
 			</div>
 		{/if}
 
-		<form
-			id={formId}
-			method="POST"
-			action="?/save"
-			use:enhance
-			class="editor-form"
-			class:is-hidden={mode === 'preview'}
-			on:submit={syncForm}
-		>
-			<input type="hidden" name="original_slug" value={originalSlug} />
-			<input type="hidden" name="content_html" value={item.contentHtml} />
-			<input type="hidden" name="content_json" value={JSON.stringify(item.contentJson ?? null)} />
-			<input type="hidden" name="metadata" value={JSON.stringify(item.metadata ?? {})} />
-			<input type="hidden" name="legacy_content" value={item.legacyContent ?? ''} />
-
-			<section class="yr-panel" aria-labelledby="sec-main">
-				<h2 id="sec-main" class="yr-panel__head">
-					<span class="yr-panel__square"></span>01 // Dati principali
-				</h2>
-				<div class="yr-panel__body main-grid">
-					<div class="f-title">
-						<label class="yr-label" for="title">Titolo</label>
-						<input
-							id="title"
-							name="title"
-							bind:value={item.title}
-							on:input={handleTitleInput}
-							required
-						/>
-					</div>
-					<div class="f-slug">
-						<label class="yr-label" for="slug">Slug</label>
-						<input
-							id="slug"
-							name="slug"
-							bind:value={item.slug}
-							on:input={handleSlugInput}
-							pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
-							required
-						/>
-					</div>
-					<div class="f-date">
-						<label class="yr-label" for="date">Data</label>
-						<input id="date" name="date" type="date" bind:value={item.date} required />
-					</div>
-					<div class="f-desc">
-						<label class="yr-label" for="description">Descrizione</label>
-						<textarea id="description" name="description" bind:value={item.description} required
-						></textarea>
-					</div>
+		<div class="layout" class:split={mode === 'split'}>
+			{#if mode === 'preview' || mode === 'split'}
+				<div
+					class="preview-pane"
+					class:side={mode === 'split'}
+					aria-label="Anteprima dell'articolo"
+				>
+					<PostPreview item={previewItem} />
 				</div>
-			</section>
+			{/if}
 
-			<div class="panel-row">
-				<section class="yr-panel" aria-labelledby="sec-cat">
-					<h2 id="sec-cat" class="yr-panel__head">
-						<span class="yr-panel__square"></span>02 // Categorie
+			<form
+				id={formId}
+				method="POST"
+				action="?/save"
+				use:enhance={handleSave}
+				class="editor-form"
+				class:is-hidden={mode === 'preview'}
+				on:submit={syncForm}
+			>
+				<input type="hidden" name="original_slug" value={originalSlug} />
+				<input type="hidden" name="content_html" value={item.contentHtml} />
+				<input type="hidden" name="content_json" value={JSON.stringify(item.contentJson ?? null)} />
+				<input type="hidden" name="metadata" value={JSON.stringify(item.metadata ?? {})} />
+				<input type="hidden" name="legacy_content" value={item.legacyContent ?? ''} />
+
+				<section class="yr-panel" aria-labelledby="sec-main">
+					<h2 id="sec-main" class="yr-panel__head">
+						<span class="yr-panel__square"></span>01 // Dati principali
 					</h2>
-					<div class="yr-panel__body stack">
-						<div>
-							<label class="yr-label" for="categories">Categorie separate da virgola</label>
+					<div class="yr-panel__body main-grid">
+						<div class="f-title">
+							<label class="yr-label" for="title">Titolo</label>
 							<input
-								id="categories"
-								name="categories"
-								value={categoryText}
-								on:input={(event) => setCategories(event.currentTarget.value)}
+								id="title"
+								name="title"
+								bind:value={item.title}
+								on:input={handleTitleInput}
+								required
 							/>
 						</div>
-						{#if existingCategories.length}
-							<div class="category-picker">
-								<div class="picker-head">
-									<span class="yr-label">Esistenti ({existingCategories.length})</span>
-									<input
-										type="search"
-										aria-label="Filtra le categorie esistenti"
-										placeholder="Filtra le categorie"
-										bind:value={categoryFilter}
-										on:keydown={(event) => {
-											if (event.key === 'Enter') event.preventDefault();
-										}}
-									/>
-								</div>
-								<div class="category-options">
-									{#each matchingCategories as category (category)}
-										<button
-											type="button"
-											class="chip"
-											class:selected={selectedCategories.has(categoryKey(category))}
-											aria-pressed={selectedCategories.has(categoryKey(category))}
-											on:click={() => toggleCategory(category)}>{category}</button
-										>
-									{:else}
-										<p class="muted" role="status">Nessuna categoria corrispondente.</p>
-									{/each}
-								</div>
-							</div>
-						{/if}
+						<div class="f-slug">
+							<label class="yr-label" for="slug">Slug</label>
+							<input
+								id="slug"
+								name="slug"
+								bind:value={item.slug}
+								on:input={handleSlugInput}
+								pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
+								required
+							/>
+						</div>
+						<div class="f-date">
+							<label class="yr-label" for="date">Data</label>
+							<input id="date" name="date" type="date" bind:value={item.date} required />
+						</div>
+						<div class="f-desc">
+							<label class="yr-label" for="description">Descrizione</label>
+							<textarea id="description" name="description" bind:value={item.description} required
+							></textarea>
+						</div>
 					</div>
 				</section>
 
-				<section class="yr-panel" aria-labelledby="sec-cover">
-					<h2 id="sec-cover" class="yr-panel__head">
-						<span class="yr-panel__square"></span>03 // Copertina
-					</h2>
-					<div class="yr-panel__body stack">
-						<div class="cover-field" class:dragging={coverDragging}>
-							<label class="yr-label" for="image">URL o percorso</label>
-							<input
-								id="image"
-								name="image"
-								type="text"
-								placeholder="https://... oppure /images/..."
-								bind:value={item.image}
-								on:dragover={(event) => {
-									event.preventDefault();
-									coverDragging = true;
-								}}
-								on:dragleave={() => (coverDragging = false)}
-								on:drop={handleCoverDrop}
-								on:paste={handleCoverPaste}
-							/>
-							<div
-								class="dropzone"
-								role="button"
-								tabindex="0"
-								aria-label="Trascina o incolla un’immagine di copertina"
-								on:dragover={(event) => {
-									event.preventDefault();
-									coverDragging = true;
-								}}
-								on:dragleave={() => (coverDragging = false)}
-								on:drop={handleCoverDrop}
-								on:paste={handleCoverPaste}
-							>
-								{#if coverUploading}
-									<span role="status">Caricamento…</span>
-								{:else}
-									Trascina o incolla un’immagine qui
-								{/if}
+				<div class="panel-row">
+					<section class="yr-panel" aria-labelledby="sec-cat">
+						<h2 id="sec-cat" class="yr-panel__head">
+							<span class="yr-panel__square"></span>02 // Categorie
+						</h2>
+						<div class="yr-panel__body stack">
+							<div>
+								<label class="yr-label" for="categories">Categorie separate da virgola</label>
+								<input
+									id="categories"
+									name="categories"
+									value={categoryText}
+									on:input={(event) => setCategories(event.currentTarget.value)}
+								/>
 							</div>
+							{#if existingCategories.length}
+								<div class="category-picker">
+									<div class="picker-head">
+										<span class="yr-label">Esistenti ({existingCategories.length})</span>
+										<input
+											type="search"
+											aria-label="Filtra le categorie esistenti"
+											placeholder="Filtra le categorie"
+											bind:value={categoryFilter}
+											on:keydown={(event) => {
+												if (event.key === 'Enter') event.preventDefault();
+											}}
+										/>
+									</div>
+									<div class="category-options">
+										{#each matchingCategories as category (category)}
+											<button
+												type="button"
+												class="chip"
+												class:selected={selectedCategories.has(categoryKey(category))}
+												aria-pressed={selectedCategories.has(categoryKey(category))}
+												on:click={() => toggleCategory(category)}>{category}</button
+											>
+										{:else}
+											<p class="muted" role="status">Nessuna categoria corrispondente.</p>
+										{/each}
+									</div>
+								</div>
+							{/if}
 						</div>
-						{#if coverError}<p class="cover-error" role="alert">{coverError}</p>{/if}
-						{#if item.image}
-							<img class="cover-preview" src={item.image} alt="Anteprima della copertina" />
-						{/if}
-					</div>
-				</section>
+					</section>
 
-				<section class="yr-panel" aria-labelledby="sec-pub">
-					<h2 id="sec-pub" class="yr-panel__head">
-						<span class="yr-panel__square"></span>04 // Pubblicazione
-					</h2>
-					<div class="yr-panel__body stack">
-						<Switch name="published" bind:checked={item.published} label="Pubblicato" />
-
-						{#if item.metadata.contentType === 'posts'}
-							<fieldset>
-								<legend class="yr-label">Metadati recensione</legend>
-								<label class="checkbox"
-									><input
-										type="checkbox"
-										checked={review.isReview}
-										on:change={(event) => updateReview('isReview', event.currentTarget.checked)}
-									/> È una recensione</label
+					<section class="yr-panel" aria-labelledby="sec-cover">
+						<h2 id="sec-cover" class="yr-panel__head">
+							<span class="yr-panel__square"></span>03 // Copertina
+						</h2>
+						<div class="yr-panel__body stack">
+							<div class="cover-field" class:dragging={coverDragging}>
+								<label class="yr-label" for="image">URL o percorso</label>
+								<input
+									id="image"
+									name="image"
+									type="text"
+									placeholder="https://... oppure /images/..."
+									bind:value={item.image}
+									on:dragover={(event) => {
+										event.preventDefault();
+										coverDragging = true;
+									}}
+									on:dragleave={() => (coverDragging = false)}
+									on:drop={handleCoverDrop}
+									on:paste={handleCoverPaste}
+								/>
+								<div
+									class="dropzone"
+									role="button"
+									tabindex="0"
+									aria-label="Trascina o incolla un’immagine di copertina"
+									on:dragover={(event) => {
+										event.preventDefault();
+										coverDragging = true;
+									}}
+									on:dragleave={() => (coverDragging = false)}
+									on:drop={handleCoverDrop}
+									on:paste={handleCoverPaste}
 								>
-								{#if review.isReview}
-									<div>
-										<label class="yr-label" for="gameName">Nome gioco</label>
-										<input
-											id="gameName"
-											value={review.gameName}
-											on:input={(event) => updateReview('gameName', event.currentTarget.value)}
-										/>
-									</div>
-									<div>
-										<label class="yr-label" for="gameImage">Immagine gioco (URL o percorso)</label>
-										<input
-											id="gameImage"
-											type="text"
-											placeholder="https://... oppure /images/..."
-											value={review.gameImage}
-											on:input={(event) => updateReview('gameImage', event.currentTarget.value)}
-										/>
-									</div>
-									<div class="pair">
+									{#if coverUploading}
+										<span role="status">Caricamento…</span>
+									{:else}
+										Trascina o incolla un’immagine qui
+									{/if}
+								</div>
+							</div>
+							<button
+								type="button"
+								class="yr-button cover-studio-open"
+								on:click={() => (coverStudioOpen = true)}>Crea copertina</button
+							>
+							{#if coverError}<p class="cover-error" role="alert">{coverError}</p>{/if}
+							{#if item.image}
+								<img class="cover-preview" src={item.image} alt="Anteprima della copertina" />
+							{/if}
+						</div>
+					</section>
+
+					<section class="yr-panel" aria-labelledby="sec-pub">
+						<h2 id="sec-pub" class="yr-panel__head">
+							<span class="yr-panel__square"></span>04 // Pubblicazione
+						</h2>
+						<div class="yr-panel__body stack">
+							<Switch name="published" bind:checked={item.published} label="Pubblicato" />
+
+							{#if item.metadata.contentType === 'posts'}
+								<fieldset>
+									<legend class="yr-label">Metadati recensione</legend>
+									<label class="checkbox"
+										><input
+											type="checkbox"
+											checked={review.isReview}
+											on:change={(event) => updateReview('isReview', event.currentTarget.checked)}
+										/> È una recensione</label
+									>
+									{#if review.isReview}
 										<div>
-											<label class="yr-label" for="ratingValue">Voto</label>
+											<label class="yr-label" for="gameName">Nome gioco</label>
 											<input
-												id="ratingValue"
-												type="number"
-												min="0"
-												max="10"
-												step="0.1"
-												value={review.ratingValue}
-												on:input={(event) => updateReview('ratingValue', event.currentTarget.value)}
+												id="gameName"
+												value={review.gameName}
+												on:input={(event) => updateReview('gameName', event.currentTarget.value)}
 											/>
 										</div>
 										<div>
-											<label class="yr-label" for="developer">Sviluppatore</label>
+											<label class="yr-label" for="gameImage">Immagine gioco (URL o percorso)</label
+											>
 											<input
-												id="developer"
-												value={review.developer}
-												on:input={(event) => updateReview('developer', event.currentTarget.value)}
+												id="gameImage"
+												type="text"
+												placeholder="https://... oppure /images/..."
+												value={review.gameImage}
+												on:input={(event) => updateReview('gameImage', event.currentTarget.value)}
 											/>
 										</div>
-									</div>
-								{/if}
-							</fieldset>
-						{/if}
+										<div class="pair">
+											<div>
+												<label class="yr-label" for="ratingValue">Voto</label>
+												<input
+													id="ratingValue"
+													type="number"
+													min="0"
+													max="10"
+													step="0.1"
+													value={review.ratingValue}
+													on:input={(event) =>
+														updateReview('ratingValue', event.currentTarget.value)}
+												/>
+											</div>
+											<div>
+												<label class="yr-label" for="developer">Sviluppatore</label>
+												<input
+													id="developer"
+													value={review.developer}
+													on:input={(event) => updateReview('developer', event.currentTarget.value)}
+												/>
+											</div>
+										</div>
+									{/if}
+								</fieldset>
+							{/if}
+						</div>
+					</section>
+				</div>
+
+				<section class="yr-panel" aria-labelledby="sec-content">
+					<h2 id="sec-content" class="yr-panel__head">
+						<span class="yr-panel__square"></span>05 // Contenuto
+					</h2>
+					<div class="yr-panel__body">
+						{#key editorKey}
+							<RichTextEditor bind:html={item.contentHtml} bind:json={item.contentJson} />
+						{/key}
 					</div>
 				</section>
-			</div>
-
-			<section class="yr-panel" aria-labelledby="sec-content">
-				<h2 id="sec-content" class="yr-panel__head">
-					<span class="yr-panel__square"></span>05 // Contenuto
-				</h2>
-				<div class="yr-panel__body">
-					<RichTextEditor bind:html={item.contentHtml} bind:json={item.contentJson} />
-				</div>
-			</section>
-		</form>
+			</form>
+		</div>
 	</div>
 </div>
 
@@ -501,6 +674,15 @@
 		max-width: min(60rem, 92vw);
 		margin: 0 auto;
 	}
+	.zen-frame.active .layout.split {
+		max-width: min(120rem, 96vw);
+		margin: 0 auto;
+	}
+	.zen-frame.active .layout.split form,
+	.zen-frame.active .layout.split :global(.preview-pane) {
+		max-width: none;
+		margin: 0;
+	}
 	.zen-frame.active :global(.editor),
 	.zen-frame.active :global(.ProseMirror) {
 		min-height: auto;
@@ -510,6 +692,63 @@
 		border: 1px solid var(--yr-line);
 		background: var(--automataBg);
 		box-shadow: var(--yr-shadow);
+	}
+
+	.draft-bar {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem 1rem;
+		margin: 0 0 1.25rem;
+		padding: 0.7rem 0.9rem;
+		border: 1px solid var(--automataColor);
+		border-inline-start: 4px solid var(--automataRed);
+		background-color: var(--yr-surface);
+		box-shadow: var(--yr-shadow);
+	}
+	.draft-bar p {
+		margin: 0;
+	}
+	.draft-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+
+	.split-toggle {
+		display: none;
+	}
+	@media (min-width: 1200px) {
+		.split-toggle {
+			display: inline-flex;
+		}
+		.layout.split {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+			gap: 1.25rem;
+			align-items: start;
+		}
+		.layout.split .editor-form {
+			order: 1;
+		}
+		.layout.split .preview-pane {
+			order: 2;
+			position: sticky;
+			inset-block-start: 4.5rem;
+			max-height: calc(100vh - 6rem);
+			overflow-y: auto;
+			overscroll-behavior: contain;
+		}
+		.layout.split .panel-row {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+	/* Below the split breakpoint the side preview behaves like the normal editor. */
+	@media (max-width: 1199px) {
+		.preview-pane.side {
+			display: none;
+		}
 	}
 
 	.editor-form {

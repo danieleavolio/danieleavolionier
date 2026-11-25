@@ -1,4 +1,5 @@
 @import '@fontsource/manrope';
+@import '@fontsource/manrope/700.css';
 @import '@fontsource/jetbrains-mono';
 
 @import '@fontsource/pt-serif/400.css';
@@ -717,4 +718,37 @@ pre code,
 html :focus-visible {
 	outline: 2px solid var(--automataRed) !important;
 	outline-offset: 3px;
+}
+
+/* The body runs at weight 300, where `bolder` only reaches 400 and looks like plain text. */
+strong,
+b {
+	font-weight: 700;
+}
+
+/* Links inside running text: lowercase, thin underline, NieR fill on hover. */
+:is(.rich-content, .ProseMirror) :is(p, li, td, th, blockquote) a {
+	padding: 0 0.12em;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	font-weight: 600;
+	letter-spacing: normal;
+	text-transform: none;
+	text-shadow: none;
+	text-align: inherit;
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-decoration-color: color-mix(in srgb, currentColor 55%, transparent);
+	text-underline-offset: 0.22em;
+	transition:
+		background-color 0.12s ease-out,
+		color 0.12s ease-out;
+
+	&:hover,
+	&:focus-visible {
+		background-color: var(--automataColor);
+		color: var(--automataBg);
+		text-decoration-color: transparent;
+	}
 }

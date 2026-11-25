@@ -42,6 +42,8 @@
 	onMount(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+				// The article editor uses Ctrl+K for links and handles it first.
+				if (e.defaultPrevented) return;
 				e.preventDefault();
 				showModal = !showModal;
 				if (showModal) {

@@ -15,18 +15,16 @@ Il piano completo sta nel progetto Claude "Sito Web Daniele Avolio", in
 
 ## Editor: cosa manca
 
-Nessuna nuova dipendenza. Ogni fase si chiude con una verifica in Chrome, desktop
-e mobile, con dati fittizi, e con un commit fatto solo dopo l'ok di Daniele.
+Fasi 4 e 5 fatte: salvataggio automatico della bozza in `localStorage`
+(`src/lib/editor/draft-storage.ts`) e anteprima affiancata da 1200px. In più: Studio
+copertine (`CoverStudio.svelte`), pannello di inserimento (`InsertPanel.svelte`),
+toolbar a gruppi e menu flottante nell'editor.
 
-4. **Salvataggio automatico.** La bozza va in `localStorage`, con una chiave per
-   slug, e non viene mai scritta su Supabase in automatico. Alla riapertura compare
-   "Hai una bozza non salvata del …: ripristina o scarta". La bozza locale si
-   cancella dopo un salvataggio riuscito. File: `AdminContentEditor.svelte`, nuovo
-   `src/lib/editor/draft-storage.ts`.
-5. **Anteprima affiancata.** Editor a sinistra e articolo renderizzato a destra,
-   aggiornato 500 ms dopo l'ultima modifica. Su telefono diventa due schede,
-   Scrittura e Anteprima. Usa lo stesso rendering delle pagine pubbliche. File:
-   `AdminContentEditor.svelte`, `PostPreview.svelte`.
+Da fare, nessuna nuova dipendenza:
+
+- Mermaid guidato da form (tipo di diagramma, nodi, collegamenti), senza sintassi.
+- Immagini con didascalia e layout a colonne.
+- Valutare la seconda riga della toolbar, che va a capo sotto i 1440px.
 
 ## SEO: cosa manca
 
