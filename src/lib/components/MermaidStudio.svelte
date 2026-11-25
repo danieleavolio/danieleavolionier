@@ -97,9 +97,22 @@
 		edges.push({ id: Date.now(), from: prev.id, to: last.id, label: '' });
 	}
 
+	// Il modulo riscrive il codice solo se è partito da vuoto o dal suo stesso output.
+	let adopted = $state(untrack(() => !initial));
+	let generated = '';
+
 	$effect(() => {
-		if (mode === 'form') source = buildFlowchart();
+		if (mode === 'form' && adopted) {
+			source = buildFlowchart();
+			generated = source.trim();
+		}
 	});
+
+	function openForm() {
+		const current = source.trim();
+		adopted = !current || current === generated;
+		mode = 'form';
+	}
 
 	const trimmed = $derived(source.trim());
 	const valid = $derived(Boolean(trimmed) && rendered === trimmed && !rendering && !error);
@@ -188,9 +201,7 @@
 	<div class="studio-grid">
 		<div class="controls">
 			<div class="modes" role="group" aria-label="Modalità di modifica">
-				<button type="button" aria-pressed={mode === 'form'} onclick={() => (mode = 'form')}
-					>Guidato</button
-				>
+				<button type="button" aria-pressed={mode === 'form'} onclick={openForm}>Guidato</button>
 				<button type="button" aria-pressed={mode === 'code'} onclick={() => (mode = 'code')}
 					>Codice</button
 				>
@@ -510,7 +521,7 @@
 		--pele-radius: 0px;
 	}
 
-	.rich-mermaid :global(svg.pele-flowchart) {
+	.rich-mermaid :global(svg.pele) {
 		fill: var(--pele-fg);
 	}
 

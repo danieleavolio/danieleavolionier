@@ -255,7 +255,7 @@
 		--pele-accent: var(--automataRed);
 		--pele-radius: 0px;
 	}
-	.rich-content :global(svg.pele-flowchart) {
+	.rich-content :global(svg.pele) {
 		/* Unstyled SVG labels inherit fill, including inside the admin's sections. */
 		fill: var(--pele-fg);
 	}

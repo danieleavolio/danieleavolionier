@@ -8,6 +8,7 @@
 	import Placeholder from '@tiptap/extension-placeholder';
 	import { Table, TableRow, TableCell, TableHeader } from '@tiptap/extension-table';
 	import {
+		CodeBlockLanguagePicker,
 		codeBlockEditButtons,
 		createRichExtensions,
 		slashMenu,
@@ -402,6 +403,7 @@
 				ItalianShortcuts,
 				...createRichExtensions(),
 				slashMenu(() => slashItems),
+				CodeBlockLanguagePicker,
 				codeBlockEditButtons([
 					{
 						language: 'bar-chart',
@@ -868,6 +870,18 @@
 	.editor :global(.ProseMirror ::selection) {
 		background: var(--automataColor);
 		color: var(--automataBg);
+	}
+
+	.editor :global(.block-language-select) {
+		display: block;
+		margin-block: 0.75rem 0.25rem;
+		padding: 0.25rem 0.4rem;
+		border: 1px solid var(--yr-line-strong);
+		border-radius: 0;
+		color: var(--automataColor);
+		background: var(--automataBg);
+		font-family: var(--font-mono);
+		font-size: 0.8rem;
 	}
 
 	.editor :global(.block-edit-button) {

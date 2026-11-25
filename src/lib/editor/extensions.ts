@@ -405,3 +405,77 @@ export function codeBlockEditButtons(kinds: CodeBlockEditButton[]) {
 		}
 	});
 }
+
+const CODE_LANGUAGES: [value: string, label: string][] = [
+	['', 'Automatico'],
+	['bash', 'Bash'],
+	['powershell', 'PowerShell'],
+	['json', 'JSON'],
+	['javascript', 'JavaScript / TypeScript'],
+	['python', 'Python'],
+	['css', 'CSS'],
+	['html', 'HTML / Svelte'],
+	['yaml', 'YAML'],
+	['diff', 'Diff'],
+	['markdown', 'Markdown'],
+	['mermaid', 'Mermaid'],
+	['bar-chart', 'Grafico a barre'],
+	['text', 'Testo semplice']
+];
+
+/** A language selector above each code block: sets the fence language by hand. */
+export const CodeBlockLanguagePicker = Extension.create({
+	name: 'codeBlockLanguagePicker',
+	addProseMirrorPlugins() {
+		return [
+			new Plugin({
+				props: {
+					decorations(state) {
+						const pickers: Decoration[] = [];
+						state.doc.descendants((node, position) => {
+							if (node.type.name !== 'codeBlock') return;
+							const current = String(node.attrs.language ?? '');
+							pickers.push(
+								Decoration.widget(
+									position,
+									(view, getPosition) => {
+										const select = document.createElement('select');
+										select.className = 'block-language-select';
+										select.setAttribute('aria-label', 'Linguaggio del blocco di codice');
+										const options = CODE_LANGUAGES.some(([value]) => value === current)
+											? CODE_LANGUAGES
+											: [...CODE_LANGUAGES, [current, current] as [string, string]];
+										for (const [value, label] of options) {
+											const option = document.createElement('option');
+											option.value = value;
+											option.textContent = `Linguaggio: ${label}`;
+											option.selected = value === current;
+											select.append(option);
+										}
+										select.addEventListener('change', () => {
+											const at = getPosition();
+											if (at === undefined) return;
+											const target = view.state.doc.nodeAt(at);
+											if (target?.type.name !== 'codeBlock') return;
+											view.dispatch(
+												view.state.tr.setNodeMarkup(at, undefined, {
+													...target.attrs,
+													language: select.value || null
+												})
+											);
+											view.focus();
+										});
+										return select;
+									},
+									{ side: -2, key: `code-language-${position}-${current}`, ignoreSelection: true }
+								)
+							);
+							return false;
+						});
+						return DecorationSet.create(state.doc, pickers);
+					}
+				}
+			})
+		];
+	}
+});
