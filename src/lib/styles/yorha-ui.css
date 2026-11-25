@@ -195,6 +195,28 @@ a.yr-button--primary:focus-visible {
 	color: var(--automataWhite);
 }
 
+/* a:visited in app.css would otherwise repaint link buttons with the text colour. */
+a.yr-button:visited {
+	color: var(--automataColor);
+}
+
+a.yr-button:visited:hover,
+a.yr-button:visited:focus-visible,
+a.yr-button--primary:visited {
+	color: var(--automataBg);
+}
+
+a.yr-button--primary:visited:hover,
+a.yr-button--primary:visited:focus-visible,
+a.yr-button--danger:visited:hover,
+a.yr-button--danger:visited:focus-visible {
+	color: var(--automataWhite);
+}
+
+a.yr-button--danger:visited {
+	color: var(--automataRed);
+}
+
 .yr-button--ghost,
 a.yr-button--ghost {
 	background-color: transparent;
@@ -289,6 +311,20 @@ a.yr-button--danger:focus-visible {
 		0.7rem 50%,
 		right 0.7rem 50%;
 	cursor: pointer;
+}
+
+/* The open list is drawn by the browser: give it the theme colours too. */
+:where(select) {
+	color-scheme: light;
+}
+
+:where(select) option {
+	background-color: var(--automataBg);
+	color: var(--automataColor);
+}
+
+html[data-theme='dark'] :where(select) {
+	color-scheme: dark;
 }
 
 html[data-theme='dark'] .yr-select,

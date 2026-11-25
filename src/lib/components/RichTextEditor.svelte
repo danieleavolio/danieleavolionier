@@ -709,7 +709,7 @@
 
 	.toolbar {
 		position: sticky;
-		top: 0;
+		top: var(--editor-sticky-top, 0px);
 		z-index: 3;
 		display: flex;
 		flex-wrap: wrap;
@@ -756,9 +756,10 @@
 	}
 
 	.toolbar select {
+		inline-size: auto;
 		min-block-size: 2rem;
-		margin: 0;
-		padding: 0 0.4rem;
+		margin: 0 0.15rem;
+		padding: 0 1.8rem 0 1.5rem;
 		font-family: var(--font-mono);
 		font-size: 0.78rem;
 		border-radius: 0;

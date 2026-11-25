@@ -266,6 +266,18 @@
 
 	onDestroy(() => clearTimeout(previewTimer));
 
+	// Side preview scrolls in proportion to how far the editor has been read.
+	let previewPane: HTMLDivElement | undefined;
+	let editorForm: HTMLFormElement | undefined;
+
+	function syncPreviewScroll() {
+		if (mode !== 'split' || !previewPane || !editorForm) return;
+		const rect = editorForm.getBoundingClientRect();
+		const range = rect.height - window.innerHeight;
+		const ratio = range > 0 ? Math.min(1, Math.max(0, -rect.top / range)) : 0;
+		previewPane.scrollTop = ratio * (previewPane.scrollHeight - previewPane.clientHeight);
+	}
+
 	function toggleZen() {
 		zen = !zen;
 	}
@@ -291,7 +303,7 @@
 	}
 </script>
 
-<svelte:window on:keydown={handleKeydown} />
+<svelte:window on:keydown={handleKeydown} on:scroll|capture={syncPreviewScroll} />
 
 {#if coverStudioOpen}
 	<CoverStudio
@@ -354,6 +366,7 @@
 			{#if mode === 'preview' || mode === 'split'}
 				<div
 					class="preview-pane"
+					bind:this={previewPane}
 					class:side={mode === 'split'}
 					aria-label="Anteprima dell'articolo"
 				>
@@ -363,6 +376,7 @@
 
 			<form
 				id={formId}
+				bind:this={editorForm}
 				method="POST"
 				action="?/save"
 				use:enhance={handleSave}
@@ -647,7 +661,12 @@
 		font-size: 0.9rem;
 	}
 
+	/* Keeps the editor toolbar just under the sticky action bar. */
+	.zen-frame {
+		--editor-sticky-top: 3.6rem;
+	}
 	.zen-frame.active {
+		--editor-sticky-top: 0px;
 		position: fixed;
 		inset: 0;
 		z-index: 30;
