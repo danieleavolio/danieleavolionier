@@ -2,6 +2,8 @@
 	import '@fontsource/manrope/300.css';
 	import '@fontsource/manrope/600.css';
 	import { untrack } from 'svelte';
+	import CoverIconPicker from '#lib/components/CoverIconPicker.svelte';
+	import CoverColorPicker from '#lib/components/CoverColorPicker.svelte';
 	import {
 		coverTemplates,
 		defaultCoverSpec,
@@ -161,17 +163,72 @@
 			></textarea>
 			<p class="hint">Spazi e a capo restano: va bene anche l’ASCII art.</p>
 
-			<label for={`${id}-bars`}>Barre</label>
-			<textarea
-				id={`${id}-bars`}
-				form=""
-				class="mono"
-				rows="3"
-				spellcheck="false"
-				placeholder="etichetta | valore | rosso"
-				bind:value={spec.bars}
-			></textarea>
-			<p class="hint">Una per riga: <code>etichetta | valore</code>, colore facoltativo.</p>
+			<fieldset>
+				<legend>Flusso (icone e frecce)</legend>
+				<p class="hint">
+					Per una copertina solo con il flusso, lascia vuoti sopratitolo, titolo e sottotitolo.
+				</p>
+				{#each spec.flow as step, i (i)}
+					<div class="row">
+						<CoverIconPicker bind:value={step.kind} color={step.color} theme={spec.theme} />
+						<input
+							form=""
+							type="text"
+							aria-label="Etichetta"
+							placeholder="Etichetta"
+							bind:value={step.label}
+						/>
+						<CoverColorPicker bind:value={step.color} theme={spec.theme} />
+						<button
+							type="button"
+							aria-label="Rimuovi passaggio"
+							onclick={() => spec.flow.splice(i, 1)}
+						>
+							×
+						</button>
+					</div>
+				{/each}
+				<button
+					type="button"
+					onclick={() => spec.flow.push({ label: '', kind: 'box', color: 'ink' })}
+				>
+					+ Passaggio
+				</button>
+			</fieldset>
+
+			<fieldset>
+				<legend>Barre</legend>
+				{#each spec.bars as bar, i (i)}
+					<div class="row">
+						<input
+							form=""
+							type="text"
+							aria-label="Etichetta"
+							placeholder="Etichetta"
+							bind:value={bar.label}
+						/>
+						<input
+							form=""
+							type="text"
+							inputmode="decimal"
+							class="short"
+							aria-label="Valore"
+							placeholder="Valore"
+							bind:value={bar.value}
+						/>
+						<CoverColorPicker bind:value={bar.color} theme={spec.theme} />
+						<button type="button" aria-label="Rimuovi barra" onclick={() => spec.bars.splice(i, 1)}>
+							×
+						</button>
+					</div>
+				{/each}
+				<button
+					type="button"
+					onclick={() => spec.bars.push({ label: '', value: '', color: 'ink' })}
+				>
+					+ Barra
+				</button>
+			</fieldset>
 
 			<label for={`${id}-tags`}>Tag</label>
 			<input id={`${id}-tags`} form="" type="text" bind:value={spec.tags} />
@@ -279,6 +336,26 @@
 	legend {
 		padding-inline: 0.25rem;
 		font-weight: 600;
+	}
+
+	fieldset:has(.row) {
+		display: grid;
+		gap: 0.4rem;
+	}
+
+	.row {
+		display: flex;
+		align-items: center;
+		gap: 0.35rem;
+	}
+
+	.row input[type='text'] {
+		flex: 1 1 0;
+		min-inline-size: 0;
+	}
+
+	.row input.short {
+		flex: 0 0 5rem;
 	}
 
 	.choices {

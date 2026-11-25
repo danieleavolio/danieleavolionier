@@ -270,11 +270,41 @@
 	let previewPane: HTMLDivElement | undefined;
 	let editorForm: HTMLFormElement | undefined;
 
-	function syncPreviewScroll() {
+	// Each side ignores the scroll events its own sync just caused.
+	let ignorePreviewUntil = 0;
+	let ignoreEditorUntil = 0;
+
+	function scrollParent(node: HTMLElement): HTMLElement | null {
+		for (let el = node.parentElement; el; el = el.parentElement) {
+			const { overflowY } = getComputedStyle(el);
+			if (/(auto|scroll)/.test(overflowY) && el.scrollHeight > el.clientHeight) return el;
+		}
+		return null;
+	}
+
+	function syncPreviewScroll(event?: Event) {
 		if (mode !== 'split' || !previewPane || !editorForm) return;
+		const now = performance.now();
+		if (event?.target === previewPane) {
+			// Preview scrolled by hand: move the editor in proportion.
+			if (now < ignorePreviewUntil) return;
+			const max = previewPane.scrollHeight - previewPane.clientHeight;
+			if (max <= 0) return;
+			const parent = scrollParent(editorForm);
+			const viewport = parent ? parent.clientHeight : window.innerHeight;
+			const range = editorForm.getBoundingClientRect().height - viewport;
+			if (range <= 0) return;
+			const delta = editorForm.getBoundingClientRect().top + (previewPane.scrollTop / max) * range;
+			ignoreEditorUntil = now + 150;
+			(parent ?? window).scrollBy({ top: delta, behavior: 'instant' });
+			return;
+		}
+		if (now < ignoreEditorUntil) return;
 		const rect = editorForm.getBoundingClientRect();
-		const range = rect.height - window.innerHeight;
+		const viewport = scrollParent(editorForm)?.clientHeight ?? window.innerHeight;
+		const range = rect.height - viewport;
 		const ratio = range > 0 ? Math.min(1, Math.max(0, -rect.top / range)) : 0;
+		ignorePreviewUntil = now + 150;
 		previewPane.scrollTop = ratio * (previewPane.scrollHeight - previewPane.clientHeight);
 	}
 

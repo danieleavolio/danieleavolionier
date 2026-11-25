@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { renderBarCharts } from '#lib/bar-chart.ts';
 	import { highlightCodeBlocks } from '#lib/highlight.ts';
 	import { renderMermaidBlocks } from '#lib/mermaid.ts';
@@ -25,27 +25,39 @@
 		gallery = { items: images.map(({ src, alt }) => ({ src, alt })), start };
 	}
 
+	let observer: IntersectionObserver | undefined;
+
+	function observeBlocks() {
+		if (!container) return;
+		if (!observer) {
+			void renderMermaidBlocks(container);
+			return;
+		}
+		container.querySelectorAll('pre').forEach((block) => observer?.observe(block));
+	}
+
+	// New HTML (live preview) brings new diagram blocks: watch them again.
+	$: if (container && renderedHtml) void tick().then(observeBlocks);
+
 	onMount(() => {
 		const content = container;
 		content.addEventListener('click', openGallery);
-		if (!('IntersectionObserver' in window)) {
-			void renderMermaidBlocks(container);
-			return () => content.removeEventListener('click', openGallery);
+		if ('IntersectionObserver' in window) {
+			observer = new IntersectionObserver(
+				(entries) => {
+					for (const entry of entries) {
+						if (!entry.isIntersecting) continue;
+						observer?.unobserve(entry.target);
+						void renderMermaidBlocks(entry.target as HTMLElement);
+					}
+				},
+				{ rootMargin: '400px' }
+			);
 		}
-
-		const observer = new IntersectionObserver(
-			(entries) => {
-				for (const entry of entries) {
-					if (!entry.isIntersecting) continue;
-					observer.unobserve(entry.target);
-					void renderMermaidBlocks(entry.target as HTMLElement);
-				}
-			},
-			{ rootMargin: '400px' }
-		);
-		container.querySelectorAll('pre').forEach((block) => observer.observe(block));
+		observeBlocks();
 		return () => {
-			observer.disconnect();
+			observer?.disconnect();
+			observer = undefined;
 			content.removeEventListener('click', openGallery);
 		};
 	});
@@ -68,6 +80,8 @@
 
 	.rich-content :global(table) {
 		display: block;
+		border-collapse: collapse;
+		border-radius: 0;
 		max-width: 100%;
 		width: fit-content;
 		overflow-x: auto;
@@ -75,6 +89,7 @@
 
 	.rich-content :global(th),
 	.rich-content :global(td) {
+		border-radius: 0;
 		padding: 0.4rem 0.7rem;
 		border: 1px solid var(--yr-line-strong);
 		text-align: left;
@@ -231,7 +246,6 @@
 
 	.rich-content :global(.rich-mermaid) {
 		display: flex;
-		justify-content: center;
 		padding: 1rem;
 		margin: 1rem 0;
 		background: var(--automataBg);
@@ -240,6 +254,8 @@
 		overflow-x: auto;
 	}
 	.rich-content :global(.rich-mermaid svg) {
+		flex: none;
+		margin-inline: auto;
 		max-width: 100%;
 		height: auto;
 		font-family: var(--font-mono);

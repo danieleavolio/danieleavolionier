@@ -147,6 +147,7 @@
 			.filter((l) => l && !l.startsWith('%%'));
 		const head = lines.shift()?.match(/^(?:flowchart|graph)\s+(LR|RL|TD|TB|BT)\s*;?$/i);
 		if (!head) return false;
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity -- local lookup, not reactive state
 		const ids = new Map<string, FormNode>();
 		const nextNodes: FormNode[] = [];
 		const nextEdges: FormEdge[] = [];

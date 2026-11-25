@@ -1,6 +1,71 @@
 export type CoverTemplate = 'pannello' | 'titolo' | 'quadrato';
 export type CoverTheme = 'chiaro' | 'scuro';
 
+/** A palette name ('ink', 'red', …) or a custom `#rrggbb`. */
+export type CoverColor = string;
+export type CoverBar = { label: string; value: string; color: CoverColor };
+export type CoverStepKind =
+	| 'box'
+	| 'database'
+	| 'dollar'
+	| 'check'
+	| 'arrow'
+	| 'cross'
+	| 'warning'
+	| 'user'
+	| 'server'
+	| 'cloud'
+	| 'file'
+	| 'folder'
+	| 'gear'
+	| 'mail'
+	| 'lock'
+	| 'clock'
+	| 'code'
+	| 'chart'
+	| 'globe'
+	| 'bolt'
+	| 'search';
+export type CoverStep = { label: string; kind: CoverStepKind; color: CoverColor };
+
+export const coverStepKinds: { value: CoverStepKind; label: string }[] = [
+	{ value: 'box', label: 'Riquadro' },
+	{ value: 'database', label: 'Database' },
+	{ value: 'dollar', label: 'Dollaro' },
+	{ value: 'check', label: 'Spunta' },
+	{ value: 'cross', label: 'Croce' },
+	{ value: 'warning', label: 'Attenzione' },
+	{ value: 'arrow', label: 'Freccia' },
+	{ value: 'user', label: 'Utente' },
+	{ value: 'server', label: 'Server' },
+	{ value: 'cloud', label: 'Cloud' },
+	{ value: 'file', label: 'File' },
+	{ value: 'folder', label: 'Cartella' },
+	{ value: 'gear', label: 'Ingranaggio' },
+	{ value: 'mail', label: 'Email' },
+	{ value: 'lock', label: 'Lucchetto' },
+	{ value: 'clock', label: 'Orologio' },
+	{ value: 'code', label: 'Codice' },
+	{ value: 'chart', label: 'Grafico' },
+	{ value: 'globe', label: 'Mondo' },
+	{ value: 'bolt', label: 'Fulmine' },
+	{ value: 'search', label: 'Lente' }
+];
+
+/** Colours offered by the studio, with their hex per theme. */
+export const coverSwatches: { value: string; label: string; chiaro: string; scuro: string }[] = [
+	{ value: 'ink', label: 'Inchiostro', chiaro: '#4d493e', scuro: '#b4af9a' },
+	{ value: 'red', label: 'Rosso', chiaro: '#cd674d', scuro: '#cd664d' },
+	{ value: 'ocra', label: 'Ocra', chiaro: '#a9822f', scuro: '#d1ad5a' },
+	{ value: 'oliva', label: 'Oliva', chiaro: '#69753f', scuro: '#a3b074' },
+	{ value: 'blu', label: 'Blu', chiaro: '#47697a', scuro: '#7fa6b8' }
+];
+
+export function resolveCoverColor(theme: CoverTheme, color: CoverColor): string {
+	if (/^#[0-9a-f]{6}$/i.test(color)) return color;
+	return (coverSwatches.find((swatch) => swatch.value === color) ?? coverSwatches[0])[theme];
+}
+
 export type CoverSpec = {
 	template: CoverTemplate;
 	theme: CoverTheme;
@@ -9,7 +74,8 @@ export type CoverSpec = {
 	subtitle: string;
 	panelTitle: string;
 	panelText: string;
-	bars: string;
+	bars: CoverBar[];
+	flow: CoverStep[];
 	tags: string;
 	footer: string;
 };
@@ -37,7 +103,8 @@ export function defaultCoverSpec(
 		subtitle: input.description?.trim() ?? '',
 		panelTitle: '',
 		panelText: '',
-		bars: '',
+		bars: [],
+		flow: [],
 		tags: (input.categories ?? []).slice(0, 3).join(', '),
 		footer: 'danieleavolio.it'
 	};
@@ -238,17 +305,30 @@ function wrapMono(ctx: Ctx, text: string, maxWidth: number): string[] {
 	return lines;
 }
 
-type Bar = { label: string; value: number; shown: string; red: boolean };
+type Bar = { label: string; value: number; shown: string; color: string };
 
-function parseBars(source: string): Bar[] {
+function parseBars(rows: CoverBar[], theme: CoverTheme): Bar[] {
 	const bars: Bar[] = [];
-	for (const line of source.split('\n')) {
-		const [label = '', shown = '', color = ''] = line.split('|').map((part) => part.trim());
+	for (const row of rows) {
+		const label = row.label.trim();
+		const shown = row.value.trim();
 		const value = Number(shown.replace(',', '.'));
 		if (!label || !shown || !Number.isFinite(value) || value < 0) continue;
-		bars.push({ label, value, shown, red: /^(rosso|red)$/i.test(color) });
+		bars.push({ label, value, shown, color: resolveCoverColor(theme, row.color) });
 	}
 	return bars;
+}
+
+type Step = { label: string; kind: CoverStepKind; color: string };
+
+function parseFlow(rows: CoverStep[], theme: CoverTheme): Step[] {
+	return rows
+		.filter((row) => row.label.trim())
+		.map((row) => ({
+			label: row.label.trim(),
+			kind: row.kind,
+			color: resolveCoverColor(theme, row.color)
+		}));
 }
 
 type Palette = (typeof palettes)[CoverTheme];
@@ -256,8 +336,196 @@ type Palette = (typeof palettes)[CoverTheme];
 type PanelSpec = {
 	title: string;
 	text: string;
+	flow: Step[];
 	bars: Bar[];
 };
+
+const nodeW = 112;
+const nodeGap = 38;
+const nodeRowH = 104;
+
+/** Draws one step icon centred on (cx, cy), in a 52px square. */
+export function drawStepIcon(
+	ctx: Ctx,
+	step: { kind: CoverStepKind; color: string },
+	index: number,
+	cx: number,
+	cy: number
+) {
+	const half = 26;
+	ctx.save();
+	ctx.translate(cx, cy);
+	ctx.strokeStyle = step.color;
+	ctx.fillStyle = step.color;
+	ctx.lineWidth = 3;
+	ctx.lineJoin = 'miter';
+	ctx.lineCap = 'butt';
+	const line = (...pts: number[]) => {
+		ctx.beginPath();
+		ctx.moveTo(pts[0], pts[1]);
+		for (let i = 2; i < pts.length; i += 2) ctx.lineTo(pts[i], pts[i + 1]);
+		ctx.stroke();
+	};
+	const circle = (x: number, y: number, r: number, fill = false) => {
+		ctx.beginPath();
+		ctx.arc(x, y, r, 0, Math.PI * 2);
+		if (fill) ctx.fill();
+		else ctx.stroke();
+	};
+	const label = (text: string, size: number, dy = 1) => {
+		setFont(ctx, 600, size, mono);
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'middle';
+		ctx.fillText(text, 0, dy);
+		ctx.textAlign = 'left';
+	};
+	const frame = () => ctx.strokeRect(-half + 2, -half + 2, half * 2 - 4, half * 2 - 4);
+	switch (step.kind) {
+		case 'database': {
+			const rx = 22;
+			const ry = 7;
+			const top = -half + ry + 2;
+			const bottom = half - ry - 2;
+			ctx.beginPath();
+			ctx.ellipse(0, top, rx, ry, 0, 0, Math.PI * 2);
+			ctx.moveTo(-rx, top);
+			ctx.lineTo(-rx, bottom);
+			ctx.ellipse(0, bottom, rx, ry, 0, Math.PI, 0, true);
+			ctx.lineTo(rx, top);
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.ellipse(0, (top + bottom) / 2, rx, ry, 0, 0, Math.PI);
+			ctx.stroke();
+			break;
+		}
+		case 'dollar':
+			circle(0, 0, half - 2);
+			label('$', 30, 2);
+			break;
+		case 'check':
+			frame();
+			line(-12, 0, -3, 10, 13, -10);
+			break;
+		case 'cross':
+			frame();
+			line(-11, -11, 11, 11);
+			line(11, -11, -11, 11);
+			break;
+		case 'warning':
+			ctx.lineJoin = 'round';
+			line(0, -23, 24, 20, -24, 20, 0, -23);
+			line(0, -9, 0, 6);
+			circle(0, 13, 2, true);
+			break;
+		case 'arrow':
+			line(-half + 2, 0, half - 4, 0);
+			ctx.beginPath();
+			ctx.moveTo(half - 2, 0);
+			ctx.lineTo(half - 14, -9);
+			ctx.lineTo(half - 14, 9);
+			ctx.closePath();
+			ctx.fill();
+			break;
+		case 'user':
+			circle(0, -9, 9);
+			ctx.beginPath();
+			ctx.arc(0, 26, 20, Math.PI * 1.18, Math.PI * 1.82);
+			ctx.stroke();
+			break;
+		case 'server':
+			for (const y of [-22, -4, 14]) {
+				ctx.strokeRect(-22, y, 44, 14);
+				circle(-14, y + 7, 2, true);
+			}
+			break;
+		case 'cloud':
+			ctx.lineJoin = 'round';
+			ctx.beginPath();
+			ctx.moveTo(-14, 14);
+			ctx.arc(-14, 4, 10, Math.PI / 2, Math.PI * 1.5);
+			ctx.arc(-2, -6, 12, Math.PI, Math.PI * 1.85);
+			ctx.arc(14, 3, 11, Math.PI * 1.5, Math.PI / 2);
+			ctx.closePath();
+			ctx.stroke();
+			break;
+		case 'file':
+			line(-15, -24, 5, -24, 17, -12, 17, 24, -15, 24, -15, -24);
+			line(5, -24, 5, -12, 17, -12);
+			line(-8, 0, 10, 0);
+			line(-8, 9, 10, 9);
+			break;
+		case 'folder':
+			line(-24, 20, -24, -16, -8, -16, -2, -9, 24, -9, 24, 20, -24, 20);
+			break;
+		case 'gear': {
+			circle(0, 0, 7);
+			for (let i = 0; i < 8; i++) {
+				const t = (i * Math.PI) / 4;
+				line(Math.cos(t) * 14, Math.sin(t) * 14, Math.cos(t) * 23, Math.sin(t) * 23);
+			}
+			circle(0, 0, 15);
+			break;
+		}
+		case 'mail':
+			ctx.strokeRect(-23, -15, 46, 30);
+			line(-23, -15, 0, 3, 23, -15);
+			break;
+		case 'lock':
+			ctx.strokeRect(-16, -4, 32, 26);
+			ctx.beginPath();
+			ctx.arc(0, -4, 10, Math.PI, 0);
+			ctx.stroke();
+			circle(0, 9, 3, true);
+			break;
+		case 'clock':
+			circle(0, 0, half - 2);
+			line(0, -14, 0, 0, 10, 6);
+			break;
+		case 'code':
+			line(-8, -14, -22, 0, -8, 14);
+			line(8, -14, 22, 0, 8, 14);
+			line(4, -18, -4, 18);
+			break;
+		case 'chart':
+			line(-22, -22, -22, 22, 22, 22);
+			ctx.fillRect(-14, 4, 9, 14);
+			ctx.fillRect(-1, -6, 9, 24);
+			ctx.fillRect(12, -16, 9, 34);
+			break;
+		case 'globe':
+			circle(0, 0, half - 2);
+			ctx.beginPath();
+			ctx.ellipse(0, 0, 10, half - 2, 0, 0, Math.PI * 2);
+			ctx.stroke();
+			line(-(half - 2), 0, half - 2, 0);
+			break;
+		case 'bolt':
+			ctx.lineJoin = 'round';
+			ctx.beginPath();
+			ctx.moveTo(6, -25);
+			ctx.lineTo(-14, 3);
+			ctx.lineTo(-1, 3);
+			ctx.lineTo(-6, 25);
+			ctx.lineTo(14, -3);
+			ctx.lineTo(1, -3);
+			ctx.closePath();
+			ctx.stroke();
+			break;
+		case 'search':
+			circle(-5, -5, 14);
+			line(5, 5, 22, 22);
+			break;
+		default:
+			frame();
+			label(String(index + 1).padStart(2, '0'), 18);
+	}
+	ctx.restore();
+	ctx.lineWidth = 1;
+}
+
+function flowPerRow(innerW: number): number {
+	return Math.max(1, Math.floor((innerW + nodeGap) / (nodeW + nodeGap)));
+}
 
 function drawPanel(
 	ctx: Ctx,
@@ -267,13 +535,16 @@ function drawPanel(
 	y: number,
 	width: number,
 	maxHeight: number
-) {
+): number {
 	const headH = panel.title ? 46 : 0;
 	const padX = 24;
 	const padY = 22;
 	const innerW = width - padX * 2;
 	const rowH = 34;
 	const barsH = panel.bars.length ? panel.bars.length * rowH : 0;
+	const flowH = panel.flow.length
+		? Math.ceil(panel.flow.length / flowPerRow(innerW)) * nodeRowH
+		: 0;
 
 	let fontSize = 19;
 	let lines: string[] = [];
@@ -282,8 +553,9 @@ function drawPanel(
 		setFont(ctx, 400, fontSize, mono);
 		lines = panel.text ? wrapMono(ctx, panel.text, innerW) : [];
 		const textH = lines.length * fontSize * 1.55;
-		const between = lines.length && barsH ? 14 : 0;
-		height = headH + padY * 2 + textH + between + barsH - (barsH ? 6 : 0);
+		const sections = (lines.length ? 1 : 0) + (flowH ? 1 : 0) + (barsH ? 1 : 0);
+		const gaps = Math.max(0, sections - 1) * 14;
+		height = headH + padY * 2 + textH + flowH + gaps + barsH - (barsH ? 6 : 0);
 		if (height <= maxHeight) break;
 	}
 	height = Math.min(height, maxHeight);
@@ -321,7 +593,60 @@ function drawPanel(
 		ctx.fillText(line, x + padX, cy + lineH / 2);
 		cy += lineH;
 	}
-	if (lines.length && barsH) cy += 14;
+	if (lines.length && (flowH || barsH)) cy += 14;
+
+	if (panel.flow.length) {
+		const perRow = flowPerRow(innerW);
+		ctx.textBaseline = 'middle';
+		panel.flow.forEach((step, i) => {
+			const col = i % perRow;
+			const row = Math.floor(i / perRow);
+			const nx = x + padX + col * (nodeW + nodeGap);
+			const ny = cy + row * nodeRowH;
+			const cx = nx + nodeW / 2;
+			drawStepIcon(ctx, step, i, cx, ny + 30);
+			ctx.textBaseline = 'middle';
+			setFont(ctx, 400, 15, mono);
+			ctx.fillStyle = step.color === p.accent ? p.ink : step.color;
+			ctx.textAlign = 'center';
+			const maxChars = Math.floor(nodeW / ctx.measureText('M').width);
+			const rows: string[] = [];
+			let current = '';
+			for (const word of step.label.split(/\s+/)) {
+				const next = current ? `${current} ${word}` : word;
+				if (current && next.length > maxChars) {
+					rows.push(current);
+					current = word;
+				} else current = next;
+			}
+			rows.push(current);
+			rows.slice(0, 2).forEach((text, k) => {
+				ctx.fillText(fitText(ctx, text, nodeW + 8, 0), cx, ny + 72 + k * 18);
+			});
+			ctx.textAlign = 'left';
+			// Arrow towards the next step on the same row.
+			if (col < perRow - 1 && i < panel.flow.length - 1) {
+				const from = nx + nodeW - 14;
+				const to = from + nodeGap + 14;
+				const ay = ny + 30;
+				ctx.strokeStyle = p.accent;
+				ctx.fillStyle = p.accent;
+				ctx.lineWidth = 2;
+				ctx.beginPath();
+				ctx.moveTo(from + 4, ay);
+				ctx.lineTo(to - 8, ay);
+				ctx.stroke();
+				ctx.beginPath();
+				ctx.moveTo(to, ay);
+				ctx.lineTo(to - 9, ay - 6);
+				ctx.lineTo(to - 9, ay + 6);
+				ctx.closePath();
+				ctx.fill();
+				ctx.lineWidth = 1;
+			}
+		});
+		cy += flowH + (barsH ? 14 : 0);
+	}
 
 	if (panel.bars.length) {
 		setFont(ctx, 400, 18, mono);
@@ -339,13 +664,14 @@ function drawPanel(
 			ctx.textAlign = 'left';
 			ctx.fillText(fitText(ctx, bar.label, labelW, 0), x + padX, mid);
 			const w = Math.max(2, (bar.value / max) * trackW);
-			ctx.fillStyle = bar.red ? p.red : p.accent;
+			ctx.fillStyle = bar.color;
 			ctx.fillRect(trackX, mid - 8, w, 16);
-			ctx.fillStyle = bar.red ? p.red : p.ink;
+			ctx.fillStyle = bar.color === p.accent ? p.ink : bar.color;
 			ctx.fillText(bar.shown, trackX + w + 14, mid);
 			cy += rowH;
 		}
 	}
+	return height;
 }
 
 export function renderCover(canvas: HTMLCanvasElement, spec: CoverSpec): void {
@@ -416,11 +742,14 @@ export function renderCover(canvas: HTMLCanvasElement, spec: CoverSpec): void {
 	const panel: PanelSpec = {
 		title: spec.panelTitle.trim(),
 		text: spec.panelText.replace(/\s+$/, ''),
-		bars: parseBars(spec.bars)
+		flow: parseFlow(spec.flow, spec.theme),
+		bars: parseBars(spec.bars, spec.theme)
 	};
 	const hasPanel =
-		spec.template !== 'titolo' && Boolean(panel.title || panel.text.trim() || panel.bars.length);
-	const sideBySide = spec.template === 'pannello' && hasPanel;
+		spec.template !== 'titolo' &&
+		Boolean(panel.title || panel.text.trim() || panel.bars.length || panel.flow.length);
+	const textless = !spec.title.trim() && !spec.subtitle.trim() && !spec.eyebrow.trim();
+	const sideBySide = spec.template === 'pannello' && hasPanel && !textless;
 	const gap = 36;
 	const textW = sideBySide ? (W - m * 2 - gap) / 2 : W - m * 2;
 
@@ -477,7 +806,18 @@ export function renderCover(canvas: HTMLCanvasElement, spec: CoverSpec): void {
 	}
 
 	if (!hasPanel) return;
-	if (sideBySide) {
+	if (textless) {
+		// Flow-only cover: draw the panel larger and centred in the free area.
+		const k = 1.6;
+		const w = (W - m * 2 - 6) / k;
+		const probe = document.createElement('canvas').getContext('2d') as Ctx;
+		const h = drawPanel(probe, p, panel, 0, 0, w, (contentH - 6) / k);
+		ctx.save();
+		ctx.translate(m, top + Math.max(0, (contentH - 6 - h * k) / 2));
+		ctx.scale(k, k);
+		drawPanel(ctx, p, panel, 0, 0, w, (contentH - 6) / k);
+		ctx.restore();
+	} else if (sideBySide) {
 		drawPanel(ctx, p, panel, m + textW + gap, top, textW, contentH - 6);
 	} else {
 		const panelTop = Math.max(blockTop + blockH + 40, top);
