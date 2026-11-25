@@ -32,6 +32,13 @@
 		margin-bottom: var(--size-5);
 	}
 
+	/* On phones the column is already full width: the toggle does nothing. */
+	@media (max-width: 800px) {
+		.reading-width {
+			display: none;
+		}
+	}
+
 	button {
 		padding: 0.3rem 0.9rem;
 		border: 1px solid var(--yr-line-strong);

@@ -296,6 +296,9 @@
 			position: sticky;
 			background-color: var(--automataBg);
 			padding-block: var(--size-4);
+			/* Full-bleed: cancel the layout side padding so no bare strips show beside the bar. */
+			margin-inline: calc(var(--size-7) * -1);
+			padding-inline: var(--size-7);
 		}
 	}
 </style>

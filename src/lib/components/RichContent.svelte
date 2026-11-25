@@ -94,6 +94,11 @@
 		border: 1px solid var(--yr-line-strong);
 		text-align: left;
 		vertical-align: top;
+		/* The container breaks anywhere; table cells must wrap on words or narrow columns shred to one letter per line. */
+		overflow-wrap: normal;
+		word-break: normal;
+		min-inline-size: 5.5rem;
+		line-height: 1.5;
 	}
 
 	.rich-content :global(th) {
@@ -438,6 +443,20 @@
 		border: 1px solid var(--automataColor);
 		text-align: center;
 		font-weight: 700;
+	}
+
+	@media (max-width: 800px) {
+		/* Keep tall or oversized images from filling several screens on a phone. */
+		.rich-content :global(img:not(.rich-gallery img)),
+		.rich-content :global(video) {
+			max-height: 70vh;
+			width: auto;
+			height: auto;
+			object-fit: contain;
+		}
+		.rich-content :global(iframe) {
+			min-height: 14rem;
+		}
 	}
 
 	@media (max-width: 480px) {
