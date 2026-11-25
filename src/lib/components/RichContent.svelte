@@ -446,6 +446,18 @@
 	}
 
 	@media (max-width: 800px) {
+		/* Pros/cons: left-aligned, tight lines, instead of centred text with article-size leading. */
+		.rich-content :global(.rg-list) {
+			text-align: left;
+		}
+		.rich-content :global(.rg-list li) {
+			line-height: 1.5;
+			margin-block: 0.4rem;
+		}
+		.rich-content :global(pre) {
+			line-height: 1.55;
+			font-size: 0.85rem;
+		}
 		/* Keep tall or oversized images from filling several screens on a phone. */
 		.rich-content :global(img:not(.rich-gallery img)),
 		.rich-content :global(video) {
