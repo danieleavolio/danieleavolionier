@@ -18,6 +18,26 @@ function readDataArray(element: HTMLElement, attribute: string): string[] {
 	return parseArrayLiteral(element_.getAttribute?.(attribute));
 }
 
+/** Turns a YouTube or Vimeo page link into its embeddable player URL, or null for anything else. */
+export function toEmbedUrl(raw: string): string | null {
+	try {
+		const url = new URL(raw.trim());
+		const host = url.hostname.replace(/^www\./, '');
+		let id: string | null = null;
+		if (host === 'youtu.be') id = url.pathname.slice(1);
+		else if (host === 'youtube.com' || host === 'm.youtube.com') {
+			const path = url.pathname.match(/^\/(?:embed|shorts|live)\/([\w-]+)/);
+			id = url.pathname === '/watch' ? url.searchParams.get('v') : (path?.[1] ?? null);
+		} else if (host === 'vimeo.com') {
+			const num = url.pathname.match(/^\/(\d+)/);
+			return num ? `https://player.vimeo.com/video/${num[1]}` : null;
+		}
+		return id && /^[\w-]+$/.test(id) ? `https://www.youtube.com/embed/${id}` : null;
+	} catch {
+		return null;
+	}
+}
+
 export const RichBlock = Node.create({
 	name: 'richBlock',
 	group: 'block',
@@ -83,7 +103,21 @@ export const RichBlock = Node.create({
 		];
 	},
 	renderHTML({ HTMLAttributes }) {
-		const { kind, src, title, images, grade, max, pros, cons, ...rest } = HTMLAttributes;
+		const {
+			kind: rawKind,
+			src: rawSrc,
+			title,
+			images,
+			grade,
+			max,
+			pros,
+			cons,
+			...rest
+		} = HTMLAttributes;
+		const embedSrc =
+			rawKind === 'video' || rawKind === 'embed' ? toEmbedUrl(String(rawSrc ?? '')) : null;
+		const kind = embedSrc ? 'embed' : rawKind;
+		const src = embedSrc ?? rawSrc;
 
 		if (kind === 'gallery') {
 			const galleryImages = Array.isArray(images) ? (images as string[]).filter(isGalleryUrl) : [];

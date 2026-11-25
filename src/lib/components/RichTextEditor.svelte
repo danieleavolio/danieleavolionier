@@ -199,6 +199,19 @@
 		tip: 'Consiglio'
 	};
 
+	let calloutTone: CalloutTone = 'info';
+	// Tono del box in cui si trova il cursore; l'espressione legge `editor` per restare reattiva.
+	$: activeTone = editor?.isActive('callout')
+		? ((editor.getAttributes('callout').tone as CalloutTone) ?? null)
+		: null;
+
+	function setCalloutTone(tone: CalloutTone) {
+		calloutTone = tone;
+		if (editor?.isActive('callout')) {
+			editor.chain().focus().updateAttributes('callout', { tone }).run();
+		}
+	}
+
 	const slashItems: SlashItem[] = [
 		{
 			title: 'Titolo 2',
@@ -546,9 +559,19 @@
 				<button
 					type="button"
 					title="Box di nota; un secondo clic lo toglie"
-					on:click={() => editor?.chain().focus().toggleCallout('info').run()}
+					on:click={() => editor?.chain().focus().toggleCallout(calloutTone).run()}
 					class:active={editor.isActive('callout')}>Box</button
 				>
+				<select
+					aria-label="Colore del box"
+					title="Colore del box"
+					value={activeTone ?? calloutTone}
+					on:change={(event) => setCalloutTone(event.currentTarget.value as CalloutTone)}
+				>
+					{#each Object.entries(TONE_LABELS) as [tone, label] (tone)}
+						<option value={tone}>{label}</option>
+					{/each}
+				</select>
 				<button type="button" title="Tabella 3×3" on:click={insertTable}>Tabella</button>
 			</div>
 
@@ -730,6 +753,19 @@
 		transition:
 			background-color 0.08s,
 			color 0.08s;
+	}
+
+	.toolbar select {
+		min-block-size: 2rem;
+		margin: 0;
+		padding: 0 0.4rem;
+		font-family: var(--font-mono);
+		font-size: 0.78rem;
+		border-radius: 0;
+		border: 1px solid var(--yr-line-strong);
+		background: transparent;
+		color: var(--automataColor);
+		cursor: pointer;
 	}
 
 	.toolbar button.icon {

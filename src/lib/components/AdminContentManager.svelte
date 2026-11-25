@@ -33,6 +33,8 @@
 	let editorSection: HTMLElement;
 	let archiveOpen = $state(true);
 	let filter = $state('');
+	// Cambia solo quando si apre un altro articolo: lo slug digitato non deve rimontare l'editor.
+	let editorId = $state(0);
 
 	const categoryOptions = $derived(data.items.flatMap((item) => item.categories));
 	const visibleItems = $derived.by(() => {
@@ -62,11 +64,13 @@
 
 	function newItem() {
 		selected = { ...data.empty, metadata: { contentType } };
+		editorId += 1;
 		void focusEditor();
 	}
 
 	function edit(item: EditableContent) {
 		selected = { ...item, categories: [...item.categories], metadata: { ...item.metadata } };
+		editorId += 1;
 		void focusEditor();
 	}
 
@@ -156,7 +160,7 @@
 	</section>
 
 	<section class="editor-section" bind:this={editorSection} aria-label="Editor">
-		{#key selected.slug || selected}
+		{#key editorId}
 			<AdminContentEditor item={selected} {form} {categoryOptions} />
 		{/key}
 	</section>
