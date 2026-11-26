@@ -9,7 +9,10 @@
 	export let html = '';
 
 	let container: HTMLElement;
-	let gallery: { items: { src: string; alt: string }[]; start: number } | null = null;
+	let gallery: {
+		items: { src: string; alt: string; video?: boolean }[];
+		start: number;
+	} | null = null;
 	$: renderedHtml = linkGalleryImages(highlightCodeBlocks(renderBarCharts(html)));
 
 	function openGallery(event: MouseEvent) {
@@ -18,11 +21,20 @@
 		const link = event.target instanceof Element ? event.target.closest('a') : null;
 		const group = link?.closest('.rich-gallery[data-rich-block="gallery"]');
 		if (!group || !link) return;
-		const images = [...group.querySelectorAll<HTMLImageElement>('a > img')];
-		const start = images.findIndex((image) => image.parentElement === link);
+		const media = [
+			...group.querySelectorAll<HTMLImageElement | HTMLVideoElement>('a > img, a > video')
+		];
+		const start = media.findIndex((item) => item.parentElement === link);
 		if (start < 0) return;
 		event.preventDefault();
-		gallery = { items: images.map(({ src, alt }) => ({ src, alt })), start };
+		gallery = {
+			items: media.map((item) => ({
+				src: item.src,
+				alt: item instanceof HTMLImageElement ? item.alt : '',
+				video: item instanceof HTMLVideoElement
+			})),
+			start
+		};
 	}
 
 	let observer: IntersectionObserver | undefined;
@@ -163,8 +175,31 @@
 		display: block;
 		overflow: hidden;
 		outline-offset: 2px;
+		border: 1px solid var(--yr-line-strong);
 		background: var(--yr-muted);
 		cursor: zoom-in;
+	}
+
+	.rich-content :global(.rich-gallery > a:hover),
+	.rich-content :global(.rich-gallery > a:focus-visible) {
+		border-color: var(--automataRed);
+		outline: 1px solid var(--automataRed);
+	}
+
+	.rich-content :global(.rich-gallery > a.gallery-video) {
+		position: relative;
+	}
+
+	.rich-content :global(.rich-gallery > a.gallery-video::after) {
+		content: '▶';
+		position: absolute;
+		inset: 0;
+		display: grid;
+		place-items: center;
+		font-size: 1.6rem;
+		color: #fff;
+		text-shadow: 0 0 6px rgb(0 0 0 / 70%);
+		pointer-events: none;
 	}
 
 	.rich-content :global(.rich-gallery img),
