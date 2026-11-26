@@ -150,17 +150,17 @@
 		display: none;
 	}
 
-	@media (max-width: 1300px) {
+	@media (max-width: 1000px) {
 		.desktop,
 		.links.desktop {
 			display: none;
 		}
 		.mobile {
-			display: block;
+			display: inline-flex;
 		}
 	}
 
-	@media (min-width: 1301px) {
+	@media (min-width: 1001px) {
 		.hidden-menu {
 			display: none;
 		}
@@ -290,6 +290,16 @@
 		opacity: 1;
 	}
 
+	/* Tap targets of at least 44px. */
+	.button-hamburger,
+	.home,
+	.close {
+		align-items: center;
+		justify-content: center;
+		min-width: 2.75rem;
+		min-height: 2.75rem;
+	}
+
 	@media (max-width: 800px) {
 		nav {
 			justify-content: space-between;
@@ -299,6 +309,13 @@
 			/* Full-bleed: cancel the layout side padding so no bare strips show beside the bar. */
 			margin-inline: calc(var(--size-7) * -1);
 			padding-inline: var(--size-7);
+		}
+	}
+
+	@media (max-width: 560px) {
+		nav {
+			margin-inline: calc(var(--size-4) * -1);
+			padding-inline: var(--size-4);
 		}
 	}
 </style>

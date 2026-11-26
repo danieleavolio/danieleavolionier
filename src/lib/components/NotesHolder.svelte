@@ -1,18 +1,32 @@
-<script>
-	export let title = '';
-	export let description = '';
-	export let downloadLink = '';
+<script lang="ts">
+	let {
+		title = '',
+		description = '',
+		category = '',
+		downloadLink = '',
+		isPdf = false
+	}: {
+		title?: string;
+		description?: string;
+		category?: string;
+		downloadLink?: string;
+		isPdf?: boolean;
+	} = $props();
 </script>
 
 <div class="note-holder">
 	<div class="title-desc">
+		<p class="meta">
+			<span class="badge">{isPdf ? 'PDF' : 'Link'}</span>
+			{#if category}<span class="badge">{category}</span>{/if}
+		</p>
 		<p class="note-title">{title}</p>
 
 		<div class="note-description">
 			<p>{description}</p>
 		</div>
 	</div>
-	<a href={downloadLink} target="_blank">
+	<a href={downloadLink} target="_blank" rel="noopener" aria-label={`Apri ${title}`}>
 		<span class="material-symbols-outlined"> download </span>
 	</a>
 </div>
@@ -21,6 +35,21 @@
 	.note-title {
 		font-size: 1.5rem;
 		font-weight: bold;
+	}
+
+	.meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		margin: 0 0 0.5rem;
+	}
+
+	.badge {
+		padding: 0.1rem 0.5rem;
+		border: 1px solid currentColor;
+		font-size: 0.75rem;
+		letter-spacing: 0.08rem;
+		text-transform: uppercase;
 	}
 
 	.note-holder {

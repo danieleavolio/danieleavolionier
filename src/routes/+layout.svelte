@@ -126,6 +126,16 @@
 		}
 	}
 
+	@media (max-width: 560px) {
+		.layout {
+			padding-inline: var(--size-4);
+		}
+
+		main {
+			padding-block: var(--size-6);
+		}
+	}
+
 	/* Very wide screens: a wider frame and less dead space under the header. */
 	@media (min-width: 1800px) {
 		.layout {

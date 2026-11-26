@@ -65,3 +65,15 @@ export interface stackElement {
 	title: string;
 	color: string;
 }
+
+export type Note = {
+	id: string;
+	title: string;
+	description: string;
+	category: string;
+	file_url: string;
+	file_path?: string | null;
+	position: number;
+	published: boolean;
+	updated_at?: string;
+};

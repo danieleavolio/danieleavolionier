@@ -7,6 +7,7 @@
 	import ShareComponent from '#lib/components/ShareComponent.svelte';
 	import RichContent from '#lib/components/RichContent.svelte';
 	import ReadingWidth from '#lib/components/ReadingWidth.svelte';
+	import BackToTop from '#lib/components/BackToTop.svelte';
 	import RelatedPosts from '#lib/components/RelatedPosts.svelte';
 	import { page } from '$app/state';
 	import type { PageData } from './$types';
@@ -58,6 +59,7 @@
 			Data: {formatDate(data.meta.date)} · {calculateReadingTime(
 				data.contentHtml || metadata.description
 			)} min di lettura
+			<ReadingWidth />
 		</p>
 		{#if metadata.gameImage}
 			<img class="banner-image" src={seoImage} alt={metadata.title} />
@@ -74,8 +76,6 @@
 		<img class="cover-image" src={metadata.image} alt={metadata.title} />
 	{/if}
 
-	<ReadingWidth />
-
 	<RichContent html={data.contentHtml} />
 
 	<RelatedPosts posts={data.relatedPosts} />
@@ -89,6 +89,8 @@
 		description="Sviluppatore e amante del mondo dei videogiochi 🎮 e della cultura pop giapponese 🗾"
 	/>
 </article>
+
+<BackToTop />
 
 <style>
 	article {
@@ -171,6 +173,8 @@
 		display: block;
 		width: 100%;
 		height: auto;
+		aspect-ratio: 1200 / 630;
+		max-height: min(60vh, 34rem);
 		margin: clamp(2rem, 5vw, 3.5rem) auto var(--size-7);
 		border-radius: 10px;
 		border: 2px solid var(--automataBlackO);

@@ -101,6 +101,14 @@
 		line-height: 1.5;
 	}
 
+	/* Article paragraph spacing and leading would balloon every row. */
+	.rich-content :global(td > p),
+	.rich-content :global(th > p) {
+		margin: 0;
+		line-height: 1.5;
+		text-align: left;
+	}
+
 	.rich-content :global(th) {
 		font-weight: 700;
 		background: var(--automataBgRGBA);
@@ -468,6 +476,39 @@
 		}
 		.rich-content :global(iframe) {
 			min-height: 14rem;
+		}
+		/* Tables: compact cells, code kept on one line so the table scrolls sideways instead of growing tall. */
+		.rich-content :global(table) {
+			font-size: 0.85rem;
+		}
+		.rich-content :global(th),
+		.rich-content :global(td) {
+			padding: 0.3rem 0.5rem;
+			min-inline-size: 4.5rem;
+			line-height: 1.4;
+		}
+		.rich-content :global(td code),
+		.rich-content :global(th code) {
+			white-space: nowrap;
+		}
+		/* Diagrams are laid out wider than the screen (see mermaid.ts) and scaled down to fit. */
+		.rich-content :global(.rich-mermaid) {
+			padding: 0.5rem;
+		}
+		/* Bar charts: tighter labels so long names do not push the value onto its own line. */
+		.rich-content :global(.rich-bar-chart__title) {
+			font-size: 0.9rem;
+		}
+		.rich-content :global(.rich-bar-chart__labels) {
+			font-size: 0.9rem;
+			gap: 0.1rem 0.5rem;
+		}
+		.rich-content :global(.rich-bar-chart__labels strong) {
+			white-space: nowrap;
+			margin-inline-start: auto;
+		}
+		.rich-content :global(.rich-bar-chart__rows) {
+			padding: 0.7rem;
 		}
 	}
 

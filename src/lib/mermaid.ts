@@ -244,7 +244,8 @@ export async function renderMermaidBlocks(container: HTMLElement): Promise<void>
 		if (!pre?.isConnected) continue;
 		const source = (code.textContent ?? '').trim();
 		const rem = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
-		const width = pre.clientWidth - 2 * rem - 2; // Frame padding and border
+		// Frame padding and border; never lay out narrower than 26rem; narrow screens scale the SVG down.
+		const width = Math.max(pre.clientWidth - 2 * rem - 2, 26 * rem);
 		try {
 			const result = await renderMermaidSource(source, `rich-diagram-${diagramSequence++}`, width);
 			if (!pre.isConnected) continue;

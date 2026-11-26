@@ -7,7 +7,10 @@ import { publicSupabase } from '#lib/server/public-supabase.ts';
 export const handle: Handle = async ({ event, resolve }) => {
 	const pathname = event.url.pathname;
 	const needsAuth =
-		pathname === '/admin' || pathname.startsWith('/admin/') || pathname === '/api/media';
+		pathname === '/admin' ||
+		pathname.startsWith('/admin/') ||
+		pathname === '/api/media' ||
+		pathname === '/api/notes-upload';
 	if (!needsAuth) {
 		event.locals.supabase = publicSupabase;
 		event.locals.user = null;

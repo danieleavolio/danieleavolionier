@@ -1,4 +1,4 @@
-import type { Element, NowItem } from '#lib/types.ts';
+import type { Element, NowItem, Note } from '#lib/types.ts';
 import { realUpdatedAt, restoreArticleHtml } from '#lib/server/article-repairs.ts';
 import { repairPlainMarkdownHtml } from '#lib/server/markdown-repair.ts';
 import { calculateReadingTime } from '#lib/utils.ts';
@@ -141,4 +141,16 @@ export async function listContentMetadata(
 		date: row.date,
 		updatedAt: realUpdatedAt(row.updated_at)
 	}));
+}
+
+export async function listNotes(supabase: SupabaseClient, includeDrafts = false): Promise<Note[]> {
+	let query = supabase
+		.from('notes')
+		.select('*')
+		.order('category', { ascending: true })
+		.order('position', { ascending: true });
+	if (!includeDrafts) query = query.eq('published', true);
+	const { data, error } = await query;
+	if (error) throw error;
+	return (data ?? []) as Note[];
 }

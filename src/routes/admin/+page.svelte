@@ -29,6 +29,13 @@
 				<a class="yr-button yr-button--primary" href="/admin/now">Apri Now</a>
 			</div>
 		</section>
+		<section class="yr-panel">
+			<h2 class="yr-panel__head"><span class="yr-panel__square"></span>04 // Appunti</h2>
+			<div class="yr-panel__body">
+				<p>Gestisci gli appunti: categorie, link esterni e PDF caricati.</p>
+				<a class="yr-button yr-button--primary" href="/admin/appunti">Apri gli appunti</a>
+			</div>
+		</section>
 	</div>
 
 	<section class="yr-panel">

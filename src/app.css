@@ -521,6 +521,11 @@ html[data-theme='dark'] {
 	--tok-d: #a8402a;
 }
 
+/* Wide has a ceiling too: lines stay under ~90 characters. */
+:root {
+	--reading-width: 72rem;
+}
+
 html[data-reading='narrow'] {
 	--reading-width: 44rem;
 }
@@ -821,5 +826,21 @@ b {
 		background-color: var(--automataColor);
 		color: var(--automataBg);
 		text-decoration-color: transparent;
+	}
+}
+
+/* Phones and small tablets: shorter measure, ragged text, relative leading. */
+@media (max-width: 800px) {
+	article {
+		line-height: 1.75;
+	}
+
+	.prose p {
+		text-align: left;
+	}
+
+	h1 {
+		letter-spacing: 0.08rem;
+		text-wrap: balance;
 	}
 }

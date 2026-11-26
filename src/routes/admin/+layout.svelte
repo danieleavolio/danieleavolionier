@@ -8,7 +8,8 @@
 		{ href: '/admin', label: 'Dashboard', exact: true },
 		{ href: '/admin/posts', label: 'Posts', exact: false },
 		{ href: '/admin/projects', label: 'Progetti', exact: false },
-		{ href: '/admin/now', label: 'Now', exact: false }
+		{ href: '/admin/now', label: 'Now', exact: false },
+		{ href: '/admin/appunti', label: 'Appunti', exact: false }
 	];
 
 	function isActive(tab: (typeof tabs)[number]): boolean {

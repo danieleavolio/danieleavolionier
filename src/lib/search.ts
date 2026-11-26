@@ -1,6 +1,5 @@
 import FlexSearch from 'flexsearch';
 import type { Element } from '#lib/types.ts';
-import { notes } from '#lib/notes_files_desc.ts';
 
 export interface SearchEntry {
 	slug: string;
@@ -23,7 +22,13 @@ let allEntries: SearchEntry[] = [];
 
 type SearchSource = Pick<Element, 'slug' | 'title' | 'description'>;
 
-export function createIndex(data: { posts: SearchSource[]; progetti: SearchSource[] }) {
+export type SearchNote = { title: string; description: string; downloadLink: string };
+
+export function createIndex(data: {
+	posts: SearchSource[];
+	progetti: SearchSource[];
+	notes?: SearchNote[];
+}) {
 	searchIndex = new FlexSearch.Index({ tokenize: 'forward' });
 
 	const postEntries: SearchEntry[] = (data.posts || []).map((p) => ({
@@ -40,7 +45,7 @@ export function createIndex(data: { posts: SearchSource[]; progetti: SearchSourc
 		type: 'progetto'
 	}));
 
-	const noteEntries: SearchEntry[] = (notes || []).map((n) => ({
+	const noteEntries: SearchEntry[] = (data.notes || []).map((n) => ({
 		slug: n.downloadLink,
 		title: n.title,
 		description: n.description || '',

@@ -101,6 +101,18 @@
 		scrollbar-color: var(--automataRed) transparent;
 		scrollbar-width: thin;
 	}
+	/* Phones: chips that wrap, with no inner scroll area. */
+	@media (max-width: 800px) {
+		.filters {
+			display: flex;
+			flex-wrap: wrap;
+			max-height: none;
+			overflow: visible;
+		}
+		.filters .filter-item {
+			width: auto;
+		}
+	}
 	.filter-item span:last-child {
 		min-width: 0;
 		overflow-wrap: anywhere;

@@ -6,6 +6,7 @@
 	import Tag from '#lib/components/Tag.svelte';
 	import RichContent from '#lib/components/RichContent.svelte';
 	import ReadingWidth from '#lib/components/ReadingWidth.svelte';
+	import BackToTop from '#lib/components/BackToTop.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -38,7 +39,7 @@
 	<hgroup>
 		<h1>{data.meta.title}</h1>
 		<h3>{data.meta.description}</h3>
-		<p>Data: {formatDate(data.meta.date)}</p>
+		<p>Data: {formatDate(data.meta.date)} <ReadingWidth /></p>
 	</hgroup>
 
 	<div class="tags">
@@ -51,8 +52,6 @@
 		<img class="cover-image" src={metadata.image} alt={metadata.title} />
 	{/if}
 
-	<ReadingWidth />
-
 	<RichContent html={data.contentHtml} />
 
 	<Author
@@ -63,11 +62,15 @@
 	/>
 </article>
 
+<BackToTop />
+
 <style>
 	.cover-image {
 		display: block;
 		width: 100%;
 		height: auto;
+		aspect-ratio: 1200 / 630;
+		max-height: min(60vh, 34rem);
 		margin: clamp(2rem, 5vw, 3.5rem) auto var(--size-7);
 		border-radius: 10px;
 		border: 2px solid var(--automataBlackO);

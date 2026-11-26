@@ -19,17 +19,17 @@
 	});
 </script>
 
-<div class="reading-width" role="group" aria-label="Larghezza di lettura">
+<span class="reading-width" role="group" aria-label="Larghezza di lettura">
 	<button type="button" aria-pressed={!narrow} onclick={() => set(false)}>Wide</button>
 	<button type="button" aria-pressed={narrow} onclick={() => set(true)}>Narrow</button>
-</div>
+</span>
 
 <style>
 	.reading-width {
-		display: flex;
-		justify-content: center;
+		display: inline-flex;
+		vertical-align: middle;
 		gap: 0;
-		margin-bottom: var(--size-5);
+		margin-inline-start: var(--size-3);
 	}
 
 	/* On phones the column is already full width: the toggle does nothing. */
@@ -40,6 +40,7 @@
 	}
 
 	button {
+		min-block-size: 2.25rem;
 		padding: 0.3rem 0.9rem;
 		border: 1px solid var(--yr-line-strong);
 		background: transparent;
@@ -56,7 +57,8 @@
 	}
 
 	button[aria-pressed='true'] {
-		background: var(--yr-accent);
-		color: var(--automataBg);
+		border-color: var(--yr-accent);
+		color: var(--yr-accent);
+		box-shadow: inset 0 -2px 0 var(--yr-accent);
 	}
 </style>

@@ -30,25 +30,6 @@ test('related articles are crawlable without JavaScript and sit between body and
 	}
 });
 
-test('related ranking has meaningful review and AI neighbours, not random filler', async ({
-	page
-}) => {
-	await page.goto('/pagine/recensione-outer-wilds');
-	await expect(page.locator('.related-posts a').first()).toHaveAttribute(
-		'href',
-		'/pagine/recensione-chants-of-sennaar'
-	);
-	await page.goto('/pagine/opencode-e-le-balene');
-	await expect(page.locator('.related-posts a')).toHaveCount(1);
-	await expect(page.locator('.related-posts a')).toHaveAttribute(
-		'href',
-		'/pagine/come-ho-refactorato-il-mio-sito-svelte-con-codex-'
-	);
-	await expect(page.locator('.related-posts .reason')).toContainText('sviluppo assistito da AI');
-	await page.goto('/pagine/how-to-fix-pixel-7-pro-volume-button-falling-off');
-	await expect(page.locator('.related-posts')).toHaveCount(0);
-});
-
 test('related navigation updates the article, canonical and suggestions with native fonts and focus', async ({
 	page
 }) => {

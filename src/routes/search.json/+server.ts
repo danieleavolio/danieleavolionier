@@ -1,12 +1,13 @@
 import { json } from '@sveltejs/kit';
-import { listPublishedContent } from '#lib/server/public-content.ts';
+import { listNotes, listPublishedContent } from '#lib/server/public-content.ts';
 
 export const config = { isr: { expiration: 300 } };
 
 export async function GET({ locals }) {
-	const [posts, progetti] = await Promise.all([
+	const [posts, progetti, notes] = await Promise.all([
 		listPublishedContent(locals.supabase, 'posts'),
-		listPublishedContent(locals.supabase, 'projects')
+		listPublishedContent(locals.supabase, 'projects'),
+		listNotes(locals.supabase).catch(() => [])
 	]);
 
 	return json({
@@ -19,6 +20,11 @@ export async function GET({ locals }) {
 			slug: `progetti/${slug}`,
 			title,
 			description
+		})),
+		notes: notes.map(({ title, description, file_url }) => ({
+			title,
+			description,
+			downloadLink: file_url
 		}))
 	});
 }
