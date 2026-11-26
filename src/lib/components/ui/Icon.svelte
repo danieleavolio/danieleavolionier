@@ -33,10 +33,8 @@
 	focusable="false"
 >
 	{#if name === 'home'}
-		<rect x="3.5" y="3.5" width="7" height="7" />
-		<rect x="13.5" y="3.5" width="7" height="7" />
-		<rect x="3.5" y="13.5" width="7" height="7" />
-		<rect class="solid" x="13.5" y="13.5" width="7" height="7" />
+		<path d="M3 11.5L12 3.5l9 8M5.5 10v10.5h13V10" />
+		<rect class="solid" x="10" y="14" width="4" height="6.5" />
 	{:else if name === 'menu'}
 		<g class="solid">
 			<rect x="4" y="4" width="2.6" height="2.6" />
