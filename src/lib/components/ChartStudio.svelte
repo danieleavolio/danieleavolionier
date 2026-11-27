@@ -126,6 +126,8 @@
 						<option value="colonne">Colonne</option>
 						<option value="barre">Barre orizzontali</option>
 						<option value="linea">Linea</option>
+						<option value="torta">Torta</option>
+						<option value="anello">Anello</option>
 					</select>
 				</div>
 				<label>
@@ -151,14 +153,16 @@
 					</label>
 				{/if}
 			</div>
-			<label>
-				Spessore: {settings.thickness}%
-				<input form="" type="range" min="10" max="100" step="1" bind:value={settings.thickness} />
-			</label>
-			<label class="check">
-				<input form="" type="checkbox" bind:checked={settings.wide} />
-				Larghezza piena (occupa tutta la colonna)
-			</label>
+			{#if settings.type !== 'torta' && settings.type !== 'anello'}
+				<label>
+					Spessore: {settings.thickness}%
+					<input form="" type="range" min="10" max="100" step="1" bind:value={settings.thickness} />
+				</label>
+				<label class="check">
+					<input form="" type="checkbox" bind:checked={settings.wide} />
+					Larghezza piena (occupa tutta la colonna)
+				</label>
+			{/if}
 			<div class="data-rows">
 				{#each rows as row, index (row.id)}
 					<fieldset class="datum">

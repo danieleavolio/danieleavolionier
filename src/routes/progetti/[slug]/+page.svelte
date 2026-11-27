@@ -7,6 +7,7 @@
 	import RichContent from '#lib/components/RichContent.svelte';
 	import ReadingWidth from '#lib/components/ReadingWidth.svelte';
 	import BackToTop from '#lib/components/BackToTop.svelte';
+	import TocRail from '#lib/components/TocRail.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -62,6 +63,7 @@
 	/>
 </article>
 
+<TocRail html={data.contentHtml} />
 <BackToTop />
 
 <style>

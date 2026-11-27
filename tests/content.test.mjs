@@ -12,10 +12,14 @@ let hooks;
 let related;
 let article;
 let renderBarCharts;
+let blocks;
+let glossary;
+let contentBlocks;
 let chartSource;
 let chartCodeBlock;
 let chartDataSource;
 let parseChart;
+let tableHighlight;
 let sanitizeContentHtml;
 let restoreArticleHtml;
 let linkGalleryImages;
@@ -33,6 +37,10 @@ before(async () => {
 	article = await server.ssrLoadModule('/src/routes/pagine/[slug]/+page.server.ts');
 	({ renderBarCharts, chartSource, chartCodeBlock, chartDataSource, parseChart } =
 		await server.ssrLoadModule('/src/lib/bar-chart.ts'));
+	tableHighlight = await server.ssrLoadModule('/src/lib/table-highlight.ts');
+	blocks = await server.ssrLoadModule('/src/lib/blocks.ts');
+	glossary = await server.ssrLoadModule('/src/lib/glossary.ts');
+	contentBlocks = await server.ssrLoadModule('/src/lib/blocks-content.ts');
 	({ sanitizeContentHtml } = await server.ssrLoadModule('/src/lib/server/sanitize.ts'));
 	({ restoreArticleHtml } = await server.ssrLoadModule('/src/lib/server/article-repairs.ts'));
 	({ linkGalleryImages } = await server.ssrLoadModule('/src/lib/rich-gallery.ts'));
@@ -73,6 +81,79 @@ test('bar-chart leaves invalid or unrelated code alone and escapes labels and un
 	assert.match(safe, /0 &lt;b&gt;/);
 	assert.match(safe, /--bar-width:0\.000%/);
 	assert.doesNotMatch(safe, /<(?:script|svg|b)>/);
+});
+
+test('il registro dei blocchi rende i linguaggi registrati e lascia il resto come codice', () => {
+	const { blockRenderers, renderBlocks, decodeCodeText } = blocks;
+	const html = '<pre><code class="language-prova">a &lt; b</code></pre>';
+	assert.equal(renderBlocks(html), html);
+	blockRenderers.set('prova', (source) => (source === 'a < b' ? '<p>ok</p>' : null));
+	try {
+		assert.equal(renderBlocks(html), '<p>ok</p>');
+		const invalid = '<pre><code class="language-prova">altro</code></pre>';
+		assert.equal(renderBlocks(invalid), invalid);
+		const other = '<pre><code class="language-js">a</code></pre>';
+		assert.equal(renderBlocks(other), other);
+	} finally {
+		blockRenderers.delete('prova');
+	}
+	assert.equal(decodeCodeText('&lt;&#65;&#x42;&amp;&unknown;'), '<AB&&unknown;');
+});
+
+test('blocchi di contenuto: sorgente valido diventa HTML, non valido resta codice', () => {
+	const { contentBlockFor } = contentBlocks;
+	const render = (language, source) =>
+		blocks.renderBlocks(blocks.blockCodeHtml(language, source));
+	const stays = (language, source) =>
+		assert.equal(render(language, source), blocks.blockCodeHtml(language, source));
+
+	const term = render('terminale', 'titolo: Shell\n$ npm i\nfatto <ok>\n$ ls');
+	assert.match(term, /rich-terminale__bar"><span>Shell<\/span><button[^>]*hidden/);
+	assert.equal(term.match(/rich-terminale__cmd/g).length, 2);
+	assert.match(term, /fatto &lt;ok&gt;/);
+	stays('terminale', '   \n');
+
+	assert.match(render('tldr', 'titolo: Sintesi\n- uno\n- due'), /<li>uno<\/li><li>due<\/li>/);
+	stays('tldr', '- 1\n- 2\n- 3\n- 4\n- 5\n- 6');
+	stays('tldr', 'testo libero');
+
+	const acc = render('accordion', 'aperta: sì\n## A\nprimo\n\nsecondo\n## B\nx');
+	assert.match(acc, /<details open><summary>A<\/summary>.*<p>primo<\/p><p>secondo<\/p>/);
+	assert.doesNotMatch(acc.split('<details')[2], /^ open/);
+	stays('accordion', 'testo prima del titolo\n## A\nx');
+
+	const time = render('timeline', 'orizzontale: sì\n2024 | Nascita | con | pipe\n2025 | Dopo');
+	assert.match(time, /rich-timeline--orizzontale/);
+	assert.match(time, /<p>con \| pipe<\/p>/);
+	stays('timeline', '2024 senza titolo');
+
+	const quote = render(
+		'citazione',
+		'autore: Ada\nfonte: Note\nlink: https://example.com/x\nCiao\n\nmondo'
+	);
+	assert.match(quote, /<a href="https:\/\/example.com\/x"[^>]*>Note<\/a>/);
+	assert.match(quote, /<p>Ciao<\/p><p>mondo<\/p>/);
+	assert.doesNotMatch(render('citazione', 'fonte: X\nlink: javascript:alert(1)\nt'), /<a /);
+	stays('citazione', 'autore: solo autore');
+
+	const steps = render('passi', 'Installa | con npm\nAvvia');
+	assert.match(steps, /data-passi="[a-z0-9]+"/);
+	assert.equal(steps.match(/type="checkbox"/g).length, 2);
+	stays('passi', ' | solo nota');
+
+	// serialize → parse è un giro completo, anche con testi che imitano la sintassi.
+	const spec = contentBlockFor('terminale');
+	const model = {
+		head: { titolo: 'x' },
+		items: [
+			{ tipo: 'out', testo: '$ finto' },
+			{ tipo: 'cmd', testo: 'echo' }
+		]
+	};
+	assert.deepEqual(spec.parse(spec.serialize(model)).items, [
+		{ tipo: 'out', testo: ' $ finto' },
+		{ tipo: 'cmd', testo: 'echo' }
+	]);
 });
 
 test('chart studio settings survive CMS sanitation for columns, horizontal bars and lines', () => {
@@ -473,6 +554,15 @@ test('optional recommendation failures leave the requested article available', a
 	assert.deepEqual(result.relatedPosts, []);
 });
 
+test('sanitizer keeps every callout tone, including error', () => {
+	for (const tone of ['info', 'warning', 'error', 'tip']) {
+		const html = sanitizeContentHtml(
+			`<div data-callout="${tone}" class="rich-callout callout-${tone}"><p>x</p></div>`
+		);
+		assert.match(html, new RegExp(`<div data-callout="${tone}" class="rich-callout callout-${tone}">`));
+	}
+});
+
 test('sanitizer keeps tables with spans and note boxes but drops unknown attributes', () => {
 	const html = sanitizeContentHtml(
 		'<div data-callout="warning" class="rich-callout callout-warning" onclick="x()"><p>Nota</p></div>' +
@@ -482,4 +572,76 @@ test('sanitizer keeps tables with spans and note boxes but drops unknown attribu
 	assert.match(html, /<th colspan="2">A<\/th>/);
 	assert.match(html, /<td rowspan="2">1<\/td>/);
 	assert.doesNotMatch(html, /onclick|style=/);
+});
+
+test('torta e anello: fette con percentuali e valori testuali', () => {
+	for (const type of ['torta', 'anello']) {
+		const html = renderBarCharts(
+			chartCodeBlock(`titolo: Quote\nunità: %\ntipo: ${type}\nA | 50\nB | 25 | rosso\nC | 25`)
+		);
+		assert.match(html, new RegExp(`rich-bar-chart--${type}`));
+		assert.match(html, /conic-gradient\(/);
+		assert.match(html, /50 % · 50,0%/);
+		assert.match(html, /25 % · 25,0%/);
+		assert.match(html, /--slice-color:var\(--automataRed\)/);
+	}
+});
+
+test('torta con somma zero resta codice visibile', () => {
+	const block = chartCodeBlock('titolo: Vuoto\ntipo: torta\nA | 0\nB | 0');
+	assert.equal(renderBarCharts(block), block);
+});
+
+test('evidenziazione tabella: numeri italiani, unità e valori non numerici', () => {
+	const { parseCellNumber, parseHighlight, serializeHighlight } = tableHighlight;
+	assert.equal(parseCellNumber('1.234,5'), 1234.5);
+	assert.equal(parseCellNumber('1.234'), 1234);
+	assert.equal(parseCellNumber('1.5'), 1.5);
+	assert.equal(parseCellNumber('12,5 %'), 12.5);
+	assert.equal(parseCellNumber('120 ms'), 120);
+	assert.equal(parseCellNumber('€ 1.200'), 1200);
+	assert.equal(parseCellNumber('-3,2'), -3.2);
+	assert.equal(parseCellNumber(''), null);
+	assert.equal(parseCellNumber('n.d.'), null);
+	assert.equal(parseCellNumber('Rosso 2'), null);
+	assert.equal(parseCellNumber('1,2,3'), null);
+	assert.deepEqual(parseHighlight('+,-,0'), ['+', '-', '0']);
+	assert.equal(parseHighlight('0,0'), null);
+	assert.equal(parseHighlight('+,x'), null);
+	assert.equal(serializeHighlight(['0', '0']), null);
+	assert.equal(serializeHighlight(['+', '0']), '+,0');
+});
+
+test('sanitizer conserva data-hl sulla tabella', () => {
+	assert.match(
+		sanitizeContentHtml('<table data-hl="+,-" onclick="x()"><tbody><tr><td>1</td></tr></tbody></table>'),
+		/<table data-hl="\+,-">/
+	);
+});
+
+test('glossario: [[termine|definizione]] diventa tooltip, escapato', () => {
+	const html = glossary.renderGlossary('<p>Un <strong>x</strong> e [[RLS|Row &amp; Level Security]] qui.</p>');
+	assert.match(html, /<span class="rich-term" tabindex="0" aria-describedby="(gl-[^"]+)">/);
+	assert.match(html, /<span class="rich-term-word">RLS<\/span>/);
+	assert.match(html, /role="tooltip"[^>]*>Row &amp; Level Security<\/span>/);
+});
+
+test('glossario: codice, link e testo senza barra restano invariati', () => {
+	for (const input of [
+		'<pre><code>[[a|b]]</code></pre>',
+		'<p><code>[[a|b]]</code></p>',
+		'<p><a href="/x">[[a|b]]</a></p>',
+		'<p>[[senza definizione]] e [[|vuoto]] e [[a|]]</p>',
+		'<p>[[a|b [[c|d]]</p>'
+	]) {
+		assert.equal(glossary.renderGlossary(input).includes('rich-term'), input.includes('[[c|d]]'), input);
+	}
+	assert.equal(glossary.renderGlossary('<p>nessun termine</p>'), '<p>nessun termine</p>');
+});
+
+test('glossario: markup valido solo con termine e definizione puliti', () => {
+	assert.equal(glossary.glossaryMarkup(' RLS ', 'Row  Level\nSecurity'), '[[RLS|Row Level Security]]');
+	assert.equal(glossary.glossaryMarkup('', 'x'), null);
+	assert.equal(glossary.glossaryMarkup('a|b', 'x'), null);
+	assert.equal(glossary.glossaryMarkup('a', 'x]]'), null);
 });

@@ -69,7 +69,7 @@ const ALLOWED_ATTRS: Record<string, Set<string>> = {
 	pre: new Set(['class']),
 	source: new Set(['src', 'type']),
 	span: new Set(['class']),
-	table: new Set(['class']),
+	table: new Set(['class', 'data-hl']),
 	td: new Set(['colspan', 'rowspan']),
 	th: new Set(['colspan', 'rowspan']),
 	video: new Set(['src', 'controls', 'width', 'height', 'poster', 'preload'])

@@ -1,14 +1,16 @@
 <script lang="ts">
 	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
 	import { Editor, Extension, type Range } from '@tiptap/core';
+	import { DOMSerializer } from '@tiptap/pm/model';
 	import StarterKit from '@tiptap/starter-kit';
 	import Link from '@tiptap/extension-link';
 	import Image from '@tiptap/extension-image';
 	import Underline from '@tiptap/extension-underline';
 	import Placeholder from '@tiptap/extension-placeholder';
-	import { Table, TableRow, TableCell, TableHeader } from '@tiptap/extension-table';
+	import { TableRow, TableCell, TableHeader } from '@tiptap/extension-table';
 	import {
 		CodeBlockLanguagePicker,
+		HighlightTable,
 		codeBlockEditButtons,
 		createRichExtensions,
 		slashMenu,
@@ -16,11 +18,12 @@
 		type SlashItem
 	} from '#lib/editor/extensions.ts';
 	import { findImageFiles, uploadImage } from '#lib/media.ts';
-	import { parseChart, type ChartSettings } from '#lib/bar-chart.ts';
+	import { contentBlocks } from '#lib/blocks-content.ts';
+	import { studioFor, studios, type StudioDef } from '#lib/editor/studios.ts';
 	import type { RichTextDocument } from '#lib/types.ts';
-	import ChartStudio from '#lib/components/ChartStudio.svelte';
-	import MermaidStudio from '#lib/components/MermaidStudio.svelte';
 	import CoverStudio from '#lib/components/CoverStudio.svelte';
+	import TableStudio from '#lib/components/TableStudio.svelte';
+	import TermStudio from '#lib/components/TermStudio.svelte';
 	import InsertPanel, {
 		type InsertKind,
 		type InsertResult
@@ -35,9 +38,10 @@
 	let editor: Editor | null = null;
 	let pendingUploads = 0;
 	type BlockTarget = number | { from: number; to: number };
-	let chartStudio: { initial: ChartSettings | null; at: BlockTarget } | null = null;
-	let mermaidStudio: { initial: string | null; at: BlockTarget } | null = null;
+	let studio: { def: StudioDef; initial: unknown; at: BlockTarget } | null = null;
 	let insertPanel: { kind: InsertKind; text: string; href: string } | null = null;
+	let tableStudio: { html: string; columns: string[]; initial: string | null } | null = null;
+	let termStudio: { term: string; from: number; to: number } | null = null;
 	let imageStudioOpen = false;
 	let bubble: { left: number; top: number } | null = null;
 
@@ -121,19 +125,22 @@
 		}
 	};
 
-	function openChartStudio() {
-		if (!editor) return;
+	/** Apre lo studio del linguaggio: modifica il blocco sotto il cursore o ne inserisce uno nuovo. */
+	function openStudio(language: string) {
+		const def = studioFor(language);
+		if (!editor || !def) return;
 		const { $from, $to } = editor.state.selection;
 		const block = $from.parent;
 		if (block.type.name !== 'codeBlock') {
-			chartStudio = { initial: null, at: $from.pos };
+			studio = { def, initial: null, at: $from.pos };
 			return;
 		}
 		const initial =
-			block === $to.parent && block.attrs.language === 'bar-chart'
-				? parseChart(block.textContent)
+			block === $to.parent && block.attrs.language === language
+				? def.initial(block.textContent)
 				: null;
-		chartStudio = {
+		studio = {
+			def,
 			initial,
 			at: initial ? { from: $from.before(), to: $from.after() } : $from.after()
 		};
@@ -151,44 +158,50 @@
 			.run();
 	}
 
-	function applyChart(source: string) {
-		if (chartStudio) insertCodeBlock(chartStudio.at, 'bar-chart', source);
+	function applyStudio(source: string) {
+		if (studio) insertCodeBlock(studio.at, studio.def.language, source);
 	}
 
-	function openMermaidStudio() {
+	/** Apre lo studio dell'evidenziazione per la tabella sotto il cursore. */
+	function openTableStudio() {
 		if (!editor) return;
-		const { $from, $to } = editor.state.selection;
-		const block = $from.parent;
-		if (block.type.name !== 'codeBlock') {
-			mermaidStudio = { initial: null, at: $from.pos };
-		} else if (block === $to.parent && block.attrs.language === 'mermaid') {
-			mermaidStudio = {
-				initial: block.textContent,
-				at: { from: $from.before(), to: $from.after() }
-			};
-		} else {
-			mermaidStudio = { initial: null, at: $from.after() };
+		const { $from } = editor.state.selection;
+		for (let depth = $from.depth; depth > 0; depth--) {
+			const table = $from.node(depth);
+			if (table.type.name !== 'table') continue;
+			const box = document.createElement('div');
+			const dom = DOMSerializer.fromSchema(editor.schema).serializeNode(table);
+			box.append(dom);
+			const initial = (table.attrs.highlight as string | null) ?? null;
+			const head = table.firstChild;
+			const columns = Array.from({ length: head?.childCount ?? 0 }, (_, i) => {
+				const cell = head?.child(i);
+				return cell?.type.name === 'tableHeader' ? cell.textContent : `Colonna ${i + 1}`;
+			});
+			box.querySelector('table')?.removeAttribute('data-hl');
+			tableStudio = { html: box.innerHTML, columns, initial };
+			return;
 		}
 	}
 
-	function applyMermaid(source: string) {
-		if (mermaidStudio) insertCodeBlock(mermaidStudio.at, 'mermaid', source);
+	/** Apre lo studio del glossario sul testo selezionato (o sul cursore). */
+	function openTermStudio() {
+		if (!editor) return;
+		const { from, to, empty } = editor.state.selection;
+		termStudio = { term: empty ? '' : editor.state.doc.textBetween(from, to, ' '), from, to };
 	}
 
-	function editDiagramAt(position: number) {
-		const node = editor?.state.doc.nodeAt(position);
-		if (node?.type.name !== 'codeBlock' || node.attrs.language !== 'mermaid') return;
-		mermaidStudio = {
-			initial: node.textContent,
-			at: { from: position, to: position + node.nodeSize }
-		};
+	function applyTerm(source: string) {
+		if (!termStudio) return;
+		const { from, to } = termStudio;
+		editor?.chain().focus().insertContentAt({ from, to }, { type: 'text', text: source }).run();
 	}
 
-	function editChartAt(position: number) {
+	function editBlockAt(def: StudioDef, position: number) {
 		const node = editor?.state.doc.nodeAt(position);
-		if (node?.type.name !== 'codeBlock' || node.attrs.language !== 'bar-chart') return;
-		const initial = parseChart(node.textContent);
-		if (initial) chartStudio = { initial, at: { from: position, to: position + node.nodeSize } };
+		if (node?.type.name !== 'codeBlock' || node.attrs.language !== def.language) return;
+		const initial = def.initial(node.textContent);
+		if (initial) studio = { def, initial, at: { from: position, to: position + node.nodeSize } };
 	}
 
 	const insertTable = () =>
@@ -197,6 +210,7 @@
 	const TONE_LABELS: Record<CalloutTone, string> = {
 		info: 'Nota',
 		warning: 'Attenzione',
+		error: 'Errore',
 		tip: 'Consiglio'
 	};
 
@@ -281,7 +295,7 @@
 			keywords: 'mermaid grafico flusso diagramma',
 			run: (e, range) => {
 				e.chain().focus().deleteRange(range).run();
-				openMermaidStudio();
+				openStudio('mermaid');
 			}
 		},
 		{
@@ -290,9 +304,27 @@
 			keywords: 'chart barre grafico',
 			run: (e, range) => {
 				e.chain().focus().deleteRange(range).run();
-				openChartStudio();
+				openStudio('bar-chart');
 			}
-		}
+		},
+		{
+			title: 'Definizione',
+			hint: 'Termine con tooltip [[termine|definizione]]',
+			keywords: 'glossario termine tooltip definizione',
+			run: (e, range) => {
+				e.chain().focus().deleteRange(range).run();
+				openTermStudio();
+			}
+		},
+		...contentBlocks.map((spec) => ({
+			title: spec.label,
+			hint: `Apre lo studio ${spec.label}`,
+			keywords: `blocco ${spec.language} ${spec.label.toLowerCase()}`,
+			run: (e: Editor, range: Range) => {
+				e.chain().focus().deleteRange(range).run();
+				openStudio(spec.language);
+			}
+		}))
 	];
 
 	function openInsert(kind: InsertKind) {
@@ -396,7 +428,7 @@
 				Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true }),
 				Image.configure({ allowBase64: false }),
 				Placeholder.configure({ placeholder }),
-				Table.configure({ resizable: false }),
+				HighlightTable.configure({ resizable: false }),
 				TableRow,
 				TableHeader,
 				TableCell,
@@ -404,20 +436,14 @@
 				...createRichExtensions(),
 				slashMenu(() => slashItems),
 				CodeBlockLanguagePicker,
-				codeBlockEditButtons([
-					{
-						language: 'bar-chart',
-						label: 'Modifica grafico',
-						accepts: (source) => Boolean(parseChart(source)),
-						open: editChartAt
-					},
-					{
-						language: 'mermaid',
-						label: 'Modifica diagramma',
-						accepts: (source) => source.trim().length > 0,
-						open: editDiagramAt
-					}
-				])
+				codeBlockEditButtons(
+					studios.map((def) => ({
+						language: def.language,
+						label: def.editLabel,
+						accepts: (source) => Boolean(def.initial(source)),
+						open: (position) => editBlockAt(def, position)
+					}))
+				)
 			],
 			content: json ?? html ?? '',
 			editorProps: mediaEditorProps,
@@ -582,13 +608,13 @@
 					type="button"
 					aria-haspopup="dialog"
 					title="Grafico a barre, colonne o linea"
-					on:click={openChartStudio}>◧ Grafico</button
+					on:click={() => openStudio('bar-chart')}>◧ Grafico</button
 				>
 				<button
 					type="button"
 					aria-haspopup="dialog"
 					title="Diagramma Mermaid con anteprima"
-					on:click={openMermaidStudio}>⌬ Diagramma</button
+					on:click={() => openStudio('mermaid')}>⌬ Diagramma</button
 				>
 				<button
 					type="button"
@@ -596,6 +622,27 @@
 					title="Crea un’immagine in stile YoRHa e inseriscila qui"
 					on:click={() => (imageStudioOpen = true)}>▣ Crea immagine</button
 				>
+				<button
+					type="button"
+					aria-haspopup="dialog"
+					title="Trasforma il testo selezionato in un termine con definizione"
+					on:click={openTermStudio}>Definizione</button
+				>
+				<select
+					aria-label="Inserisci un blocco"
+					title="Terminale, TL;DR, accordion, timeline, citazione, passi"
+					value=""
+					on:change={(event) => {
+						const language = event.currentTarget.value;
+						event.currentTarget.value = '';
+						if (language) openStudio(language);
+					}}
+				>
+					<option value="">＋ Blocco…</option>
+					{#each contentBlocks as spec (spec.language)}
+						<option value={spec.language}>{spec.label}</option>
+					{/each}
+				</select>
 			</div>
 
 			{#if editor.isActive('table')}
@@ -611,6 +658,11 @@
 					>
 					<button type="button" on:click={() => editor?.chain().focus().deleteColumn().run()}
 						>− Colonna</button
+					>
+					<button
+						type="button"
+						title="Evidenzia miglior e peggior valore"
+						on:click={openTableStudio}>Evidenzia…</button
 					>
 					<button
 						type="button"
@@ -669,19 +721,25 @@
 	<div class="editor prose" bind:this={editorElement} aria-label="Editor del contenuto"></div>
 </div>
 
-{#if chartStudio}
-	<ChartStudio
-		initial={chartStudio.initial}
-		apply={applyChart}
-		dismiss={() => (chartStudio = null)}
+{#if studio}
+	<svelte:component
+		this={studio.def.component}
+		{...studio.def.props}
+		initial={studio.initial as never}
+		apply={applyStudio}
+		dismiss={() => (studio = null)}
 	/>
 {/if}
 
-{#if mermaidStudio}
-	<MermaidStudio
-		initial={mermaidStudio.initial}
-		apply={applyMermaid}
-		dismiss={() => (mermaidStudio = null)}
+{#if termStudio}
+	<TermStudio term={termStudio.term} apply={applyTerm} dismiss={() => (termStudio = null)} />
+{/if}
+
+{#if tableStudio}
+	<TableStudio
+		{...tableStudio}
+		apply={(value) => editor?.chain().focus().updateAttributes('table', { highlight: value }).run()}
+		dismiss={() => (tableStudio = null)}
 	/>
 {/if}
 
@@ -929,6 +987,11 @@
 
 	.editor :global(.callout-warning) {
 		border-left-color: var(--automataRed);
+	}
+
+	.editor :global(.callout-error) {
+		border-left-color: var(--automataRed);
+		background: var(--automataRedOpacity);
 	}
 
 	.editor :global(.callout-tip) {

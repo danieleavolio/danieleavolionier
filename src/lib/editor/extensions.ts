@@ -1,5 +1,7 @@
 import { Extension, Node, mergeAttributes } from '@tiptap/core';
+import { Table } from '@tiptap/extension-table';
 import { Plugin } from '@tiptap/pm/state';
+import { parseHighlight } from '#lib/table-highlight.ts';
 import Suggestion from '@tiptap/suggestion';
 import type { Editor, Range } from '@tiptap/core';
 import { Decoration, DecorationSet } from '@tiptap/pm/view';
@@ -191,7 +193,7 @@ export const RichBlock = Node.create({
 	}
 });
 
-export const CALLOUT_TONES = ['info', 'warning', 'tip'] as const;
+export const CALLOUT_TONES = ['info', 'warning', 'error', 'tip'] as const;
 export type CalloutTone = (typeof CALLOUT_TONES)[number];
 
 declare module '@tiptap/core' {
@@ -239,6 +241,20 @@ export const Callout = Node.create({
 					editor.isActive('callout')
 						? commands.lift('callout')
 						: commands.wrapIn('callout', { tone })
+		};
+	}
+});
+
+/** Tabella con l'attributo `data-hl` (evidenziazione per colonna, vedi `table-highlight.ts`). */
+export const HighlightTable = Table.extend({
+	addAttributes() {
+		return {
+			...this.parent?.(),
+			highlight: {
+				default: null,
+				parseHTML: (element) => parseHighlight(element.getAttribute('data-hl'))?.join(',') ?? null,
+				renderHTML: ({ highlight }) => (highlight ? { 'data-hl': highlight } : {})
+			}
 		};
 	}
 });

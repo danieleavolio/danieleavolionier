@@ -27,6 +27,29 @@ Mermaid resta per i diagrammi: Pele prova a renderizzarli vicino al viewport,
 Mermaid.js è il fallback. Il CSS usa i token del tema, non colori scelti
 all'interno dell'articolo.
 
+## Blocchi dell'editor
+
+Un blocco speciale è un blocco di codice con un linguaggio. In lettura
+`RichContent` lo trasforma in HTML; se il sorgente non è valido resta codice. La
+sintassi di ogni blocco sta in `references/blocchi-cms.md` della skill
+`articolo-daniele`.
+
+| Pezzo                                                   | File                                                                         | Cosa fa                                                                                                                   |
+| ------------------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Registro dei blocchi                                    | `src/lib/blocks.ts`                                                          | linguaggio → render; ogni modulo fa `blockRenderers.set(...)` ed è importato in `RichContent`                             |
+| Terminale, TL;DR, accordion, timeline, citazione, passi | `src/lib/blocks-content.ts`                                                  | una specifica per blocco: parser, serializzazione, render, campi dello studio                                             |
+| Grafici (barre, colonne, linea, torta, anello)          | `src/lib/bar-chart.ts`                                                       | render HTML/CSS con valori testuali                                                                                       |
+| Evidenziazione tabelle                                  | `src/lib/table-highlight.ts`                                                 | `data-hl` sulla tabella; migliore/peggiore per colonna, solo lato client                                                  |
+| Glossario inline                                        | `src/lib/glossary.ts`                                                        | `[[termine\|definizione]]` nel testo → tooltip; salta codice, link e pulsanti                                             |
+| Indice flottante                                        | `TocRail.svelte`                                                             | legge `h2`/`h3` dell'articolo, evidenzia la sezione corrente; visibile solo se c'è spazio (Wide ≥ 104rem, Narrow ≥ 76rem) |
+| Cornice degli studi                                     | `BlockStudio.svelte`                                                         | dialogo con controlli, anteprima dal vivo, Annulla/Inserisci                                                              |
+| Studi                                                   | `ChartStudio`, `MermaidStudio`, `ContentStudio`, `TableStudio`, `TermStudio` | si registrano in `src/lib/editor/studios.ts` (blocchi) o si aprono dal pulsante (tabella, definizione)                    |
+
+Per aggiungere un blocco: parser e render in un modulo che si registra in
+`blocks.ts`, CSS in `RichContent.svelte` con i token del tema, voce in
+`studios.ts`, voce nel menu `/` e pulsante in `RichTextEditor.svelte`, test in
+`tests/content.test.mjs`, sintassi in `blocchi-cms.md`.
+
 ## Confini di pubblicazione
 
 Le pagine pubbliche aggiornabili usano ISR Vercel (300 secondi). Admin e upload

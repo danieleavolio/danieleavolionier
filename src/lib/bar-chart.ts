@@ -1,25 +1,9 @@
+import { decodeCodeText } from '#lib/blocks.ts';
 import { escapeHtmlText } from '#lib/rich-grading.ts';
 
 const chartBlock = /<pre\b[^>]*>\s*<code\b([^>]*)>([^<]*)<\/code>\s*<\/pre>/gi;
-const namedEntities: Record<string, string> = {
-	amp: '&',
-	lt: '<',
-	gt: '>',
-	quot: '"',
-	apos: "'",
-	nbsp: '\u00a0'
-};
 
-function decodeCodeText(value: string): string {
-	return value.replace(/&(#x[\da-f]+|#\d+|amp|lt|gt|quot|apos|nbsp);/gi, (entity, key: string) => {
-		if (!key.startsWith('#')) return namedEntities[key] ?? entity;
-		const hex = key[1].toLowerCase() === 'x';
-		const point = Number.parseInt(key.slice(hex ? 2 : 1), hex ? 16 : 10);
-		return point > 0 && point <= 0x10ffff ? String.fromCodePoint(point) : entity;
-	});
-}
-
-export const chartTypes = ['barre', 'colonne', 'linea'] as const;
+export const chartTypes = ['barre', 'colonne', 'linea', 'torta', 'anello'] as const;
 export const defaultChartThickness = 60;
 export const chartPalette = {
 	rosso: { name: 'Rosso YoRHa', token: 'var(--automataRed)' },
@@ -146,9 +130,41 @@ export function parseChart(source: string): (ChartSettings & { rows: ChartRow[] 
 	return { title, unit, type, thickness, color, wide, data: lines.join('\n'), rows };
 }
 
+const pieColors = [
+	'var(--yr-accent)',
+	'var(--automataRed)',
+	'var(--automataYellow)',
+	'var(--automataWhite)',
+	'var(--automataBlackO)'
+];
+
+function renderPie(chart: NonNullable<ReturnType<typeof parseChart>>): string | null {
+	const { title, type, color, rows } = chart;
+	const total = rows.reduce((sum, { amount }) => sum + amount, 0);
+	if (total <= 0) return null;
+	let start = 0;
+	const stops: string[] = [];
+	const legend = rows
+		.map(({ label, display, color: itemColor, amount }, i) => {
+			const paint = itemColor
+				? colorCss(itemColor)
+				: color && rows.length === 1
+					? colorCss(color)
+					: pieColors[i % pieColors.length];
+			const end = start + (amount / total) * 100;
+			stops.push(`${paint} ${start.toFixed(3)}% ${end.toFixed(3)}%`);
+			start = end;
+			const share = `${((amount / total) * 100).toFixed(1).replace('.', ',')}%`;
+			return `<li class="rich-bar-chart__slice"><span class="rich-bar-chart__swatch" style="--slice-color:${paint}" aria-hidden="true"></span><span>${escapeHtmlText(label)}</span><strong>${escapeHtmlText(display)} · ${share}</strong></li>`;
+		})
+		.join('');
+	return `<figure class="rich-bar-chart yr-panel rich-bar-chart--${type}"><figcaption class="rich-bar-chart__title yr-panel__head">${escapeHtmlText(title)}</figcaption><div class="rich-bar-chart__pie-wrap"><div class="rich-bar-chart__pie" style="background:conic-gradient(${stops.join(',')})" aria-hidden="true"></div><ul class="rich-bar-chart__legend" role="list">${legend}</ul></div></figure>`;
+}
+
 function renderChart(source: string): string | null {
 	const chart = parseChart(source);
 	if (!chart) return null;
+	if (chart.type === 'torta' || chart.type === 'anello') return renderPie(chart);
 	const { title, type, thickness, color, wide, rows } = chart;
 	const max = Math.max(...rows.map(({ amount }) => amount)) || 1;
 	const percentages = rows.map(({ amount }) => (amount / max) * 100);
