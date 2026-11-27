@@ -200,6 +200,15 @@
 		background: var(--automataBgRGBA);
 	}
 
+	/* Il rosso del tema scuro ha poco contrasto come testo o simbolo: lo schiariamo. */
+	.rich-content {
+		--rich-red: var(--automataRed);
+	}
+
+	:global(html[data-theme='dark']) .rich-content {
+		--rich-red: color-mix(in srgb, var(--automataRed) 45%, var(--automataColor));
+	}
+
 	.rich-content :global(.rich-callout) {
 		margin-block: 1.25rem;
 		padding: 0.75rem 1rem;
@@ -242,7 +251,7 @@
 
 	.rich-content :global(.callout-warning::before) {
 		content: '!';
-		color: var(--automataRed);
+		color: var(--rich-red);
 		border-radius: 0;
 	}
 
@@ -253,7 +262,7 @@
 
 	.rich-content :global(.callout-error::before) {
 		content: '×';
-		color: var(--automataRed);
+		color: var(--rich-red);
 		background: var(--automataBg);
 		font-size: 1rem;
 	}
@@ -616,7 +625,7 @@
 	.rich-content :global(td.rich-hl-worst::after) {
 		content: ' ▼';
 		font-size: 0.7em;
-		color: var(--automataRed);
+		color: var(--rich-red);
 	}
 
 	.rich-content :global(.rich-bar-chart__pie-wrap) {
@@ -771,7 +780,7 @@
 
 	.rich-content :global(.rich-terminale__cmd::before) {
 		content: '$ ';
-		color: var(--automataRed);
+		color: var(--rich-red);
 		user-select: none;
 	}
 

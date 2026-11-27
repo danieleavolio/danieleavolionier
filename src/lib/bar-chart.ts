@@ -133,9 +133,9 @@ export function parseChart(source: string): (ChartSettings & { rows: ChartRow[] 
 const pieColors = [
 	'var(--yr-accent)',
 	'var(--automataRed)',
-	'var(--automataYellow)',
-	'var(--automataWhite)',
-	'var(--automataBlackO)'
+	'color-mix(in srgb, var(--yr-accent) 50%, var(--automataBg))',
+	'color-mix(in srgb, var(--automataRed) 50%, var(--automataBg))',
+	'var(--automataWhite)'
 ];
 
 function renderPie(chart: NonNullable<ReturnType<typeof parseChart>>): string | null {
