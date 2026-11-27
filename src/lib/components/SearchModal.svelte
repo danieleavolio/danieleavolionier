@@ -6,6 +6,8 @@
 	import Modal from './Modal.svelte';
 	import Spinner from './ui/Spinner.svelte';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
+	import { langFromPath } from '#lib/i18n.ts';
 
 	let search: 'loading' | 'ready' | 'error' = 'loading';
 	let searchTerm = '';
@@ -16,14 +18,18 @@
 	let selectedIndex = 0;
 	let searchApi: typeof import('#lib/search.ts') | undefined;
 	let loadPromise: Promise<void> | undefined;
+	let loadedLang = 'it';
 
 	function loadSearch(): Promise<void> {
-		if (loadPromise) return loadPromise;
+		// L'indice dipende dalla lingua della pagina: se cambia, si ricarica.
+		const lang = langFromPath(page.url.pathname);
+		if (loadPromise && loadedLang === lang) return loadPromise;
+		loadedLang = lang;
 		search = 'loading';
 		loadPromise = (async () => {
 			const [api, posts] = await Promise.all([
 				import('#lib/search.ts'),
-				fetch('/search.json').then((response) => {
+				fetch(lang === 'en' ? '/en/search.json' : '/search.json').then((response) => {
 					if (!response.ok) throw new Error(`Search returned ${response.status}`);
 					return response.json();
 				})

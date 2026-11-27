@@ -8,9 +8,11 @@
 	import Tag from '#lib/components/Tag.svelte';
 	import { onMount, tick } from 'svelte';
 	import { categoryStore } from '#lib/stores/categoryStore.js';
+	import { articlePath, ui } from '#lib/i18n.ts';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
+	$: t = ui(data.lang);
 
 	let activeFilters: string[] = [];
 	let CatFilter: CategoriesFilter;
@@ -64,29 +66,43 @@
 </script>
 
 <Seo
-	title="Blog & Articoli Tecnici"
-	description="Articoli, tutorial e approfondimenti su sviluppo web, frontend, intelligenza artificiale e programmazione scritti da Daniele Avolio."
+	title={data.lang === 'en' ? 'Blog & Technical Articles' : 'Blog & Articoli Tecnici'}
+	description={data.lang === 'en'
+		? 'Articles, tutorials and deep dives on web development, frontend, artificial intelligence and programming by Daniele Avolio.'
+		: 'Articoli, tutorial e approfondimenti su sviluppo web, frontend, intelligenza artificiale e programmazione scritti da Daniele Avolio.'}
+	alternates={data.alternates}
 />
 
-<h1 class="sr-only">Blog e articoli tecnici</h1>
+<h1 class="sr-only">
+	{data.lang === 'en' ? 'Blog and technical articles' : 'Blog e articoli tecnici'}
+</h1>
 <section>
 	<ul class="posts">
 		{#each postToShow as post (post.slug)}
 			<li transition:slide class="post">
-				<a href={`/pagine/${post.slug}`} class="title">{post.title}</a>
+				<a href={articlePath(post.slug, data.lang)} class="title">{post.title}</a>
 				<p class="date">
-					{formatDate(post.date)} · {post.readingTime ?? calculateReadingTime(post.description)} min lettura
+					{formatDate(post.date, 'medium', t.locale)} · {post.readingTime ??
+						calculateReadingTime(post.description)}
+					{t.readingTime}
 				</p>
 				<p class="description">{post.description}</p>
 				<div class="tags">
 					{#each getCategories(post) as category, index (index)}
-						<Tag from="pagine" {category} isActive={activeFilters.includes(category)} />
+						<Tag
+							from={data.lang === 'en' ? 'en/pagine' : 'pagine'}
+							{category}
+							isActive={activeFilters.includes(category)}
+						/>
 					{/each}
 				</div>
 			</li>
 		{/each}
 		{#if postToShow.length === 0}
-			<h1>Nessun post trovato! <Icon name="empty" size={30} /></h1>
+			<h1>
+				{data.lang === 'en' ? 'No posts found!' : 'Nessun post trovato!'}
+				<Icon name="empty" size={30} />
+			</h1>
 		{/if}
 	</ul>
 	<div class="filter-column">

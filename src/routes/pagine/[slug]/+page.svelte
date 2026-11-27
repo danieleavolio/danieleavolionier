@@ -11,6 +11,7 @@
 	import TocRail from '#lib/components/TocRail.svelte';
 	import RelatedPosts from '#lib/components/RelatedPosts.svelte';
 	import { page } from '$app/state';
+	import { ui } from '#lib/i18n.ts';
 	import type { PageData } from './$types';
 
 	interface Props {
@@ -20,6 +21,7 @@
 	let { data }: Props = $props();
 
 	const siteUrl = config.url.replace(/\/$/, '');
+	let t = $derived(ui(data.lang));
 	let metadata = $derived(data.meta);
 	let metadataCategories = $derived(Array.isArray(metadata.categories) ? metadata.categories : []);
 	let fallbackOg = $derived(`${siteUrl}/og/pagine/${data.slug}.png`);
@@ -39,6 +41,7 @@
 		developer={metadata.developer}
 		author="Daniele Avolio"
 		publishDate={metadata.date}
+		alternates={data.alternates}
 	/>
 {:else}
 	<Seo
@@ -50,6 +53,7 @@
 		articleBody={metadata.description}
 		publishDate={metadata.date}
 		dateModified={metadata.updatedAt || metadata.date}
+		alternates={data.alternates}
 	/>
 {/if}
 <article>
@@ -57,9 +61,10 @@
 		<h1>{data.meta.title}</h1>
 		<h3>{data.meta.description}</h3>
 		<p>
-			Data: {formatDate(data.meta.date)} · {calculateReadingTime(
+			{t.dateLabel}: {formatDate(data.meta.date, 'medium', t.locale)} · {calculateReadingTime(
 				data.contentHtml || metadata.description
-			)} min di lettura
+			)}
+			{t.readingTime}
 			<ReadingWidth />
 		</p>
 		{#if metadata.gameImage}
@@ -69,7 +74,7 @@
 
 	<div class="tags">
 		{#each metadataCategories as category, index (index)}
-			<Tag {category} from="pagine" />
+			<Tag {category} from={data.lang === 'en' ? 'en/pagine' : 'pagine'} />
 		{/each}
 	</div>
 
@@ -83,12 +88,7 @@
 
 	<ShareComponent postTitle={metadata.title} postUrl={page.url.href} />
 
-	<Author
-		name="Daniele"
-		surname="Avolio"
-		username="lovaion"
-		description="Sviluppatore e amante del mondo dei videogiochi 🎮 e della cultura pop giapponese 🗾"
-	/>
+	<Author name="Daniele" surname="Avolio" username="lovaion" description={t.authorBio} />
 </article>
 
 <TocRail html={data.contentHtml} />

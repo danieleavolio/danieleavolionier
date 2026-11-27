@@ -521,6 +521,13 @@ html[data-theme='dark'] {
 	--tok-d: #a8402a;
 }
 
+/* Registrata come lunghezza: Wide/Narrow anima colonna e indice insieme. */
+@property --reading-width {
+	syntax: '<length>';
+	inherits: true;
+	initial-value: 72rem;
+}
+
 /* Wide has a ceiling too: lines stay under ~90 characters. */
 :root {
 	--reading-width: 72rem;
@@ -528,6 +535,16 @@ html[data-theme='dark'] {
 
 html[data-reading='narrow'] {
 	--reading-width: 44rem;
+}
+
+html {
+	transition: --reading-width 0.35s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		transition: none;
+	}
 }
 
 .prose pre {

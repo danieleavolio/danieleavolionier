@@ -23,7 +23,8 @@
 		"postinstall": "patch-package --error-on-fail",
 		"new:post": "node scripts/new-content.mjs post",
 		"new:project": "node scripts/new-content.mjs project",
-		"migrate:content": "node scripts/migrate_to_supabase.js"
+		"migrate:content": "node scripts/migrate_to_supabase.js",
+		"translate": "node scripts/translate-posts.mjs"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",

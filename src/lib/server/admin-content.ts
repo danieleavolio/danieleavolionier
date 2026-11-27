@@ -6,6 +6,7 @@ import {
 	storedPostImagePaths
 } from '#lib/server/media-cleanup.ts';
 import { restoreArticleHtml } from '#lib/server/article-repairs.ts';
+import { deleteTranslations, syncTranslation, type SyncResult } from '#lib/server/translations.ts';
 import type { RichTextDocument } from '#lib/types.ts';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { ContentRow } from './content-row';
@@ -85,8 +86,9 @@ function parseJson(value: FormDataEntryValue | null): Record<string, unknown> | 
 export async function saveContent(
 	supabase: SupabaseClient,
 	table: ContentTable,
-	form: FormData
-): Promise<void> {
+	form: FormData,
+	options: { deeplApiKey?: string } = {}
+): Promise<SyncResult | 'n/a'> {
 	const title = form.get('title')?.toString().trim();
 	const slug = form.get('slug')?.toString().trim();
 	const description = form.get('description')?.toString().trim();
@@ -113,6 +115,7 @@ export async function saveContent(
 			: null;
 	const date = form.get('date')?.toString() || new Date().toISOString().slice(0, 10);
 	const originalSlug = form.get('original_slug')?.toString().trim();
+	const published = form.get('published') === 'true';
 
 	// Images uploaded to the post-images bucket are owned by this content item.
 	// On save, every bucket image the item no longer references is deleted, so
@@ -139,7 +142,7 @@ export async function saveContent(
 		date,
 		categories,
 		image,
-		published: form.get('published') === 'true',
+		published,
 		content_html: contentHtml,
 		content_json: contentJson,
 		legacy_content: form.get('legacy_content')?.toString() || null,
@@ -153,6 +156,15 @@ export async function saveContent(
 	}
 
 	await deletePostImages(storedImages.filter((path) => !referencedImages.has(path)));
+
+	if (table !== 'posts') return 'n/a';
+	// La traduzione inglese segue il salvataggio: un errore qui non lo annulla.
+	if (originalSlug && originalSlug !== slug) await deleteTranslations(supabase, originalSlug);
+	return syncTranslation(
+		supabase,
+		{ slug, title, description, contentHtml, published },
+		{ apiKey: options.deeplApiKey }
+	);
 }
 
 export async function removeContent(
@@ -172,4 +184,5 @@ export async function removeContent(
 	if (removeError) throw removeError;
 
 	await deletePostImages(storedPostImagePaths(existingRow?.metadata));
+	if (table === 'posts') await deleteTranslations(supabase, slug);
 }

@@ -154,3 +154,63 @@ export async function listNotes(supabase: SupabaseClient, includeDrafts = false)
 	if (error) throw error;
 	return (data ?? []) as Note[];
 }
+
+export type TranslationSummary = { title: string; description: string; updatedAt?: string };
+
+/** Le traduzioni pubbliche di una lingua, per slug. L'RLS esclude gli articoli in bozza. */
+export async function listTranslations(
+	supabase: SupabaseClient,
+	lang: string
+): Promise<Map<string, TranslationSummary>> {
+	const { data, error } = await supabase
+		.from('translations')
+		.select('slug,title,description,updated_at')
+		.eq('lang', lang);
+	if (error) throw error;
+	return new Map(
+		(data ?? []).map(
+			(row: { slug: string; title: string; description: string; updated_at?: string }) => [
+				row.slug,
+				{
+					title: row.title,
+					description: row.description,
+					updatedAt: realUpdatedAt(row.updated_at)
+				}
+			]
+		)
+	);
+}
+
+/** Tiene solo gli articoli tradotti e ne sostituisce titolo e descrizione. */
+export function withTranslations<T extends { slug: string; title: string; description: string }>(
+	posts: T[],
+	translations: Map<string, TranslationSummary>
+): T[] {
+	return posts.flatMap((post) => {
+		const translation = translations.get(post.slug);
+		return translation
+			? [{ ...post, title: translation.title, description: translation.description }]
+			: [];
+	});
+}
+
+export async function getTranslatedContent(
+	supabase: SupabaseClient,
+	slug: string,
+	lang: string
+): Promise<{ title: string; description: string; contentHtml: string } | null> {
+	const { data, error } = await supabase
+		.from('translations')
+		.select('title,description,content_html')
+		.eq('slug', slug)
+		.eq('lang', lang)
+		.maybeSingle<{ title: string; description: string; content_html: string }>();
+	if (error) throw error;
+	return data
+		? {
+				title: data.title,
+				description: data.description,
+				contentHtml: prepareMedia(data.content_html)
+			}
+		: null;
+}

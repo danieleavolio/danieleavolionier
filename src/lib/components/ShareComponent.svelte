@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '#lib/components/ui/Icon.svelte';
+	import { i18n } from '#lib/i18n-state.ts';
 	export let postTitle = '';
 	export let postUrl = '';
 	let message = '';
@@ -7,24 +8,24 @@
 	async function copyLink() {
 		try {
 			await navigator.clipboard.writeText(postUrl);
-			message = 'Link copiato.';
+			message = i18n.t.copied;
 		} catch {
-			message = 'Copia non riuscita. Puoi copiare il link dalla barra degli indirizzi.';
+			message = i18n.t.copyFailed;
 		}
 	}
 </script>
 
-<section class="share-buttons" aria-label="Condividi questo contenuto">
-	<span class="share-label">Condividi</span>
+<section class="share-buttons" aria-label={i18n.t.shareLabel}>
+	<span class="share-label">{i18n.t.share}</span>
 	<div class="actions">
 		<a
 			class="share-action"
 			href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(postTitle)}&url=${encodeURIComponent(postUrl)}`}
 			target="_blank"
-			rel="noopener noreferrer"><Icon name="external" size={16} />Condividi su X</a
+			rel="noopener noreferrer"><Icon name="external" size={16} />{i18n.t.shareOnX}</a
 		>
 		<button type="button" class="share-action" on:click={copyLink}
-			><Icon name="copy" size={16} />Copia il link</button
+			><Icon name="copy" size={16} />{i18n.t.copyLink}</button
 		>
 	</div>
 	<p class="feedback" role="status">{message}</p>

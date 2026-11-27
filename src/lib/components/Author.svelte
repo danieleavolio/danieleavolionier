@@ -5,10 +5,13 @@
 	export let description = 'Description';
 
 	import Contacts from './Contacts.svelte';
+	import { i18n } from '#lib/i18n-state.ts';
 </script>
 
-<section class="author yr-panel" aria-label="Informazioni sull'autore">
-	<h2 class="yr-panel__head"><span class="yr-panel__square" aria-hidden="true"></span>Autore</h2>
+<section class="author yr-panel" aria-label={i18n.t.authorLabel}>
+	<h2 class="yr-panel__head">
+		<span class="yr-panel__square" aria-hidden="true"></span>{i18n.t.author}
+	</h2>
 	<div class="author-body">
 		<div class="name-surname">
 			<span>{name}</span>

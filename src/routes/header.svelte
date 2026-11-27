@@ -7,6 +7,7 @@
 	//Import store and set to true on click
 	import isOpened from '#lib/stores/navstore.ts';
 	import SearchModal from '#lib/components/SearchModal.svelte';
+	import { i18n } from '#lib/i18n-state.ts';
 
 	let menu: HTMLDialogElement;
 	$: if (menu) {
@@ -24,15 +25,33 @@
 		<a href="/" class="title desktop"><b>{config.title}</b></a>
 		<a href="/" class="home mobile" aria-label="Home"><Icon name="home" size={30} /></a>
 		<ul class="links desktop yr-tabs" data-sveltekit-preload-code="viewport">
-			<li><a href="/pagine" class:active={page.url.pathname.startsWith('/pagine')}>BLOG</a></li>
 			<li>
-				<a href="/progetti" class:active={page.url.pathname.startsWith('/progetti')}>PROGETTI</a>
+				<a
+					href={i18n.t.blogPath}
+					class:active={page.url.pathname.startsWith('/pagine') ||
+						page.url.pathname.startsWith('/en/pagine')}>{i18n.t.menu.blog}</a
+				>
 			</li>
-			<li><a href="/now" class:active={page.url.pathname === '/now'}>NOW</a></li>
-			<li><a href="/data" class:active={page.url.pathname === '/data'}>DATA</a></li>
-			<li><a href="/appunti" class:active={page.url.pathname === '/appunti'}>APPUNTI</a></li>
+			<li>
+				<a href="/progetti" class:active={page.url.pathname.startsWith('/progetti')}
+					>{i18n.t.menu.projects}</a
+				>
+			</li>
+			<li><a href="/now" class:active={page.url.pathname === '/now'}>{i18n.t.menu.now}</a></li>
+			<li><a href="/data" class:active={page.url.pathname === '/data'}>{i18n.t.menu.data}</a></li>
+			<li>
+				<a href="/appunti" class:active={page.url.pathname === '/appunti'}>{i18n.t.menu.notes}</a>
+			</li>
 		</ul>
 		<ThemeToggle />
+		{#if i18n.other}
+			<a
+				class="lang-switch"
+				href={i18n.other}
+				hreflang={i18n.lang === 'en' ? 'it' : 'en'}
+				aria-label={i18n.t.switchTo}>{i18n.t.switchShort}</a
+			>
+		{/if}
 		<SearchModal />
 		<button
 			on:click={handleClick}
@@ -58,24 +77,25 @@
 	<a on:click={() => isOpened.set(false)} href="/" class:active={page.url.pathname === '/'}>D.A</a>
 	<a
 		on:click={() => isOpened.set(false)}
-		href="/pagine"
-		class:active={page.url.pathname.startsWith('/pagine')}>BLOG</a
+		href={i18n.t.blogPath}
+		class:active={page.url.pathname.startsWith('/pagine') ||
+			page.url.pathname.startsWith('/en/pagine')}>{i18n.t.menu.blog}</a
 	>
 	<a
 		on:click={() => isOpened.set(false)}
 		href="/progetti"
-		class:active={page.url.pathname.startsWith('/progetti')}>PROGETTI</a
+		class:active={page.url.pathname.startsWith('/progetti')}>{i18n.t.menu.projects}</a
 	>
 	<a on:click={() => isOpened.set(false)} href="/now" class:active={page.url.pathname === '/now'}
-		>NOW</a
+		>{i18n.t.menu.now}</a
 	>
 	<a on:click={() => isOpened.set(false)} href="/data" class:active={page.url.pathname === '/data'}
-		>DATA</a
+		>{i18n.t.menu.data}</a
 	>
 	<a
 		on:click={() => isOpened.set(false)}
 		href="/appunti"
-		class:active={page.url.pathname === '/appunti'}>APPUNTI</a
+		class:active={page.url.pathname === '/appunti'}>{i18n.t.menu.notes}</a
 	>
 </dialog>
 
@@ -118,6 +138,23 @@
 
 	.mobile {
 		display: none;
+	}
+
+	.lang-switch {
+		min-block-size: 2.25rem;
+		display: inline-flex;
+		align-items: center;
+		padding: 0.3rem 0.7rem;
+		border: 1px solid var(--yr-line-strong);
+		font-family: var(--font-mono);
+		font-size: 0.8rem;
+		letter-spacing: 0.08em;
+	}
+
+	.lang-switch:hover,
+	.lang-switch:focus-visible {
+		background-color: var(--automataBgRGBA);
+		color: var(--automataColor);
 	}
 
 	button,

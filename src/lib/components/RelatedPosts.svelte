@@ -1,27 +1,31 @@
 <script lang="ts">
 	import Icon from '#lib/components/ui/Icon.svelte';
 	import type { RelatedPost } from '#lib/types.ts';
+	import { page } from '$app/state';
+	import { articlePath, langFromPath, ui } from '#lib/i18n.ts';
 
 	let { posts }: { posts: RelatedPost[] } = $props();
+	let lang = $derived(langFromPath(page.url.pathname));
+	let t = $derived(ui(lang));
 </script>
 
 {#if posts.length}
 	<section class="related-posts" aria-labelledby="related-posts-heading">
 		<div class="section-heading">
 			<h2 id="related-posts-heading">
-				<span class="heading-square" aria-hidden="true"></span>Leggi anche
+				<span class="heading-square" aria-hidden="true"></span>{t.related}
 			</h2>
 		</div>
-		<p class="intro">Altre letture sullo stesso tema.</p>
+		<p class="intro">{t.relatedIntro}</p>
 		<ul class="related-list">
 			{#each posts as post, index (post.slug)}
 				<li>
-					<a class="related-card" href={`/pagine/${encodeURIComponent(post.slug)}`}>
+					<a class="related-card" href={articlePath(post.slug, lang)}>
 						<span class="card-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
 						<h3>{post.title}</h3>
 						<p class="description">{post.description}</p>
 						<p class="reason">{post.reason}</p>
-						<span class="read-link">Leggi articolo<Icon name="arrow-right" size={18} /></span>
+						<span class="read-link">{t.readArticle}<Icon name="arrow-right" size={18} /></span>
 					</a>
 				</li>
 			{/each}

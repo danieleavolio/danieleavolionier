@@ -7,7 +7,9 @@ funzionalità parti da [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 - Mantieni i file e i componenti coerenti con il codice vicino. Usa `#lib` per
   gli import interni, TypeScript e i token YoRHa esistenti prima di introdurre
-  nuove librerie o nuovi colori. I testi del sito restano in italiano.
+  nuove librerie o nuovi colori. I testi del sito restano in italiano; l'inglese
+  degli articoli lo genera [DeepL al salvataggio](docs/translations.md) e i testi fissi
+  dell'interfaccia stanno in `src/lib/i18n.ts`.
 - Verifica in piccolo. Per l'editor usa una bozza o dati di prova, non scritture
   su Supabase di produzione. Controlla anche l'anteprima quando tocchi il
   rendering degli articoli.

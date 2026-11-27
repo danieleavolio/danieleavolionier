@@ -8,6 +8,7 @@
 - Usa un piano visibile solo quando richiesto o utile per un lavoro a più fasi. Aggiorna l’utente solo su scelte, scoperte o blocchi. Nel finale: esito, verifica concreta e stato della pubblicazione.
 - Gli articoli pubblici leggono da Supabase: modificare il Markdown locale non aggiorna la produzione. Evita migrazioni globali per modifiche puntuali. Il post-commit può fare push e pubblicare: niente commit, push o scritture remote senza richiesta.
 - Per confronti numerici negli articoli usa un blocco Markdown `bar-chart`, per i diagrammi un blocco ```mermaid. Sintassi e opzioni stanno nella skill `articolo-daniele` (`references/blocchi-cms.md`); il rendering è descritto in `docs/ARCHITECTURE.md` (`renderMermaidSource` in `src/lib/mermaid.ts`).
+- Gli articoli hanno una versione inglese generata da DeepL al salvataggio (`docs/translations.md`). I testi fissi vanno in `src/lib/i18n.ts`, in italiano e inglese. Non scrivere l'inglese a mano, non tradurre dal codice a ogni visita e non mettere `DEEPL_API_KEY` in file tracciati.
 - Non toccare il lavoro utente fuori perimetro, in particolare `docs/bozze/`, `docs/prototypes/` e `static/images/projects/`.
 - Le correzioni a contenuti storici (URL di immagini morte, vecchi blocchi galleria e grading) vanno in `src/lib/server/article-repairs.ts` e si applicano in lettura. Non riscrivere le righe su Supabase per questo.
 - Script e route di prova non vanno lasciati in radice o in `src/routes/`: una route lì viene pubblicata. Usa `tests/` o una cartella esclusa da Git.

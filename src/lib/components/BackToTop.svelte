@@ -1,5 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { page } from '$app/state';
+	import { langFromPath, ui } from '#lib/i18n.ts';
+
+	let t = $derived(ui(langFromPath(page.url.pathname)));
 
 	let visible = $state(false);
 
@@ -19,7 +23,7 @@
 </script>
 
 {#if visible}
-	<button type="button" class="back-to-top" aria-label="Torna su" onclick={top}>
+	<button type="button" class="back-to-top" aria-label={t.backToTop} onclick={top}>
 		<span aria-hidden="true">▲</span> Su
 	</button>
 {/if}

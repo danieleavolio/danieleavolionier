@@ -1,6 +1,9 @@
 import type { Element, RelatedPost } from '#lib/types.ts';
 
-type PostSummary = Pick<Element, 'slug' | 'title' | 'description' | 'categories' | 'published'>;
+type PostSummary = Pick<
+	Element,
+	'slug' | 'title' | 'description' | 'categories' | 'published' | 'date'
+>;
 type Vector = Map<string, number>;
 
 // Initial editorial tuning, not calibrated probabilities. No reader tracking.
@@ -24,42 +27,49 @@ const THEMES = [
 	{
 		key: 'ai-coding',
 		label: 'sviluppo assistito da AI',
+		labelEn: 'AI-assisted development',
 		weight: 2.5,
 		match: /\b(opencode|codex|coding)\b/
 	},
 	{
 		key: 'web',
 		label: 'sviluppo web',
+		labelEn: 'web development',
 		weight: 1.2,
 		match: /\b(svelte|sveltekit|frontend|web|filtri|ui)\b/
 	},
 	{
 		key: 'ai',
 		label: 'intelligenza artificiale',
+		labelEn: 'artificial intelligence',
 		weight: 0.8,
 		match: /\b(ai|llm|codex|opencode|machine.learning|scikit)\b/
 	},
 	{
 		key: 'games',
 		label: 'videogiochi',
+		labelEn: 'video games',
 		weight: 1.5,
 		match: /\b(videogiochi|recensione|recensioni)\b/
 	},
 	{
 		key: 'puzzle',
 		label: 'enigmi e deduzione',
+		labelEn: 'puzzles and deduction',
 		weight: 1.2,
 		match: /\b(puzzle|enigmi|deduzione)\b/
 	},
 	{
 		key: 'university',
 		label: 'università e vita personale',
+		labelEn: 'university and personal life',
 		weight: 1.5,
 		match: /\b(universita|unical|erasmus)\b/
 	},
 	{
 		key: 'phones',
 		label: 'riparazione smartphone',
+		labelEn: 'smartphone repair',
 		weight: 1.5,
 		match: /\b(pixel|telefoni|riparazione)\b/
 	}
@@ -149,13 +159,37 @@ function cosine(left: Vector, right: Vector): number {
 	return leftNorm && rightNorm ? dot / Math.sqrt(leftNorm * rightNorm) : 0;
 }
 
-export function selectRelatedPosts(current: PostSummary, candidates: PostSummary[]): RelatedPost[] {
-	// Defence in depth: never rank drafts, the current post or duplicate slugs.
-	const unique = new Map(
-		candidates
-			.filter((post) => post.published === true && post.slug !== current.slug)
-			.map((post) => [post.slug, post])
-	);
+function titleKey(post: PostSummary): string {
+	return normalize(post.title).replace(/\s+/g, ' ');
+}
+
+function timestamp(post: PostSummary): number {
+	const time = Date.parse(post.date);
+	return Number.isNaN(time) ? 0 : time;
+}
+
+export function selectRelatedPosts(
+	current: PostSummary,
+	candidates: PostSummary[],
+	lang: 'it' | 'en' = 'it'
+): RelatedPost[] {
+	// Defence in depth: never rank drafts, the current post, duplicate slugs or copies with the same title.
+	const currentTitle = titleKey(current);
+	const bySlug = new Map<string, PostSummary>();
+	for (const post of candidates) {
+		if (post.published !== true || post.slug === current.slug) continue;
+		if (currentTitle && titleKey(post) === currentTitle) continue;
+		bySlug.set(post.slug, post);
+	}
+	// Same title under different slugs: keep only the most recent copy.
+	const byTitle = new Map<string, PostSummary>();
+	for (const post of bySlug.values()) {
+		// Untitled posts are not duplicates of each other: they stay keyed by slug.
+		const key = titleKey(post) || `slug:${post.slug}`;
+		const kept = byTitle.get(key);
+		if (!kept || timestamp(post) > timestamp(kept)) byTitle.set(key, post);
+	}
+	const unique = new Map([...byTitle.values()].map((post) => [post.slug, post]));
 	const corpus = [current, ...unique.values()];
 	const categorySets = corpus.map(categories);
 	const themeSets = corpus.map(themes);
@@ -186,14 +220,17 @@ export function selectRelatedPosts(current: PostSummary, candidates: PostSummary
 				const sharedTheme = THEMES.find(
 					(theme) => themeSets[0].has(theme.key) && themeSets[candidateIndex].has(theme.key)
 				);
+				const en = lang === 'en';
 				const reason = sharedCategories.length
-					? `In comune: ${sharedCategories
+					? `${en ? 'In common' : 'In comune'}: ${sharedCategories
 							.slice(0, 2)
 							.map((tag) => CATEGORY_LABELS[tag] ?? tag)
 							.join(' · ')}`
 					: sharedTheme
-						? `Stesso tema: ${sharedTheme.label}`
-						: 'Titolo e descrizione con argomenti vicini';
+						? `${en ? 'Same topic' : 'Stesso tema'}: ${en ? sharedTheme.labelEn : sharedTheme.label}`
+						: en
+							? 'Title and description cover similar topics'
+							: 'Titolo e descrizione con argomenti vicini';
 				// Shared platforms alone (e.g. PC/PS4) do not establish a topic relationship.
 				const hasContentRelation =
 					sharedCategories.length > 0 || sharedTheme !== undefined || textSimilarity >= 0.2;

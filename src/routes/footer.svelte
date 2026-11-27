@@ -1,5 +1,6 @@
 <script lang="ts">
 	import * as config from '#lib/config.ts';
+	import { i18n } from '#lib/i18n-state.ts';
 
 	const year = new Date().getFullYear();
 
@@ -13,6 +14,9 @@
 		{ href: '/rss.xml', label: 'RSS', external: false },
 		{ href: '/privacy-policy', label: 'Privacy', external: false }
 	];
+
+	const hrefFor = (item: { href: string; label: string }) =>
+		item.label === 'RSS' && i18n.lang === 'en' ? '/en/rss.xml' : item.href;
 
 	function scrollToTop() {
 		const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -31,7 +35,7 @@
 				{#each links as item (item.href)}
 					<li>
 						<a
-							href={item.href}
+							href={hrefFor(item)}
 							target={item.external ? '_blank' : undefined}
 							rel={item.external ? 'noopener' : undefined}>{item.label}</a
 						>
@@ -43,7 +47,9 @@
 
 	<div class="strip">
 		<p>&copy; {year} Daniele Avolio</p>
-		<p class="status yr-mono"><span class="blink" aria-hidden="true"></span>Sistema online</p>
+		<p class="status yr-mono">
+			<span class="blink" aria-hidden="true"></span>{i18n.t.systemOnline}
+		</p>
 		<button type="button" class="top" onclick={scrollToTop}>Torna su ↑</button>
 	</div>
 </footer>

@@ -1,5 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { page } from '$app/state';
+	import { langFromPath, ui } from '#lib/i18n.ts';
+
+	let t = $derived(ui(langFromPath(page.url.pathname)));
 
 	let narrow = $state(false);
 
@@ -19,7 +23,7 @@
 	});
 </script>
 
-<span class="reading-width" role="group" aria-label="Larghezza di lettura">
+<span class="reading-width" role="group" aria-label={t.readingWidth}>
 	<button type="button" aria-pressed={!narrow} onclick={() => set(false)}>Wide</button>
 	<button type="button" aria-pressed={narrow} onclick={() => set(true)}>Narrow</button>
 </span>

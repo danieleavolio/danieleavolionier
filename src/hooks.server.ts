@@ -16,7 +16,13 @@ export const handle: Handle = async ({ event, resolve }) => {
 		event.locals.user = null;
 		event.locals.isAdmin = false;
 		event.locals.getSession = async () => null;
-		const response = await resolve(event);
+		const response = await resolve(event, {
+			// Le pagine inglesi dichiarano la lingua nell'HTML.
+			transformPageChunk: ({ html }) =>
+				pathname === '/en' || pathname.startsWith('/en/')
+					? html.replace('<html lang="it">', '<html lang="en">')
+					: html
+		});
 		if (pathname === '/end-of-the-lova') response.headers.set('X-Robots-Tag', 'noindex, nofollow');
 		return response;
 	}

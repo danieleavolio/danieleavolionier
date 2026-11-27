@@ -10,6 +10,7 @@ let sitemap;
 let home;
 let hooks;
 let related;
+let translate;
 let article;
 let renderBarCharts;
 let blocks;
@@ -34,6 +35,7 @@ before(async () => {
 	home = await server.ssrLoadModule('/src/routes/+page.server.ts');
 	hooks = await server.ssrLoadModule('/src/hooks.server.ts');
 	related = await server.ssrLoadModule('/src/lib/server/related-posts.ts');
+	translate = await server.ssrLoadModule('/src/lib/server/translate.ts');
 	article = await server.ssrLoadModule('/src/routes/pagine/[slug]/+page.server.ts');
 	({ renderBarCharts, chartSource, chartCodeBlock, chartDataSource, parseChart } =
 		await server.ssrLoadModule('/src/lib/bar-chart.ts'));
@@ -102,8 +104,7 @@ test('il registro dei blocchi rende i linguaggi registrati e lascia il resto com
 
 test('blocchi di contenuto: sorgente valido diventa HTML, non valido resta codice', () => {
 	const { contentBlockFor } = contentBlocks;
-	const render = (language, source) =>
-		blocks.renderBlocks(blocks.blockCodeHtml(language, source));
+	const render = (language, source) => blocks.renderBlocks(blocks.blockCodeHtml(language, source));
 	const stays = (language, source) =>
 		assert.equal(render(language, source), blocks.blockCodeHtml(language, source));
 
@@ -439,6 +440,24 @@ test('related posts rank useful neighbours with a hard cap and no self-links, dr
 		assert.deepEqual(Object.keys(post).sort(), ['description', 'reason', 'slug', 'title']);
 });
 
+test('related posts keep only the newest copy when the same title appears under two slugs', () => {
+	const current = relatedFixture.find((post) => post.slug === 'search');
+	const filters = relatedFixture.find((post) => post.slug === 'filters');
+	const older = { ...filters, slug: 'filters-old', date: '2000-01-01T00:00:00.000Z' };
+	const newer = {
+		...filters,
+		slug: 'filters-new',
+		title: `  ${filters.title.toUpperCase()} `,
+		date: '2030-01-01T00:00:00.000Z'
+	};
+	const slugs = related
+		.selectRelatedPosts(current, [...relatedFixture, older, newer])
+		.map((post) => post.slug);
+	assert.ok(slugs.includes('filters-new'));
+	assert.ok(!slugs.includes('filters'));
+	assert.ok(!slugs.includes('filters-old'));
+});
+
 test('explicit themes bridge OpenCode/Codex without recommending generic AI content', () => {
 	const current = relatedFixture.find((post) => post.slug === 'opencode');
 	const selected = related.selectRelatedPosts(current, relatedFixture);
@@ -520,8 +539,9 @@ test('article load adds only selected lightweight summaries and preserves ISR', 
 	});
 	assert.equal(result.relatedPosts.length, 3);
 	assert.equal(result.contentHtml, row.content_html);
-	assert.equal(calls.filter((call) => call.method === 'select').length, 2);
-	const summaryProjection = calls.filter((call) => call.method === 'select')[1].value;
+	const postSelects = calls.filter((call) => call.table === 'posts' && call.method === 'select');
+	assert.equal(postSelects.length, 2);
+	const summaryProjection = postSelects[1].value;
 	assert.ok(!/content|metadata/.test(summaryProjection));
 	assert.equal(
 		result.relatedPosts.some((post) => 'contentHtml' in post || 'score' in post),
@@ -559,7 +579,10 @@ test('sanitizer keeps every callout tone, including error', () => {
 		const html = sanitizeContentHtml(
 			`<div data-callout="${tone}" class="rich-callout callout-${tone}"><p>x</p></div>`
 		);
-		assert.match(html, new RegExp(`<div data-callout="${tone}" class="rich-callout callout-${tone}">`));
+		assert.match(
+			html,
+			new RegExp(`<div data-callout="${tone}" class="rich-callout callout-${tone}">`)
+		);
 	}
 });
 
@@ -614,13 +637,17 @@ test('evidenziazione tabella: numeri italiani, unità e valori non numerici', ()
 
 test('sanitizer conserva data-hl sulla tabella', () => {
 	assert.match(
-		sanitizeContentHtml('<table data-hl="+,-" onclick="x()"><tbody><tr><td>1</td></tr></tbody></table>'),
+		sanitizeContentHtml(
+			'<table data-hl="+,-" onclick="x()"><tbody><tr><td>1</td></tr></tbody></table>'
+		),
 		/<table data-hl="\+,-">/
 	);
 });
 
 test('glossario: [[termine|definizione]] diventa tooltip, escapato', () => {
-	const html = glossary.renderGlossary('<p>Un <strong>x</strong> e [[RLS|Row &amp; Level Security]] qui.</p>');
+	const html = glossary.renderGlossary(
+		'<p>Un <strong>x</strong> e [[RLS|Row &amp; Level Security]] qui.</p>'
+	);
 	assert.match(html, /<span class="rich-term" tabindex="0" aria-describedby="(gl-[^"]+)">/);
 	assert.match(html, /<span class="rich-term-word">RLS<\/span>/);
 	assert.match(html, /role="tooltip"[^>]*>Row &amp; Level Security<\/span>/);
@@ -634,14 +661,158 @@ test('glossario: codice, link e testo senza barra restano invariati', () => {
 		'<p>[[senza definizione]] e [[|vuoto]] e [[a|]]</p>',
 		'<p>[[a|b [[c|d]]</p>'
 	]) {
-		assert.equal(glossary.renderGlossary(input).includes('rich-term'), input.includes('[[c|d]]'), input);
+		assert.equal(
+			glossary.renderGlossary(input).includes('rich-term'),
+			input.includes('[[c|d]]'),
+			input
+		);
 	}
 	assert.equal(glossary.renderGlossary('<p>nessun termine</p>'), '<p>nessun termine</p>');
 });
 
 test('glossario: markup valido solo con termine e definizione puliti', () => {
-	assert.equal(glossary.glossaryMarkup(' RLS ', 'Row  Level\nSecurity'), '[[RLS|Row Level Security]]');
+	assert.equal(
+		glossary.glossaryMarkup(' RLS ', 'Row  Level\nSecurity'),
+		'[[RLS|Row Level Security]]'
+	);
 	assert.equal(glossary.glossaryMarkup('', 'x'), null);
 	assert.equal(glossary.glossaryMarkup('a|b', 'x'), null);
 	assert.equal(glossary.glossaryMarkup('a', 'x]]'), null);
+});
+
+// ---------- Traduzione ----------
+
+/** Traduttore finto: prefissa i testi e, come DeepL con ignore_tags, lascia stare <code>. */
+const fakeTranslate = async (texts, format) =>
+	texts.map((text) =>
+		format === 'text'
+			? `EN ${text}`
+			: !text.includes('<')
+				? `EN ${text}`
+				: text
+						.split(/(<code>[\s\S]*?<\/code>|<x-keep[^>]*><\/x-keep>)/)
+						.map((part) =>
+							part.startsWith('<code>') || part.startsWith('<x-keep')
+								? part
+								: part.replace(/>([^<]+)</g, (_, t) => `>EN ${t}<`)
+						)
+						.join('')
+	);
+
+const articleHtml = [
+	'<h2>Introduzione</h2>',
+	'<p>Usa <code>npm run dev</code> per partire.</p>',
+	'<ul><li>uno</li><li>due</li></ul>',
+	'<pre><code class="language-js">const ciao = "mondo";</code></pre>',
+	'<pre><code class="language-mermaid">flowchart LR\nA --&gt; B</code></pre>',
+	'<pre><code class="language-bar-chart">titolo: Tempi di build\nunità: min\nPrima | 12\nDopo | 4 | rosso</code></pre>',
+	'<pre><code class="language-tldr">titolo: In breve\n- Primo punto\n- Secondo punto</code></pre>'
+].join('');
+const chartText = (html) => blocks.decodeCodeText(html.match(/language-bar-chart">([^<]*)</)[1]);
+
+test('splitTopLevel non spezza mai un elemento annidato', () => {
+	const parts = translate.splitTopLevel('<p>a</p><ul><li><p>x</p></li></ul>testo<hr><p>b</p>');
+	assert.deepEqual(parts, ['<p>a</p>', '<ul><li><p>x</p></li></ul>', 'testo<hr><p>b</p>']);
+});
+
+test('traduzione: testo tradotto, codice e mermaid intatti, grafici e blocchi ancora validi', async () => {
+	const result = await translate.translateArticle(
+		{ title: 'Titolo', description: 'Descrizione', contentHtml: articleHtml },
+		fakeTranslate
+	);
+	assert.equal(result.title, 'EN Titolo');
+	assert.equal(result.description, 'EN Descrizione');
+	assert.match(result.contentHtml, /<h2>EN Introduzione<\/h2>/);
+	assert.match(result.contentHtml, /<code>npm run dev<\/code>/);
+	assert.match(result.contentHtml, /const ciao = "mondo";/);
+	assert.match(result.contentHtml, /flowchart LR\nA --&gt; B/);
+	const chart = chartText(result.contentHtml);
+	const parsed = parseChart(chart);
+	assert.equal(parsed.title, 'EN Tempi di build');
+	assert.deepEqual(
+		parsed.rows.map((row) => row.label),
+		['EN Prima', 'EN Dopo']
+	);
+	assert.match(chart, /unità: min/);
+	assert.match(result.contentHtml, /language-tldr">titolo: EN In breve\n- EN Primo punto/);
+});
+
+test('traduzione: se un blocco protetto si perde, non si salva nulla', async () => {
+	const lossy = async (texts, format) =>
+		format === 'html' ? texts.map((text) => text.replace(/<x-keep[^>]*><\/x-keep>/g, '')) : texts;
+	await assert.rejects(
+		translate.translateArticle(
+			{ title: 'T', description: '', contentHtml: '<p>Testo</p><p>Vedi [[API|Interfaccia]]</p>' },
+			lossy
+		),
+		/protetto/
+	);
+});
+
+test('traduzione: un grafico con titolo troppo lungo resta in italiano', async () => {
+	const tooLong = async (texts, format) =>
+		texts.map((text) => (format === 'text' ? 'x'.repeat(200) : text));
+	const html = '<pre><code class="language-bar-chart">titolo: Breve\nA | 1\nB | 2</code></pre>';
+	const result = await translate.translateArticle(
+		{ title: 'T', description: '', contentHtml: html },
+		tooLong
+	);
+	assert.ok(parseChart(chartText(result.contentHtml)));
+	assert.match(chartText(result.contentHtml), /titolo: Breve/);
+});
+
+test('traduzione: glossario tradotto, termine e definizione senza separatori', async () => {
+	const result = await translate.translateArticle(
+		{
+			title: 'T',
+			description: '',
+			contentHtml: '<p>Un [[API|Interfaccia per programmi]] qui.</p>'
+		},
+		fakeTranslate
+	);
+	assert.match(result.contentHtml, /\[\[EN API\|EN Interfaccia per programmi\]\]/);
+});
+
+test('DeepL: endpoint Free per le chiavi :fx, html con ignore_tags e batch', async () => {
+	const calls = [];
+	const fetchImpl = async (url, init) => {
+		const body = JSON.parse(init.body);
+		calls.push({ url, auth: init.headers.Authorization, body });
+		return new Response(
+			JSON.stringify({ translations: body.text.map((text) => ({ text: `EN ${text}` })) })
+		);
+	};
+	const run = translate.deeplTranslator('chiave:fx', { fetchImpl });
+	const out = await run(
+		Array.from({ length: 45 }, (_, i) => `<p>${i}</p>`),
+		'html'
+	);
+	assert.equal(out.length, 45);
+	assert.equal(calls.length, 2);
+	assert.equal(calls[0].url, 'https://api-free.deepl.com/v2/translate');
+	assert.equal(calls[0].auth, 'DeepL-Auth-Key chiave:fx');
+	assert.equal(calls[0].body.source_lang, 'IT');
+	assert.equal(calls[0].body.target_lang, 'EN-GB');
+	assert.equal(calls[0].body.tag_handling, 'html');
+	assert.deepEqual(calls[0].body.ignore_tags, ['code', 'x-keep']);
+	await translate.deeplTranslator('pro-key', { fetchImpl })(['ciao'], 'text');
+	assert.equal(calls[2].url, 'https://api.deepl.com/v2/translate');
+	assert.equal(calls[2].body.tag_handling, undefined);
+});
+
+test('DeepL: quota esaurita dà un errore leggibile e senza la chiave', async () => {
+	const fetchImpl = async () => new Response('{}', { status: 456 });
+	await assert.rejects(
+		translate.deeplTranslator('segreta:fx', { fetchImpl })(['ciao'], 'text'),
+		(error) => /Quota DeepL/.test(error.message) && !error.message.includes('segreta')
+	);
+});
+
+test('related posts: i motivi sono in inglese per la versione inglese', () => {
+	const current = relatedFixture.find((post) => post.slug === 'search');
+	const selected = related.selectRelatedPosts(current, relatedFixture, 'en');
+	assert.ok(selected.length > 0);
+	assert.ok(
+		selected.every((post) => !/In comune|Stesso tema|Titolo e descrizione/.test(post.reason))
+	);
 });

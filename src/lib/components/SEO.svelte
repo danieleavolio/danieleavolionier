@@ -20,6 +20,8 @@
 		dateModified?: string;
 		noindex?: boolean;
 		faq?: Array<{ question: string; answer: string }>;
+		/** Versioni dello stesso contenuto in altre lingue (percorsi del sito). */
+		alternates?: { it?: string | null; en?: string | null };
 	}
 
 	let {
@@ -39,7 +41,8 @@
 		updateDate = '',
 		dateModified = '',
 		noindex = false,
-		faq = []
+		faq = [],
+		alternates = {}
 	}: Props = $props();
 
 	const siteName = 'Daniele Avolio';
@@ -47,6 +50,7 @@
 	const fallbackImage = `${siteBaseUrl}/images/avatar-640.webp`;
 
 	// Normalizzazione rigorosa del percorso e del Canonical URL (rimuove parametri query e trailing slashes)
+	let isEnglish = $derived(page.url.pathname === '/en' || page.url.pathname.startsWith('/en/'));
 	let rawPath = $derived((page.url.pathname || '/').replace(/\/+$/, '') || '/');
 	let canonicalUrl = $derived(`${siteBaseUrl}${rawPath === '/' ? '' : rawPath}`);
 
@@ -103,19 +107,21 @@
 			segments.forEach((seg, idx) => {
 				accumulated += `/${seg}`;
 				const formattedName =
-					seg === 'pagine'
-						? 'Blog'
-						: seg === 'progetti'
-							? 'Progetti'
-							: seg === 'appunti'
-								? 'Appunti'
-								: seg === 'now'
-									? 'Now'
-									: seg === 'data'
-										? 'Data'
-										: seg === 'end-of-the-lova'
-											? 'End of the Lova'
-											: seg.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+					seg === 'en'
+						? 'English'
+						: seg === 'pagine'
+							? 'Blog'
+							: seg === 'progetti'
+								? 'Progetti'
+								: seg === 'appunti'
+									? 'Appunti'
+									: seg === 'now'
+										? 'Now'
+										: seg === 'data'
+											? 'Data'
+											: seg === 'end-of-the-lova'
+												? 'End of the Lova'
+												: seg.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 
 				itemListElement.push({
 					'@type': 'ListItem',
@@ -274,7 +280,12 @@
 	<link rel="canonical" href={canonicalUrl} />
 
 	<meta property="og:site_name" content={siteName} />
-	<meta property="og:locale" content="it_IT" />
+	<meta property="og:locale" content={isEnglish ? 'en_GB' : 'it_IT'} />
+	{#if alternates.it && alternates.en}
+		<link rel="alternate" hreflang="it" href={`${siteBaseUrl}${alternates.it}`} />
+		<link rel="alternate" hreflang="en" href={`${siteBaseUrl}${alternates.en}`} />
+		<link rel="alternate" hreflang="x-default" href={`${siteBaseUrl}${alternates.it}`} />
+	{/if}
 	<meta property="og:title" content={fullTitle} />
 	<meta property="og:description" content={safeDescription} />
 	<meta property="og:type" content={isArticle || isReview ? 'article' : 'website'} />

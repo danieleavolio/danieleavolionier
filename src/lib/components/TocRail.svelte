@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { tick } from 'svelte';
+	import { page } from '$app/state';
+	import { langFromPath, ui } from '#lib/i18n.ts';
 
 	/**
 	 * Indice flottante dell'articolo: legge i titoli h2/h3 del contenuto, dà loro
@@ -11,6 +13,7 @@
 	type Entry = { id: string; text: string; level: 2 | 3 };
 	let entries = $state<Entry[]>([]);
 	let current = $state('');
+	let t = $derived(ui(langFromPath(page.url.pathname)));
 
 	const slugify = (text: string) =>
 		text
@@ -40,6 +43,19 @@
 			};
 		});
 		return headings;
+	}
+
+	function jump(event: MouseEvent, id: string) {
+		const target = document.getElementById(id);
+		if (!target) return;
+		event.preventDefault();
+		const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		target.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+		try {
+			history.replaceState(history.state, '', `#${id}`);
+		} catch {
+			// Some embedded contexts forbid history changes; the scroll still happened.
+		}
 	}
 
 	$effect(() => {
@@ -78,13 +94,15 @@
 </script>
 
 {#if entries.length >= 2}
-	<nav class="toc-rail" aria-label="Indice dell’articolo">
-		<p>Indice</p>
+	<nav class="toc-rail" aria-label={t.tocLabel}>
+		<p>{t.toc}</p>
 		<ol>
 			{#each entries as entry (entry.id)}
 				<li class:sub={entry.level === 3}>
-					<a href={`#${entry.id}`} aria-current={current === entry.id ? 'location' : undefined}
-						>{entry.text}</a
+					<a
+						href={`#${entry.id}`}
+						aria-current={current === entry.id ? 'location' : undefined}
+						onclick={(event) => jump(event, entry.id)}>{entry.text}</a
 					>
 				</li>
 			{/each}
@@ -117,6 +135,11 @@
 		:global(html[data-reading='narrow']) .toc-rail {
 			display: block;
 		}
+	}
+
+	/* Il titolo non finisce sotto la barra o al bordo superiore quando lo raggiungi dall'indice. */
+	:global(article .rich-content > :is(h2, h3)) {
+		scroll-margin-top: 6rem;
 	}
 
 	p {
@@ -164,8 +187,12 @@
 		font-size: 0.95em;
 	}
 
-	li a:hover {
-		color: var(--yr-accent);
+	/* Il tema globale riempie gli hover con --automataColor: qui sfondo e testo sono espliciti per tema. */
+	li a:hover,
+	li a:focus-visible {
+		background-color: var(--automataBgRGBA);
+		color: var(--automataColor);
+		text-decoration: underline;
 	}
 
 	li a[aria-current='location'] {
